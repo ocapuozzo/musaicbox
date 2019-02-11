@@ -5,7 +5,7 @@
       <MusaicBox
         class="shadow p-3 mb-5 bg-white rounded"
         style="width: 300px; height: 380px;"
-        _pcs="[1,1,1,1,0,0,0,1,0,0,0,0]"
+        _pcs="[1,0,0,1,0,0,0,1,0,0,0,0]"
         v-on:onpcs="onPcsChange"
       ></MusaicBox>
       <p>{{ pcs }}</p>

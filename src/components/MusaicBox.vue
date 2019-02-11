@@ -3,7 +3,7 @@
     <div>
       <canvas ref="mcanvas" id="mcanvas" style="border:1px solid #BBB;" @click="onclick"></canvas>
     </div>
-    <div class="extra content center aligned">
+    <div class="extra content text-center aligned">
       <img id="m11" ref="m11" src="img/m11.png" class="actionable" width="70">
       <img id="m5" ref="m5" src="img/m5.png" class="actionable" width="70">
       <img id="m7" ref="m7" src="img/m7.png" class="actionable" width="70">
