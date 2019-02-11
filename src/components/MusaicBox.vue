@@ -25,14 +25,6 @@ export default {
       CEL_WIDTH: 10 // initial value
     }
   },
-  /*
-    directives: {
-      draw(canvasElement, binding) {
-        console.log("draw");
-        this.transformsPcsAndDrawsMusaic(this.opId);
-      }
-    },
-  */
   mounted() {
     // console.log(this.$refs['mcanvas']);
     let canvas = this.$refs.mcanvas;
@@ -55,16 +47,8 @@ export default {
 
     this.$emit('onpcs', this.pcs);
   },
+
   methods: {
-
-    onclick() {
-      // reactive model, use $set with array
-      // test by changing pcs[0] value
-      //      this.$set(this.pcs, 0, (this.pcs[0]) ? 0 : 1);
-      // send to listener
-      //     this.$emit('onpcs', this.pcs);
-    },
-
     mousedown(e) {
       let mcanvas = this.$refs.mcanvas;
       let rect = mcanvas.getBoundingClientRect();
@@ -182,6 +166,7 @@ export default {
       }
       this.CEL_WIDTH = CEL_WIDTH;
     },
+
     /**
      * set listeners which set a css class for geometrical animation
      */
@@ -216,6 +201,7 @@ export default {
       if ($m.classList.contains("rotateM5")) $m.classList.remove("rotateM5");
       if ($m.classList.contains("rotateM7")) $m.classList.remove("rotateM7");
     },
+
     disableButtons() {
       this.$refs["m11"].disabled = true;
       this.$refs["m5"].disabled = true;
@@ -224,6 +210,7 @@ export default {
       this.$refs["m5"].style.cursor = "wait";
       this.$refs["m7"].style.cursor = "wait";
     },
+
     enabledButtons() {
       this.$refs["m11"].style.cursor = "pointer";
       this.$refs["m5"].style.cursor = "pointer";
@@ -281,9 +268,6 @@ export default {
 </script>
 
 <style scoped>
-a {
-  color: #42b983;
-}
 
 .actionable {
   cursor: pointer;
