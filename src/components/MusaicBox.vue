@@ -4,9 +4,9 @@
       <canvas ref="mcanvas" id="mcanvas" style="border:1px solid #BBB;" @click="onclick"></canvas>
     </div>
     <div class="extra content text-center aligned">
-      <img id="m11" ref="m11" src="img/m11.png" class="actionable" width="70">
-      <img id="m5" ref="m5" src="img/m5.png" class="actionable" width="70">
-      <img id="m7" ref="m7" src="img/m7.png" class="actionable" width="70">
+      <img id="m11" ref="m11" src="img/m11.png" class="actionable img-fluid" width="70">
+      <img id="m5" ref="m5" src="img/m5.png" class="actionable img-fluid" width="70">
+      <img id="m7" ref="m7" src="img/m7.png" class="actionable img-fluid" width="70">
     </div>
   </div>
 </template>
@@ -28,23 +28,14 @@ export default {
   /*
     directives: {
       draw(canvasElement, binding) {
-        // get canvas context
-        var ctx = canvasElement.getContext("2d");
-  
-        // Clear the canvas
-        ctx.clearRect(0, 0, 300, 150);
-        // Insert stuff into canvas
-        ctx.fillStyle = "black";
-        ctx.font = "20px Georgia";
-        ctx.fillText(binding.value, 10, 50);
-        console.log("binding : " + binding);
+        console.log("draw");
+        this.transformsPcsAndDrawsMusaic(this.opId);
       }
     },
-    */
+  */
   mounted() {
     // console.log(this.$refs['mcanvas']);
     let canvas = this.$refs.mcanvas;
-
 
     this.addOpTransfOnClickListeners();
     this.$el.addEventListener("animationend", this.listenerEndAnim);
@@ -52,12 +43,11 @@ export default {
     // We can't access the rendering context until the canvas is mounted to the DOM.
     canvas.width = canvas.parentElement.clientWidth
     canvas.height = canvas.parentElement.clientWidth; //Height;
-
     canvas.addEventListener('mousedown', this.mousedown);
-
     if (this._pcs) {
       this.pcs = JSON.parse(this._pcs);
     }
+    this.CEL_WIDTH = canvas.width / (this.pcs.length + 1);
     // set reactive
     this.$set(this.pcs, 0, this.pcs[0]);
     // pseudo update initial 
@@ -152,7 +142,6 @@ export default {
       return pcs;
     },
 
-
     /**
      * After geometrical transformation, set pcs transformation
      * (algebric) and draw its musaic representation (geometric)
@@ -161,6 +150,9 @@ export default {
     transformsPcsAndDrawsMusaic(operation) {
       let canvas = this.$refs['mcanvas']; //document.getElementById("mcanvas");
       if (!canvas.getContext) return;
+
+      canvas.width = canvas.parentElement.clientWidth
+      canvas.height = canvas.parentElement.clientWidth;
 
       // Algebraic transformation
       this.pcs = operation(this.pcs);
@@ -171,7 +163,7 @@ export default {
 
       ctx.strokeStyle = "black";
 
-      let CEL_WIDTH = this.$refs['mcanvas'].width / (n + 1);
+      let CEL_WIDTH = canvas.width / (n + 1);
 
       // Draws musaic
       //loop n+1 for exact correlation between geometry ops and algebra ops

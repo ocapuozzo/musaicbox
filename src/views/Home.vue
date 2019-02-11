@@ -1,31 +1,33 @@
 <template>
-  <div class="home d-flex bd-highlight">
-    <div class="m-r-5 p-2 w-60 bd-highlight">
-      <h3>Musaic</h3>
-      <MusaicBox
-        class="shadow p-3 mb-5 bg-white rounded"
-        style="width: 300px; height: 380px;"
-        _pcs="[1,0,0,1,0,0,0,1,0,0,0,0]"
-        v-on:onpcs="onPcsChange"
-      ></MusaicBox>
-      <p>{{ pcs }}</p>
-    </div>
-
-    <div class="container-fluid ml-5 p-2 shadow p-3 mb-5 bg-white rounded">
-      <h4 class="text-center title-detail pb-2">Analysis</h4>
-      <div class="container">
-        <div class="row">
-          <div class="col-sm text-left">
-            <p>
-              Binary :
-              <span class="binary-pcs">{{ pcs }}</span>
-            </p>
-            <p>
-              PCS :
-              <span class="binary-pcs">{{ pcsstr }}</span>
-            </p>
+  <div class_="container-fluid home d-flex bd-highlight">
+    <div class="row">
+      <div class="p-2 col"
+      >
+        <h3>Musaic</h3>
+        <MusaicBox
+          class="shadow p-3 mb-5 bg-white rounded"
+          style="width: 250px; height: 350px;"
+          _pcs="[1,0,0,1,0,0,0,1,0,0,0,0]"
+          v-on:onpcs="onPcsChange"
+        ></MusaicBox>
+        <!-- p>{{ pcs }}</p -->
+      </div>
+      <div class="ml-1 p-2 shadow mb-5 bg-white rounded col">
+        <h4 class="text-center title-detail pb-2">Analysis</h4>
+        <div class="container">
+          <div class="row">
+            <div class="col-sm text-left">
+              <p>
+                Binary :
+                <span class="binary-pcs">{{ pcs }}</span>
+              </p>
+              <p>
+                PCS :
+                <span class="binary-pcs">{{ pcsstr }}</span>
+              </p>
+            </div>
+            
           </div>
-          <div class="col-sm">autres infos</div>
         </div>
       </div>
     </div>
