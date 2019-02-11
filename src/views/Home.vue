@@ -1,8 +1,7 @@
 <template>
-  <div class_="container-fluid home d-flex bd-highlight">
-    <div class="row">
-      <div class="p-2 col"
-      >
+  <div class_="container bg-white">
+    <div class="row mr-1">
+      <div class="p-2 col" style="max-width:300px;">
         <h3>Musaic</h3>
         <MusaicBox
           class="shadow p-3 mb-5 bg-white rounded"
@@ -12,7 +11,7 @@
         ></MusaicBox>
         <!-- p>{{ pcs }}</p -->
       </div>
-      <div class="ml-1 p-2 shadow mb-5 bg-white rounded col">
+      <div class="p-2 shadow mb-5 bg-white rounded col" style="min-width:350px;">
         <h4 class="text-center title-detail pb-2">Analysis</h4>
         <div class="container">
           <div class="row">
