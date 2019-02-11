@@ -13,8 +13,6 @@
 
 <script>
 
-// import this from '@/assets/js/animusaic.js';
-
 export default {
   name: "MusaicBox",
   props: {
