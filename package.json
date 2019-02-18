@@ -6,14 +6,15 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit",
     "deploy": "node ./node_modules/vue-gh-pages/index.js",
-    "homepage": "https://github.com/ocapuozzo/musaicbox"
+    "homepage": "https://github.com/ocapuozzo/musaicbox",
+    "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
     "register-service-worker": "^1.5.2",
     "vue": "^2.5.22",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",

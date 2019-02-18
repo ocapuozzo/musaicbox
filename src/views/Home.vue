@@ -24,8 +24,11 @@
                 PCS :
                 <span class="binary-pcs">{{ pcsstr }}</span>
               </p>
+               <my-canvas id="ccanvas" style="width: 250px; height: 250px; border-style:solid">
+                <ClockBis color="white"></ClockBis>
+               </my-canvas>
+              <!-- ClockBis style="width: 200px; height: 200px;"></ClockBis -->
             </div>
-            
           </div>
         </div>
       </div>
@@ -36,12 +39,14 @@
 <script>
 // @ is an alias to /src
 import MusaicBox from "@/components/MusaicBox.vue";
+import ClockBis from "@/components/ClockBis.vue";
+import MyCanvas from "@/components/MyCanvas.vue";
 
 export default {
   name: "home",
-  data() {
-    return { pcs: '' };
-  },
+  // data() {
+  //   return { pcs: '' };
+  // },
 
   methods: {
     onPcsChange: function (newPcs) {
@@ -50,6 +55,14 @@ export default {
   },
 
   computed: {
+    pcs: {
+      get() {
+        return this.$store.state.mypcs
+      },
+      set(value) {
+        this.$store.dispatch('changepcs', value);
+      }
+    },
     pcsstr: function () {
       let res = "";
       for (let index = 0; index < this.pcs.length; index++) {
@@ -61,7 +74,9 @@ export default {
     }
   },
   components: {
-    MusaicBox
+    MusaicBox,
+    MyCanvas,
+    ClockBis
   }
 };
 </script>

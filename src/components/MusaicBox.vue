@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <canvas ref="mcanvas" id="mcanvas" style="border:1px solid #BBB;" @click="onclick"></canvas>
+      <canvas ref="mcanvas" id="mcanvas" style="border:1px solid #BBB;"></canvas>
     </div>
     <div class="extra content text-center aligned">
       <img id="m11" ref="m11" src="img/m11.png" class="actionable img-fluid" width="70">
@@ -21,9 +21,20 @@ export default {
   data() {
     return {
       // default value, replaced by _post props if present in mounted()
-      pcs: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      pcsold: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       CEL_WIDTH: 10 // initial value
     }
+  },
+  computed: {
+      pcs: {
+         get() { 
+             return this.$store.state.mypcs
+         },
+         set(value) {
+             this.$store.commit('changepcs', value);
+         }
+     },
+     
   },
   mounted() {
     // console.log(this.$refs['mcanvas']);
@@ -38,14 +49,16 @@ export default {
     canvas.addEventListener('mousedown', this.mousedown);
     if (this._pcs) {
       this.pcs = JSON.parse(this._pcs);
+    } else {
+      this.pcs = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
     }
     this.CEL_WIDTH = canvas.width / (this.pcs.length + 1);
     // set reactive
-    this.$set(this.pcs, 0, this.pcs[0]);
-    // pseudo update initial 
+    // this.$set(this.pcs, 0, this.pcs[0]);
+   
     this.transformsPcsAndDrawsMusaic(this.opId);
-
-    this.$emit('onpcs', this.pcs);
+    // vuex... ??
+//     this.$emit('onpcs', this.pcs);
   },
 
   methods: {
@@ -66,7 +79,8 @@ export default {
         this.$set(this.pcs, indice, (this.pcs[indice]) ? 0 : 1);
         this.transformsPcsAndDrawsMusaic(this.opId);
         // send to listeners
-        this.$emit('onpcs', this.pcs);
+  //      this.$emit('onpcs', this.pcs);
+                
       }
     },
 
@@ -139,8 +153,9 @@ export default {
       canvas.height = canvas.parentElement.clientWidth;
 
       // Algebraic transformation
+      console.log("before op : " + this.pcs);
       this.pcs = operation(this.pcs);
-
+     console.log("after op : " + this.pcs);
       let n = this.pcs.length;
 
       let ctx = canvas.getContext("2d");
