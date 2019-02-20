@@ -8,35 +8,48 @@
       <img id="m5" ref="m5" src="img/m5.png" class="actionable img-fluid" width="70">
       <img id="m7" ref="m7" src="img/m7.png" class="actionable img-fluid" width="70">
     </div>
+    <!-- p>{{pcs}}</p -->
   </div>
 </template>
 
 <script>
 
 export default {
-  name: "MusaicBox",
+  name: "Musaic",
   props: {
     _pcs: String
   },
   data() {
     return {
-      // default value, replaced by _post props if present in mounted()
-      pcsold: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       CEL_WIDTH: 10 // initial value
     }
   },
   computed: {
-      pcs: {
-         get() { 
-             return this.$store.state.mypcs
-         },
-         set(value) {
-             this.$store.commit('changepcs', value);
-         }
-     },
-     
+    pcs: {
+      get() {
+        console.log('musaic pcs get');
+        return this.$store.state.mypcs
+      },
+      set(value) {
+        //dispatch in ISClock ????
+        this.$store.commit('changepcs', value);
+      }
+    },
+    testpcs: {
+      get() {
+        return this.$store.state.testpcs
+      }
+    }
+
   },
   mounted() {
+
+    // define event on root, which call by ISClock component
+    // (canvas non reactive with vuex...)
+    this.$root.$on('onsetpcs', () => {      
+      this.forceCanvasUpdate();
+    });
+
     // console.log(this.$refs['mcanvas']);
     let canvas = this.$refs.mcanvas;
 
@@ -50,18 +63,16 @@ export default {
     if (this._pcs) {
       this.pcs = JSON.parse(this._pcs);
     } else {
-      this.pcs = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] 
+      this.pcs = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     }
     this.CEL_WIDTH = canvas.width / (this.pcs.length + 1);
-    // set reactive
-    // this.$set(this.pcs, 0, this.pcs[0]);
-   
-    this.transformsPcsAndDrawsMusaic(this.opId);
-    // vuex... ??
-//     this.$emit('onpcs', this.pcs);
+    this.transformsPcsAndDrawsMusaic(this.opId);    
   },
 
   methods: {
+    forceCanvasUpdate() {
+      this.transformsPcsAndDrawsMusaic(this.opId);
+    },
     mousedown(e) {
       let mcanvas = this.$refs.mcanvas;
       let rect = mcanvas.getBoundingClientRect();
@@ -77,10 +88,7 @@ export default {
       // between algebra and geometry
       if (indice > 0) {
         this.$set(this.pcs, indice, (this.pcs[indice]) ? 0 : 1);
-        this.transformsPcsAndDrawsMusaic(this.opId);
-        // send to listeners
-  //      this.$emit('onpcs', this.pcs);
-                
+        this.transformsPcsAndDrawsMusaic(this.opId);    
       }
     },
 
@@ -155,7 +163,7 @@ export default {
       // Algebraic transformation
       console.log("before op : " + this.pcs);
       this.pcs = operation(this.pcs);
-     console.log("after op : " + this.pcs);
+      console.log("after op : " + this.pcs);
       let n = this.pcs.length;
 
       let ctx = canvas.getContext("2d");
@@ -265,7 +273,7 @@ export default {
       // class css from the past operation)
       this.transformsPcsAndDrawsMusaic(opTransf);
       // send to listeners new pcs (or not...)
-      this.$emit('onpcs', this.pcs);
+      //this.$emit('onpcs', this.pcs);
       // clear css class
       this.clearRotateClasses();
       this.enabledButtons();
@@ -283,7 +291,6 @@ export default {
 </script>
 
 <style scoped>
-
 .actionable {
   cursor: pointer;
 }

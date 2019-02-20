@@ -10,7 +10,7 @@
 // from  https://alligator.io/vuejs/vue-html5-canvas/ 
 
 export default {
-  name : "MyCanvas",
+  name : "WrapCanvas",
   data() {
     return {
       // By creating the provider in the data property, it becomes reactive,

@@ -19,7 +19,7 @@ export default new Vuex.Store({
     },
     mypcs:  state => {
       return state.mypcs
-    }
+    },
   },
   actions: {
     changepcs(state, mypcs) {

@@ -23,10 +23,10 @@
           >Predefined</a>
           <ul class="collapse list-unstyled" id="homeSubmenu">
             <li>
-              <router-link to="/">Chords</router-link>
+              <router-link to="#">Chords</router-link>
             </li>
             <li>
-              <router-link to="/about">Scales</router-link>
+              <router-link to="#">Scales</router-link>
             </li>
             <li>
               <a
@@ -34,7 +34,7 @@
                 data-toggle="collapse"
                 aria-expanded="false"
                 class="dropdown-toggle"
-              >Autres entrées</a>
+              >Others</a>
               <ul class="collapse list-unstyled" id="pageSubmenu">
                 <li>
                   <a href="#">Page 1</a>
@@ -52,9 +52,7 @@
         <li>
           <router-link to="/about">About</router-link>
         </li>
-        <li>
-          <a href="#">Contact</a>
-        </li>
+        
       </ul>
 
       <ul class="list-unstyled CTAs">
@@ -62,11 +60,8 @@
           <a
             href="#"
             class="download"
-          >Download source</a>
-        </li>
-        <li>
-          <a href="#" class="article">Back to article</a>
-        </li>
+          >other</a>
+        </li>       
       </ul>
     </nav>
 

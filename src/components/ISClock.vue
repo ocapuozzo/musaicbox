@@ -32,8 +32,8 @@ class Rect {
 
 export default {
   // Gets us the provider property from the parent <my-canvas> component.
+  name: "ISClock",
   inject: ['provider'],
-  name: "ClockBis",
   mouseEventDone: false,
   points: [],
   mousedownTimeout: null,
@@ -56,7 +56,7 @@ export default {
         return this.$store.state.mypcs
       },
       set(value) {
-        this.$store.dispatch('changepcs', value);
+        this.$store.commit('changepcs', value);
       }
     },
     cardinal() {
@@ -90,6 +90,7 @@ export default {
     setIRoot(index) {
       this.iRoot = index;
       this.$set(this.pcs, index, 1);
+      this.$root.$emit('onsetpcs');
       // console.log("set iRoot : " + index);
     },
 
@@ -110,16 +111,30 @@ export default {
           self.setIRoot(index);
         }, 500);
         // console.log("attach timeout function ");
+        e.stopPropagation();
       }
     },
 
     mouseup(e) {
-      clearTimeout(this.$options.mousedownTimeout);
+      if (this.$options.mousedownTimeout !== null) {
+        clearTimeout(this.$options.mousedownTimeout);
+        this.$options.mousedownTimeout = null;
+      }
+
       let index = this.getSelected(e);
 
       if (index >= 0 && index != this.iRoot) {
         this.$set(this.pcs, index, (this.pcs[index] == 1) ? 0 : 1);
-        this.pcs = this.pcs;
+
+        // musaic canvas no reactive... so send event
+        this.$root.$emit('onsetpcs');
+      }
+    },
+
+    cancel(e) {
+      if (this.$options.mousedownTimeout !== null) {
+        clearTimeout(this.$options.mousedownTimeout);
+        this.$options.mousedownTimeout = null;
       }
     },
 
@@ -220,6 +235,7 @@ export default {
       ctx.restore();
     }
   },
+  // eslint-disable-next-line 
   render() {
     //console.log("render : " + this.pcs.length);
     //console.log("provider context :" + this.provider.context);
@@ -227,6 +243,10 @@ export default {
     if (!this.$options.mouseEventDone) {
       this.provider.elt.addEventListener('mouseup', this.mouseup);
       this.provider.elt.addEventListener('mousedown', this.mousedown);
+      this.provider.elt.addEventListener("mouseout", this.cancel);
+      this.provider.elt.addEventListener("touchend", this.cancel);
+      this.provider.elt.addEventListener("touchleave", this.cancel);
+      this.provider.elt.addEventListener("touchcancel", this.cancel);
       this.$options.mouseEventDone = true;
     }
     const ctx = this.provider.context;
