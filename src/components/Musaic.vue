@@ -26,8 +26,7 @@ export default {
   },
   computed: {
     pcs: {
-      get() {
-        console.log('musaic pcs get');
+      get() {        
         return this.$store.state.mypcs
       },
       set(value) {
@@ -161,9 +160,9 @@ export default {
       canvas.height = canvas.parentElement.clientWidth;
 
       // Algebraic transformation
-      console.log("before op : " + this.pcs);
+      //console.log("before op : " + this.pcs);
       this.pcs = operation(this.pcs);
-      console.log("after op : " + this.pcs);
+      //console.log("after op : " + this.pcs);
       let n = this.pcs.length;
 
       let ctx = canvas.getContext("2d");

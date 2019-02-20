@@ -52,7 +52,6 @@ export default {
   computed: {
     pcs: {
       get() {
-        console.log('clock pcs get');
         return this.$store.state.mypcs
       },
       set(value) {
@@ -112,6 +111,19 @@ export default {
         }, 500);
         // console.log("attach timeout function ");
         e.stopPropagation();
+      }
+    },
+    dblclick(e) {
+      // console.log("double click");
+      if (this.$options.mousedownTimeout !== null) {
+        clearTimeout(this.$options.mousedownTimeout);
+        this.$options.mousedownTimeout = null;
+      }
+
+      let index = this.getSelected(e);
+
+      if (index != this.iRoot) {
+        this.setIRoot(index);
       }
     },
 
@@ -241,6 +253,7 @@ export default {
     //console.log("provider context :" + this.provider.context);
     if (!this.provider.context) return;
     if (!this.$options.mouseEventDone) {
+      this.provider.elt.addEventListener('dblclick', this.dblclick);
       this.provider.elt.addEventListener('mouseup', this.mouseup);
       this.provider.elt.addEventListener('mousedown', this.mousedown);
       this.provider.elt.addEventListener("mouseout", this.cancel);

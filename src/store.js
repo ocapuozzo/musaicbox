@@ -22,10 +22,6 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    changepcs(state, mypcs) {
-      console.log('action changepcs whith :' + mypcs);
-      state.mypcs = mypcs    
-    }
-
+   
   }
 })
