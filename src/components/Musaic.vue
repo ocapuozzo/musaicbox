@@ -27,25 +27,28 @@ export default {
   computed: {
     pcs: {
       get() {        
-        return this.$store.state.mypcs
+        return this.$store.state.ipcs.pcs
       },
       set(value) {
-        //dispatch in ISClock ????
-        this.$store.commit('changepcs', value);
+        this.$store.commit('ipcs/changepcs', value);
       }
     },
-    testpcs: {
-      get() {
-        return this.$store.state.testpcs
+    ipcs: {
+      get() {        
+        return this.$store.state.ipcs
+      },
+      set(value) {
+        this.$store.commit('ipcs/update', value);
       }
-    }
+    },
 
   },
   mounted() {
 
     // define event on root, which call by ISClock component
     // (canvas non reactive with vuex...)
-    this.$root.$on('onsetpcs', () => {      
+    this.$root.$on('onsetpcs', () => { 
+      console.log('event onsetpcs');
       this.forceCanvasUpdate();
     });
 
@@ -65,12 +68,12 @@ export default {
       this.pcs = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     }
     this.CEL_WIDTH = canvas.width / (this.pcs.length + 1);
-    this.transformsPcsAndDrawsMusaic(this.opId);    
+    this.transformsPcsAndDrawsMusaic(1);    
   },
 
   methods: {
     forceCanvasUpdate() {
-      this.transformsPcsAndDrawsMusaic(this.opId);
+      this.transformsPcsAndDrawsMusaic(1);
     },
     mousedown(e) {
       let mcanvas = this.$refs.mcanvas;
@@ -80,80 +83,26 @@ export default {
 
       // from matrix coord to indice linear
       let indice = ((5 * Math.floor(x / this.CEL_WIDTH))
-        + (Math.floor(y / this.CEL_WIDTH))) % this.pcs.length;
+        + (Math.floor(y / this.CEL_WIDTH)) + this.ipcs.iroot) % this.pcs.length;
 
       // musaic invariant : pitch zero is always to 1
       // why ? for Bijective morphism (polymorphism) 
       // between algebra and geometry
-      if (indice > 0) {
-        this.$set(this.pcs, indice, (this.pcs[indice]) ? 0 : 1);
-        this.transformsPcsAndDrawsMusaic(this.opId);    
+      if (indice != this.ipcs.iroot) {
+        this.$set(this.pcs, indice, (this.pcs[indice] == 1) ? 0 : 1);       
+        this.transformsPcsAndDrawsMusaic(1);    
       }
     },
 
-    /**
-     * image of given array where each element is multipy by m modulo n
-     * (n is size of given array)
-     * @param pcs
-     * @param mult
-     * @returns int[]
-     */
-    opM(pcs, mult) {
-      let n = pcs.length;
-      let newpcs = pcs.slice().fill(0);
-      for (let i = 0; i < n; i++) {
-        newpcs[i] = pcs[(i * mult) % n];
-      }
-      return newpcs;
-    },
-
-    /**
-     * algebric op of gemometrical left rotation
-     * @see OpM (mult = 5)
-     * @param pcs
-     * @returns {int[]}
-     */
-    opM5(pcs) {
-      return this.opM(pcs, 5);
-    },
-
-    /**
-     * algebric op of gemometrical rigth rotation
-     * @see OpM (mult = 7)
-     * @param pcs
-     * @returns {int[]}
-     */
-    opM7(pcs) {
-      return this.opM(pcs, 7);
-    },
-
-    /**
-     * algebric op of gemometrical half rotation relative to center point
-     * @see OpM (mult = 11)
-     * @param pcs
-     * @returns {int[]}
-     */
-    opM11(pcs) {
-      return this.opM(pcs, 11);
-    },
-
-    /**
-        * identity operation
-        * @see OpM (mult = 1)
-        * @param pcs
-        * @returns {int[]}
-        */
-    opId(pcs) {
-      return pcs;
-    },
-
+   
     /**
      * After geometrical transformation, set pcs transformation
      * (algebric) and draw its musaic representation (geometric)
      * so, no change visualy if ok !
      */
     transformsPcsAndDrawsMusaic(operation) {
-      let canvas = this.$refs['mcanvas']; //document.getElementById("mcanvas");
+      // get canvas direct from DOM
+      let canvas = document.getElementById("mcanvas");
       if (!canvas.getContext) return;
 
       canvas.width = canvas.parentElement.clientWidth
@@ -161,8 +110,10 @@ export default {
 
       // Algebraic transformation
       //console.log("before op : " + this.pcs);
-      this.pcs = operation(this.pcs);
-      //console.log("after op : " + this.pcs);
+      if (operation > 1) {
+         this.$store.commit('ipcs/mult', operation);
+      }
+
       let n = this.pcs.length;
 
       let ctx = canvas.getContext("2d");
@@ -172,10 +123,15 @@ export default {
       let CEL_WIDTH = canvas.width / (n + 1);
 
       // Draws musaic
-      //loop n+1 for exact correlation between geometry ops and algebra ops
+      // loop n+1 for exact correlation between geometry ops and algebra ops
+      // display *iroot centred* for bijection geometry <-> algebra
+      // Example. 
+      //   ipcs : ({0, 3, 6, 9}, iroot=0) 
+      //   ipcs : ({1, 4, 7, 10}, iroot=1)  
+      // are same IS, are same Musaic representation 
       for (let i = 0; i <= n; i++) {
         for (let j = 0; j <= n; j++) {
-          if (this.pcs[(i + j * 5) % n] == 1) {
+          if (this.ipcs.pcs[(i + this.ipcs.iroot + j * 5) % n] == 1) {
             ctx.fillStyle = "rgb(0, 0, 0)";
             ctx.fillRect(j * CEL_WIDTH, i * CEL_WIDTH, CEL_WIDTH, CEL_WIDTH);
             ctx.strokeRect(j * CEL_WIDTH, i * CEL_WIDTH, CEL_WIDTH, CEL_WIDTH);
@@ -251,17 +207,17 @@ export default {
 
       switch (event.target.className) {
         case "rotateM11":
-          opTransf = this.opM11;
+          opTransf = 11;
           break;
         case "rotateM5":
-          opTransf = this.opM5;
+          opTransf = 5;
           break;
         case "rotateM7":
-          opTransf = this.opM7;
+          opTransf = 7;
           break;
         default:
           // no transformation = id operation
-          opTransf = this.opId;
+          opTransf = 1;//this.opId;
       }
       // The geometric transformation is finished and we have determined
       // the algebraic transformation operation (opTransformation) that exactly

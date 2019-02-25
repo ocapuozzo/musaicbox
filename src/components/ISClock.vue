@@ -44,20 +44,29 @@ export default {
       default: '#F00'
     }
   },
-  data: function () {
-    return {
-      iRoot: 0
-    }
-  },
+  // data: function () {
+  //   return {
+  //     iroot: 0
+  //   }
+  // },
   computed: {
     pcs: {
       get() {
-        return this.$store.state.mypcs
+        return this.$store.state.ipcs.pcs
       },
       set(value) {
-        this.$store.commit('changepcs', value);
+        this.$store.commit('ipcs/changepcs', value);
       }
     },
+    iroot: {
+      get() {
+        return this.$store.state.ipcs.iroot
+      },
+      set(value) {
+        this.$store.commit('ipcs/setIRoot', value);
+      }
+    },
+    
     cardinal() {
       return this.$store.getters.pcsCard
     }
@@ -87,10 +96,9 @@ export default {
     },
 
     setIRoot(index) {
-      this.iRoot = index;
-      this.$set(this.pcs, index, 1);
+      this.iroot = index;
       this.$root.$emit('onsetpcs');
-      // console.log("set iRoot : " + index);
+      // console.log("set iroot : " + index);
     },
 
     mousemove(e) {
@@ -105,7 +113,7 @@ export default {
       let index = this.getSelected(e);
       if (index >= 0) {
         let self = this;
-        // a long time down => change iRoot
+        // a long time down => change iroot
         this.$options.mousedownTimeout = setTimeout(function () {
           self.setIRoot(index);
         }, 500);
@@ -122,7 +130,7 @@ export default {
 
       let index = this.getSelected(e);
 
-      if (index != this.iRoot) {
+      if (index != this.iroot) {
         this.setIRoot(index);
       }
     },
@@ -135,10 +143,12 @@ export default {
 
       let index = this.getSelected(e);
 
-      if (index >= 0 && index != this.iRoot) {
+      if (index >= 0 && index != this.iroot) {
+        console.log("mouse up : " + index);
         this.$set(this.pcs, index, (this.pcs[index] == 1) ? 0 : 1);
 
         // musaic canvas no reactive... so send event
+        // console.log("$emit('onsetpcs')");
         this.$root.$emit('onsetpcs');
       }
     },
@@ -155,7 +165,7 @@ export default {
       ctx.beginPath();
       ctx.arc(0, 0, radius, 0, 2 * Math.PI);
       // console.log("index : " + index + " selected : " + this.isSelected(index));
-      let color = (this.isSelected(index)) ? (index == this.iRoot) ? 'red' : 'yellow' : 'white'
+      let color = (this.isSelected(index)) ? (index == this.iroot) ? 'red' : 'yellow' : 'white'
       ctx.fillStyle = color;
       ctx.fill();
       grad = ctx.createRadialGradient(0, 0, radius * 0.8, 0, 0, radius * 1.2);
