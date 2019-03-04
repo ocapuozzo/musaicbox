@@ -50,6 +50,14 @@ export default {
   //   }
   // },
   computed: {
+    ipcs: {
+      get() {
+        return this.$store.state.ipcs.ipcs
+      },
+      set(value) {
+        this.$store.commit('ipcs/update', value);
+      }
+    },
     pcs: {
       get() {
         return this.$store.state.ipcs.pcs
@@ -60,7 +68,7 @@ export default {
     },
     iroot: {
       get() {
-        return this.$store.state.ipcs.iroot
+        return this.$store.state.ipcs.ipcs.iroot
       },
       set(value) {
         this.$store.commit('ipcs/setIRoot', value);
@@ -92,7 +100,7 @@ export default {
     },
 
     isSelected(i) {
-      return this.pcs[i] == 1;
+      return this.ipcs.pcs[i] == 1;
     },
 
     setIRoot(index) {
@@ -145,7 +153,7 @@ export default {
 
       if (index >= 0 && index != this.iroot) {
         console.log("mouse up : " + index);
-        this.$set(this.pcs, index, (this.pcs[index] == 1) ? 0 : 1);
+        this.$set(this.ipcs.pcs, index, (this.ipcs.pcs[index] === 1) ? 0 : 1);
 
         // musaic canvas no reactive... so send event
         // console.log("$emit('onsetpcs')");
@@ -210,11 +218,11 @@ export default {
       ctx.save();
       ctx.fillStyle = 'black';
       ctx.beginPath();
-      for (let i = 0; i < this.pcs.length; i++) {
-        if (this.pcs[i] == 1 && firstPoint) {
+      for (let i = 0; i < this.ipcs.pcs.length; i++) {
+        if (this.ipcs.pcs[i] === 1 && firstPoint) {
           firstPoint = false;
           ctx.moveTo(points[i].x, points[i].y);
-        } else if (this.pcs[i] == 1) {
+        } else if (this.ipcs.pcs[i] === 1) {
           ctx.lineTo(points[i].x, points[i].y);
         }
       }

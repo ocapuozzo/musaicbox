@@ -47,17 +47,17 @@
                 <span class="analyse-pcs">{{ iv }}</span>
               </p>
               <p>
-                Id :
-                <span class="analyse-pcs">{{ id }}</span>
-              </p>
-              <p>
                 CyclicPF :
-                <span class="analyse-pcs">{{ cyclicPF.pcs }}</span>
+                <span class="analyse-pcs">{{ cyclicPF.pcsStr }}</span>
               </p>
               <p>
                 Forte :
                 <span class="analyse-pcs">{{ fortenum }}</span>
               </p>
+              <p>
+                <span class="id-pcs">Id : {{ id }}</span>
+              </p>
+
             </div>
           </div>
         </div>
@@ -133,4 +133,10 @@ h3 {
   font-size: 1rem;
   background-color: blanchedalmond;
 }
+
+  .id-pcs {
+    text-decoration-color: brown;
+    background-color: blanchedalmond;
+    font-size: 0.7rem;
+  }
 </style>

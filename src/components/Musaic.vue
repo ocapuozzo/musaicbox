@@ -35,7 +35,7 @@ export default {
     },
     ipcs: {
       get() {        
-        return this.$store.state.ipcs
+        return this.$store.state.ipcs.ipcs
       },
       set(value) {
         this.$store.commit('ipcs/update', value);
@@ -44,7 +44,6 @@ export default {
 
   },
   mounted() {
-
     // define event on root, which call by ISClock component
     // (canvas non reactive with vuex...)
     this.$root.$on('onsetpcs', () => { 
@@ -59,7 +58,7 @@ export default {
     this.$el.addEventListener("animationend", this.listenerEndAnim);
 
     // We can't access the rendering context until the canvas is mounted to the DOM.
-    canvas.width = canvas.parentElement.clientWidth
+    canvas.width = canvas.parentElement.clientWidth;
     canvas.height = canvas.parentElement.clientWidth; //Height;
     canvas.addEventListener('mousedown', this.mousedown);
     if (this._pcs) {
@@ -67,7 +66,7 @@ export default {
     } else {
       this.pcs = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     }
-    this.CEL_WIDTH = canvas.width / (this.pcs.length + 1);
+    this.CEL_WIDTH = canvas.width / 13;
     this.transformsPcsAndDrawsMusaic(1);    
   },
 
@@ -93,8 +92,6 @@ export default {
         this.transformsPcsAndDrawsMusaic(1);    
       }
     },
-
-   
     /**
      * After geometrical transformation, set pcs transformation
      * (algebric) and draw its musaic representation (geometric)
@@ -114,7 +111,7 @@ export default {
          this.$store.commit('ipcs/mult', operation);
       }
 
-      let n = this.pcs.length;
+      let n = this.ipcs.pcs.length;
 
       let ctx = canvas.getContext("2d");
 
@@ -131,7 +128,7 @@ export default {
       // are same IS, are same Musaic representation 
       for (let i = 0; i <= n; i++) {
         for (let j = 0; j <= n; j++) {
-          if (this.ipcs.pcs[(i + this.ipcs.iroot + j * 5) % n] == 1) {
+          if (this.ipcs.pcs[(i + this.ipcs.iroot + j * 5) % n] === 1) {
             ctx.fillStyle = "rgb(0, 0, 0)";
             ctx.fillRect(j * CEL_WIDTH, i * CEL_WIDTH, CEL_WIDTH, CEL_WIDTH);
             ctx.strokeRect(j * CEL_WIDTH, i * CEL_WIDTH, CEL_WIDTH, CEL_WIDTH);
@@ -174,7 +171,7 @@ export default {
     },
 
     clearRotateClasses() {
-      let $m = this.$refs["mcanvas"];
+      const $m = this.$refs["mcanvas"];
       if ($m.classList.contains("rotateM11")) $m.classList.remove("rotateM11");
       if ($m.classList.contains("rotateM5")) $m.classList.remove("rotateM5");
       if ($m.classList.contains("rotateM7")) $m.classList.remove("rotateM7");
