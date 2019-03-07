@@ -4,9 +4,9 @@
       <canvas ref="mcanvas" id="mcanvas" style="border:1px solid #BBB;"></canvas>
     </div>
     <div class="extra content text-center aligned">
-      <img id="m11" ref="m11" src="img/m11.png" class="actionable img-fluid" width="70">
-      <img id="m5" ref="m5" src="img/m5.png" class="actionable img-fluid" width="70">
-      <img id="m7" ref="m7" src="img/m7.png" class="actionable img-fluid" width="70">
+      <img id="m11" ref="m11" src="img/m11.png" title="m11" class="actionable img-fluid" width="70" >
+      <img id="m5" ref="m5" src="img/m5.png" title="m5" class="actionable img-fluid" width="70">
+      <img id="m7" ref="m7" src="img/m7.png" title="m7" class="actionable img-fluid" width="70">
     </div>
     <!-- p>{{pcs}}</p -->
   </div>
@@ -24,6 +24,11 @@ export default {
       CEL_WIDTH: 10 // initial value
     }
   },
+  // watch: {
+  //   ipcs: function (newValue, oldValue) {
+  //     console.log("watch iPcs");
+  //   }
+  // },
   computed: {
     pcs: {
       get() {        
@@ -41,7 +46,6 @@ export default {
         this.$store.commit('ipcs/update', value);
       }
     },
-
   },
   mounted() {
     // define event on root, which call by ISClock component
@@ -82,13 +86,13 @@ export default {
 
       // from matrix coord to indice linear
       let indice = ((5 * Math.floor(x / this.CEL_WIDTH))
-        + (Math.floor(y / this.CEL_WIDTH)) + this.ipcs.iroot) % this.pcs.length;
+        + (Math.floor(y / this.CEL_WIDTH)) + this.ipcs.iroot) % this.ipcs.pcs.length;
 
       // musaic invariant : pitch zero is always to 1
       // why ? for Bijective morphism (polymorphism) 
       // between algebra and geometry
       if (indice != this.ipcs.iroot) {
-        this.$set(this.pcs, indice, (this.pcs[indice] == 1) ? 0 : 1);       
+        this.$set(this.ipcs.pcs, indice, (this.ipcs.pcs[indice] === 1) ? 0 : 1);
         this.transformsPcsAndDrawsMusaic(1);    
       }
     },

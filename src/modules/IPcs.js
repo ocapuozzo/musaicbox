@@ -1,8 +1,6 @@
-import IPcsClass from "../../models/IPcsClass";
+import IPcsClass from "../models/IPcsClass";
 
 const state = {
- // pcs: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
- // iroot: 0,
   ipcs : new  IPcsClass("0,4,7", 0)
 }
 
@@ -65,16 +63,17 @@ const mutations = {
 
   /**
    * image of given array where each element is multipy by mult modulo n
-   * (n is size of given array) plus - (mult-1) + state.iroot
+   * (n is size of given array) plus - (mult-1) * iroot
    *
+   * @param state
    * @param mult
-   * @returns int[]
+   * update ipcs
    */
   mult(state, mult) {
-    console.log('NEW mutation multiplication by :' + mult);
+    // console.log('NEW mutation multiplication by :' + mult);
     state.ipcs = state.ipcs.affineOp(mult, 0);
-  },
-}
+  }
+};
 
 export default {
   namespaced: true,

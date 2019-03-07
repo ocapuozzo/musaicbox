@@ -8,7 +8,7 @@ import "./registerServiceWorker";
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/css/styleSideBar.css";
-import store from './store/store'
+import store from './store'
 
 Vue.config.productionTip = false;
 

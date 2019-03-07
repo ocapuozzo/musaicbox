@@ -5,7 +5,6 @@
         <h4 class="text-center title-detail pb-2">Musaic</h4>
         <div class="container ml-3">
           <Musaic
-            class
             style="width: 220px; height: 350px;"
             _pcs="[1,0,0,1,0,0,0,1,0,0,0,0]"
             v-on:onpcs="onPcsChange"
@@ -86,7 +85,7 @@ export default {
   computed: {
     pcs: {
       get() {
-        return this.$store.state.ipcs.pcs
+        return this.$store.state.ipcs.ipcs.pcs
       },
       set(value) {
         this.$store.commit('ipcs/changepcs', value);
@@ -101,15 +100,6 @@ export default {
       'fortenum': 'fortenum'
     }),
 
-    // pcsstr: function () {
-    //   let res = "";
-    //   for (let index = 0; index < this.pcs.length; index++) {
-    //     const element = this.pcs[index];
-    //     if (element)
-    //       res = (res) ? res + ', ' + index.toString() : index.toString();
-    //   }
-    //   return '[ ' + res + ' ]';
-    // }
   },
   components: {
     Musaic,
