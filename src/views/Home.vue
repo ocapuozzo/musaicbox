@@ -12,7 +12,7 @@
         </div>
         <!-- p>{{ pcs }}</p -->
       </div>
-      <div class="p-2 shadow mb-5 bg-white rounded col" style="max-width:300px;min-width:300px;">
+      <div class="p-2 ml-2 shadow mb-5 bg-white rounded col" style="max-width:300px;min-width:300px;">
         <h4 class="text-center title-detail pb-2">iPCS</h4>
         <div class="container">
           <div class="row">
