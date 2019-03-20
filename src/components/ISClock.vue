@@ -37,18 +37,7 @@ export default {
   mouseEventDone: false,
   points: [],
   mousedownTimeout: null,
-  props: {
-    // The color of the box.
-    color: {
-      type: String,
-      default: '#F00'
-    }
-  },
-  // data: function () {
-  //   return {
-  //     iroot: 0
-  //   }
-  // },
+
   computed: {
     ipcs: {
       get() {
@@ -156,7 +145,6 @@ export default {
         this.$set(this.ipcs.pcs, index, (this.ipcs.pcs[index] === 1) ? 0 : 1);
 
         // musaic canvas no reactive... so send event
-        // console.log("$emit('onsetpcs')");
         this.$root.$emit('onsetpcs');
       }
     },
@@ -267,8 +255,6 @@ export default {
   },
   // eslint-disable-next-line 
   render() {
-    //console.log("render : " + this.pcs.length);
-    //console.log("provider context :" + this.provider.context);
     if (!this.provider.context) return;
     if (!this.$options.mouseEventDone) {
       this.provider.elt.addEventListener('dblclick', this.dblclick);

@@ -136,15 +136,15 @@ export default class IPcsClass {
 
   getForteNum() {
     let cpf = this.cyclicPrimeForm();
-    console.log("cpf :" + cpf);
+    // console.log("cpf :" + cpf);
     let fortenum = forte(cpf.pcsStr);
-    console.log("fortenum :" + fortenum);
+    // console.log("fortenum :" + fortenum);
     if (fortenum) {
       return fortenum;
     }
     let dpcsf = cpf.dihedralPrimeForm();
-    console.log("dpcsf : " + dpcsf);
-    console.log("dpcsf : " + dpcsf.pcsStr);
+    // console.log("dpcsf : " + dpcsf);
+    // console.log("dpcsf : " + dpcsf.pcsStr);
 
     return forte(dpcsf.pcsStr);
   }

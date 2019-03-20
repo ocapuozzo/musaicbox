@@ -24,11 +24,6 @@ export default {
       CEL_WIDTH: 10 // initial value
     }
   },
-  // watch: {
-  //   ipcs: function (newValue, oldValue) {
-  //     console.log("watch iPcs");
-  //   }
-  // },
   computed: {
     pcs: {
       get() {        
@@ -49,9 +44,9 @@ export default {
   },
   mounted() {
     // define event on root, which call by ISClock component
-    // (canvas non reactive with vuex...)
+    // bidirectionnal reactive
     this.$root.$on('onsetpcs', () => { 
-      console.log('event onsetpcs');
+      // console.log('event onsetpcs');
       this.forceCanvasUpdate();
     });
 
@@ -71,6 +66,7 @@ export default {
       this.pcs = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     }
     this.CEL_WIDTH = canvas.width / 13;
+    // call with neutral operation (1)
     this.transformsPcsAndDrawsMusaic(1);    
   },
 
@@ -93,7 +89,9 @@ export default {
       // between algebra and geometry
       if (indice != this.ipcs.iroot) {
         this.$set(this.ipcs.pcs, indice, (this.ipcs.pcs[indice] === 1) ? 0 : 1);
+        // call with neutral operation (1)
         this.transformsPcsAndDrawsMusaic(1);    
+        this.$root.$emit('onsetpcs');
       }
     },
     /**
@@ -228,10 +226,11 @@ export default {
       // transformed musaic with its transform (and delete its
       // class css from the past operation)
       this.transformsPcsAndDrawsMusaic(opTransf);
+      this.$root.$emit('onsetpcs');
       // send to listeners new pcs (or not...)
-      //this.$emit('onpcs', this.pcs);
-      // clear css class
-      this.clearRotateClasses();
+      // this.$emit('onpcs', this.pcs);       
+      // clear css class      
+      this.clearRotateClasses();      
       this.enabledButtons();
     },
 

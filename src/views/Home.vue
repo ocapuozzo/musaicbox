@@ -6,11 +6,9 @@
         <div class="container ml-3">
           <Musaic
             style="width: 220px; height: 350px;"
-            _pcs="[1,0,0,1,0,0,0,1,0,0,0,0]"
-            v-on:onpcs="onPcsChange"
+            _pcs="[1,0,0,1,0,0,0,1,0,0,0,0]"            
           ></Musaic>
         </div>
-        <!-- p>{{ pcs }}</p -->
       </div>
       <div class="p-2 ml-2 shadow mb-5 bg-white rounded col" style="max-width:300px;min-width:300px;">
         <h4 class="text-center title-detail pb-2">iPCS</h4>
@@ -18,7 +16,7 @@
           <div class="row">
             <div class="col-sm text-left">
               <WrapCanvas id="ccanvas" style="width: 250px; height: 250px;">
-                <ISClock color="white" v-on:on-change-pcs="onPcsChange"></ISClock>
+                <ISClock color="white"></ISClock>
               </WrapCanvas>
               <p>
                 PCS :
@@ -26,6 +24,7 @@
                 Card :
                 <span class="analyse-pcs">#{{ pcsCard }}</span>
               </p>
+              <MusicNotation :_ipcs="ipcs"  /> 
               <!-- ClockBis style="width: 200px; height: 200px;"></ClockBis -->
             </div>
           </div>
@@ -56,7 +55,10 @@
               <p>
                 <span class="id-pcs">Id : {{ id }}</span>
               </p>
-
+              <p>
+                iPCS :
+                <span class="analyse-pcs">{{ ipcs }}</span>
+              </p>
             </div>
           </div>
         </div>
@@ -70,17 +72,12 @@
 import Musaic from "@/components/Musaic.vue";
 import ISClock from "@/components/ISClock.vue";
 import WrapCanvas from "@/components/WrapCanvas.vue";
+import MusicNotation from "@/components/MusicNotation.vue";
+
 import { mapGetters, mapState } from 'vuex'
 
 export default {
   name: "home",
-
-  methods: {
-    onPcsChange: function (newPcs) {
-      console.log("on-change-pcs :" + newPcs);
-      this.pcs = newPcs;
-    }
-  },
 
   computed: {
     pcs: {
@@ -91,6 +88,15 @@ export default {
         this.$store.commit('ipcs/changepcs', value);
       }
     },
+    ipcs: {
+      get() {
+        return this.$store.state.ipcs.ipcs
+      },
+      set(value) {
+        this.$store.commit('ipcs/update', value);
+      }
+    },
+    
     ...mapGetters('ipcs', {
       pcsCard: 'pcsCard',
       'iv': 'iv',
@@ -104,7 +110,8 @@ export default {
   components: {
     Musaic,
     WrapCanvas,
-    ISClock
+    ISClock,
+    MusicNotation
   }
 };
 </script>
