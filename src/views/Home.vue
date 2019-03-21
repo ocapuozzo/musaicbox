@@ -18,14 +18,8 @@
               <WrapCanvas id="ccanvas" style="width: 250px; height: 250px;">
                 <ISClock color="white"></ISClock>
               </WrapCanvas>
-              <p>
-                PCS :
-                <span class="analyse-pcs">{{ pcsstr }}</span> &nbsp;
-                Card :
-                <span class="analyse-pcs">#{{ pcsCard }}</span>
-              </p>
-              <MusicNotation :_ipcs="ipcs"  /> 
-              <!-- ClockBis style="width: 200px; height: 200px;"></ClockBis -->
+              <MusicNotation :_ipcs="ipcs" style="width: 250px;"  /> 
+               
             </div>
           </div>
         </div>
@@ -36,10 +30,16 @@
         <div class="container">
           <div class="row">
             <div class="col-sm text-left">
-              <p>
+               <p>
+                PCS :
+                <span class="analyse-pcs">{{ pcsstr }}</span> &nbsp;
+                Card :
+                <span class="analyse-pcs">#{{ pcsCard }}</span>
+              </p>
+              <!-- <p>
                 Binary :
                 <span class="analyse-pcs">{{ pcs }}</span>
-              </p>
+              </p> -->
               <p>
                 Interval Vector :
                 <span class="analyse-pcs">{{ iv }}</span>

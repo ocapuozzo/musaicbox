@@ -28,15 +28,13 @@ class Rect {
   }
 }
 
-// import { setTimeout } from 'timers';
-
 export default {
   // Gets us the provider property from the parent <my-canvas> component.
   name: "ISClock",
   inject: ['provider'],
   mouseEventDone: false,
   points: [],
-  mousedownTimeout: null,
+
 
   computed: {
     ipcs: {
@@ -63,7 +61,7 @@ export default {
         this.$store.commit('ipcs/setIRoot', value);
       }
     },
-    
+
     cardinal() {
       return this.$store.getters.pcsCard
     }
@@ -77,7 +75,7 @@ export default {
       let canvas = ctx.canvas;
       let rect = canvas.getBoundingClientRect();
       let x1 = e.clientX - rect.left;
-      let y1 = Math.round(e.clientY - rect.top); // bug  (get real ???)
+      let y1 = Math.round(e.clientY - rect.top);
       let index = -1;
       for (let i = 0; i < this.$options.points.length; i++) {
         if (this.$options.points[i].contains(x1, y1)) {
@@ -105,40 +103,26 @@ export default {
         console.log('mouse move : index/pitch selected = ' + index)
       }
     },
-
-    mousedown(e) {
-      let index = this.getSelected(e);
-      if (index >= 0) {
-        let self = this;
-        // a long time down => change iroot
-        this.$options.mousedownTimeout = setTimeout(function () {
-          self.setIRoot(index);
-        }, 500);
-        // console.log("attach timeout function ");
-        e.stopPropagation();
-      }
-    },
-    dblclick(e) {
-      // console.log("double click");
-      if (this.$options.mousedownTimeout !== null) {
-        clearTimeout(this.$options.mousedownTimeout);
-        this.$options.mousedownTimeout = null;
-      }
-
-      let index = this.getSelected(e);
-
-      if (index != this.iroot) {
-        this.setIRoot(index);
-      }
-    },
-
     mouseup(e) {
-      if (this.$options.mousedownTimeout !== null) {
-        clearTimeout(this.$options.mousedownTimeout);
-        this.$options.mousedownTimeout = null;
-      }
-
       let index = this.getSelected(e);
+      
+      // https://stackoverflow.com/questions/2405771/is-right-click-a-javascript-event
+      let isRightMB;
+      e = e || window.event;
+
+      if ("which" in e)  // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
+        isRightMB = e.which == 3;
+      else if ("button" in e)  // IE, Opera 
+        isRightMB = e.button == 2;
+
+      // right click ?
+      if (isRightMB) {
+        e.preventDefault();
+        if (index != this.iroot) {
+          this.setIRoot(index);
+        }
+        return false;
+      }
 
       if (index >= 0 && index != this.iroot) {
         console.log("mouse up : " + index);
@@ -146,13 +130,6 @@ export default {
 
         // musaic canvas no reactive... so send event
         this.$root.$emit('onsetpcs');
-      }
-    },
-
-    cancel(e) {
-      if (this.$options.mousedownTimeout !== null) {
-        clearTimeout(this.$options.mousedownTimeout);
-        this.$options.mousedownTimeout = null;
       }
     },
 
@@ -257,13 +234,11 @@ export default {
   render() {
     if (!this.provider.context) return;
     if (!this.$options.mouseEventDone) {
-      this.provider.elt.addEventListener('dblclick', this.dblclick);
       this.provider.elt.addEventListener('mouseup', this.mouseup);
       this.provider.elt.addEventListener('mousedown', this.mousedown);
-      this.provider.elt.addEventListener("mouseout", this.cancel);
-      this.provider.elt.addEventListener("touchend", this.cancel);
-      this.provider.elt.addEventListener("touchleave", this.cancel);
-      this.provider.elt.addEventListener("touchcancel", this.cancel);
+      window.oncontextmenu = function () {
+        return false;     // cancel default menu right click
+      }
       this.$options.mouseEventDone = true;
     }
     const ctx = this.provider.context;

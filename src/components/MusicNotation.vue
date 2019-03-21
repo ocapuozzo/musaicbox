@@ -53,15 +53,15 @@ export default {
   },
   methods: {
     refresh() {
-      abcjs.renderAbc("paper", this.tune, {scale:.9, staffwidth:200});
+      abcjs.renderAbc("paper", this.tune, {scale:.9, staffwidth:220});
     },
   }
 }
 </script>
 
 <style scoped>
-.music-notation {
-  /* text-align: center */
+/* .music-notation {
+  text-align: center
   margin-right: 50px; 
-}
+} */
 </style>
