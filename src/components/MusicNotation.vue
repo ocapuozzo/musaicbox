@@ -29,7 +29,7 @@ export default {
     tune: function () {
       if (!this.ipcs) return;
 
-      let suffix = 'X:1\nL: 1/8\n';
+      let suffix = 'X:1\nL: 1/4\n';
       let notes = '';
       let chord = '[ ';
 
@@ -53,11 +53,15 @@ export default {
   },
   methods: {
     refresh() {
-      abcjs.renderAbc("paper", this.tune, {});
+      abcjs.renderAbc("paper", this.tune, {scale:.9, staffwidth:200});
     },
   }
 }
 </script>
 
-<style>
+<style scoped>
+.music-notation {
+  /* text-align: center */
+  margin-right: 50px; 
+}
 </style>

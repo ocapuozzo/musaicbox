@@ -53,12 +53,12 @@
                 <span class="analyse-pcs">{{ fortenum }}</span>
               </p>
               <p>
-                <span class="id-pcs">Id : {{ id }}</span>
-              </p>
-              <p>
-                iPCS :
+                (debug) iPCS :
                 <span class="analyse-pcs">{{ ipcs }}</span>
               </p>
+              <div class="footer-copyright">
+                <span class="id-pcs">Id : {{ id }}</span>
+              </div>
             </div>
           </div>
         </div>
