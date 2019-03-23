@@ -4,10 +4,11 @@
       <canvas ref="mcanvas" id="mcanvas" style="border:1px solid #BBB;"></canvas>
     </div>
     <div class="extra content text-center aligned">
-      <img id="m11" ref="m11" src="img/m11.png" title="m11" class="actionable img-fluid" width="70" >
+      <img id="m11" ref="m11" src="img/m11.png" title="m11" class="actionable img-fluid" width="70">
       <img id="m5" ref="m5" src="img/m5.png" title="m5" class="actionable img-fluid" width="70">
       <img id="m7" ref="m7" src="img/m7.png" title="m7" class="actionable img-fluid" width="70">
     </div>
+  
     <!-- p>{{pcs}}</p -->
   </div>
 </template>
@@ -26,7 +27,7 @@ export default {
   },
   computed: {
     pcs: {
-      get() {        
+      get() {
         return this.$store.state.ipcs.pcs
       },
       set(value) {
@@ -34,7 +35,7 @@ export default {
       }
     },
     ipcs: {
-      get() {        
+      get() {
         return this.$store.state.ipcs.ipcs
       },
       set(value) {
@@ -45,7 +46,7 @@ export default {
   mounted() {
     // define event on root, which call by ISClock component
     // bidirectionnal reactive
-    this.$root.$on('onsetpcs', () => { 
+    this.$root.$on('onsetpcs', () => {
       // console.log('event onsetpcs');
       this.forceCanvasUpdate();
     });
@@ -67,7 +68,7 @@ export default {
     }
     this.CEL_WIDTH = canvas.width / 13;
     // call with neutral operation (1)
-    this.transformsPcsAndDrawsMusaic(1);    
+    this.transformsPcsAndDrawsMusaic(1);
   },
 
   methods: {
@@ -90,7 +91,7 @@ export default {
       if (indice != this.ipcs.iroot) {
         this.$set(this.ipcs.pcs, indice, (this.ipcs.pcs[indice] === 1) ? 0 : 1);
         // call with neutral operation (1)
-        this.transformsPcsAndDrawsMusaic(1);    
+        this.transformsPcsAndDrawsMusaic(1);
         this.$root.$emit('onsetpcs');
       }
     },
@@ -110,7 +111,7 @@ export default {
       // Algebraic transformation
       //console.log("before op : " + this.pcs);
       if (operation > 1) {
-         this.$store.commit('ipcs/mult', operation);
+        this.$store.commit('ipcs/mult', operation);
       }
 
       let n = this.ipcs.pcs.length;
@@ -230,7 +231,7 @@ export default {
       // send to listeners new pcs (or not...)
       // this.$emit('onpcs', this.pcs);       
       // clear css class      
-      this.clearRotateClasses();      
+      this.clearRotateClasses();
       this.enabledButtons();
     },
 

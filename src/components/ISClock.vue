@@ -28,11 +28,13 @@ class Rect {
   }
 }
 
+const PITCH_LINE_WIDTH = 4;
+
 export default {
   // Gets us the provider property from the parent <my-canvas> component.
   name: "ISClock",
   inject: ['provider'],
-  mouseEventDone: false,
+  setMouseEventDone: false,
   points: [],
 
 
@@ -105,7 +107,9 @@ export default {
     },
     mouseup(e) {
       let index = this.getSelected(e);
-      
+
+      //TODO for smartphone ????
+
       // https://stackoverflow.com/questions/2405771/is-right-click-a-javascript-event
       let isRightMB;
       e = e || window.event;
@@ -117,7 +121,7 @@ export default {
 
       // right click ?
       if (isRightMB) {
-        e.preventDefault();
+        e.stopPropagation();// preventDefault();
         if (index != this.iroot) {
           this.setIRoot(index);
         }
@@ -154,7 +158,7 @@ export default {
       if (index < 10) {
         ctx.fillText(index.toString(), - .1, 1);
       } else {
-        ctx.fillText(index.toString(), -.5, 1)
+        ctx.fillText(index.toString(), -.4, 1)
       }
     },
 
@@ -170,7 +174,7 @@ export default {
         ctx.rotate(ang);
         ctx.translate(0, -radius);
         ctx.rotate(-ang);
-        this.drawCirclePitch(ctx, index, radiusPitch, 6);
+        this.drawCirclePitch(ctx, index, radiusPitch, PITCH_LINE_WIDTH);
         ctx.rotate(ang);
         ctx.translate(0, radius);
         ctx.rotate(-ang);
@@ -220,7 +224,7 @@ export default {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       let ox = ctx.canvas.width / 2;
       let oy = ctx.canvas.height / 2;
-      let radius = Math.round((ctx.canvas.clientWidth / 2) * .75);
+      let radius = Math.round((ctx.canvas.clientWidth / 2) * .8);
       this.computePitchesRegionSelected(ctx.canvas, ctx, ox, oy, radius);
       this.drawPolygon(ctx);
       ctx.save();
@@ -233,13 +237,13 @@ export default {
   // eslint-disable-next-line 
   render() {
     if (!this.provider.context) return;
-    if (!this.$options.mouseEventDone) {
+    if (!this.$options.setMouseEventDone) {
       this.provider.elt.addEventListener('mouseup', this.mouseup);
       this.provider.elt.addEventListener('mousedown', this.mousedown);
       window.oncontextmenu = function () {
         return false;     // cancel default menu right click
       }
-      this.$options.mouseEventDone = true;
+      this.$options.setMouseEventDone = true;
     }
     const ctx = this.provider.context;
     this.drawClock(ctx);

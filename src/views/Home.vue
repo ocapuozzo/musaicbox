@@ -4,22 +4,22 @@
       <div class="p-2 shadow mb-5 bg-white rounded col" style="max-width:300px;">
         <h4 class="text-center title-detail pb-2">Musaic</h4>
         <div class="container ml-3">
-          <Musaic
-            style="width: 220px; height: 350px;"
-            _pcs="[1,0,0,1,0,0,0,1,0,0,0,0]"            
-          ></Musaic>
+          <Musaic style="width: 220px; height: 350px;" _pcs="[1,0,0,1,0,0,0,1,0,0,0,0]"></Musaic>
         </div>
       </div>
-      <div class="p-2 ml-2 shadow mb-5 bg-white rounded col" style="max-width:300px;min-width:300px;">
+      <div
+        class="p-2 ml-2 shadow mb-5 bg-white rounded col"
+        style="max-width:280px;min-width:280px;"
+      >
         <h4 class="text-center title-detail pb-2">iPCS</h4>
         <div class="container">
           <div class="row">
             <div class="col-sm text-left">
-              <WrapCanvas id="ccanvas" style="width: 250px; height: 250px;">
+              <WrapCanvas id="ccanvas" style="width: 210px; height: 210px;">
                 <ISClock color="white"></ISClock>
               </WrapCanvas>
-              <MusicNotation :_ipcs="ipcs" style="width: 250px;"  /> 
-               
+              <MusicNotation :_ipcs="ipcs" style="width: 200px;"/>
+              <RotateIPcs />
             </div>
           </div>
         </div>
@@ -30,7 +30,7 @@
         <div class="container">
           <div class="row">
             <div class="col-sm text-left">
-               <p>
+              <p>
                 PCS :
                 <span class="analyse-pcs">{{ pcsstr }}</span> &nbsp;
                 Card :
@@ -39,7 +39,7 @@
               <!-- <p>
                 Binary :
                 <span class="analyse-pcs">{{ pcs }}</span>
-              </p> -->
+              </p>-->
               <p>
                 Interval Vector :
                 <span class="analyse-pcs">{{ iv }}</span>
@@ -73,6 +73,7 @@ import Musaic from "@/components/Musaic.vue";
 import ISClock from "@/components/ISClock.vue";
 import WrapCanvas from "@/components/WrapCanvas.vue";
 import MusicNotation from "@/components/MusicNotation.vue";
+import RotateIPcs from "@/components/RotateIPcs.vue";
 
 import { mapGetters, mapState } from 'vuex'
 
@@ -96,7 +97,7 @@ export default {
         this.$store.commit('ipcs/update', value);
       }
     },
-    
+
     ...mapGetters('ipcs', {
       pcsCard: 'pcsCard',
       'iv': 'iv',
@@ -111,7 +112,8 @@ export default {
     Musaic,
     WrapCanvas,
     ISClock,
-    MusicNotation
+    MusicNotation,
+    RotateIPcs
   }
 };
 </script>
@@ -131,9 +133,9 @@ h3 {
   background-color: blanchedalmond;
 }
 
-  .id-pcs {
-    text-decoration-color: brown;
-    background-color: blanchedalmond;
-    font-size: 0.7rem;
-  }
+.id-pcs {
+  text-decoration-color: brown;
+  background-color: blanchedalmond;
+  font-size: 0.7rem;
+}
 </style>

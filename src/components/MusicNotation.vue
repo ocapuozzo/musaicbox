@@ -60,8 +60,5 @@ export default {
 </script>
 
 <style scoped>
-/* .music-notation {
-  text-align: center
-  margin-right: 50px; 
-} */
+
 </style>
