@@ -12,7 +12,7 @@
         style="max-width:280px;min-width:280px;"
       >
         <h4 class="text-center title-detail pb-2">iPCS</h4>
-        <div class="container">
+        <div class="container ml-2">
           <div class="row">
             <div class="col-sm text-left">
               <WrapCanvas id="ccanvas" style="width: 210px; height: 210px;">

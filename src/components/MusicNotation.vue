@@ -53,7 +53,13 @@ export default {
   },
   methods: {
     refresh() {
-      abcjs.renderAbc("paper", this.tune, {scale:.9, staffwidth:220});
+      // https://configurator.abcjs.net/visual/
+      abcjs.renderAbc("paper", this.tune,
+        {
+          scale:.9, 
+          staffwidth:210, 
+          paddingleft: 1
+        });
     },
   }
 }
