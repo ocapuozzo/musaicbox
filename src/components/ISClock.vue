@@ -34,7 +34,7 @@ export default {
   // Gets us the provider property from the parent <my-canvas> component.
   name: "ISClock",
   inject: ['provider'],
-  setMouseEventDone: false,
+  dateMouseDone: null,
   points: [],
 
 
@@ -76,8 +76,17 @@ export default {
       const ctx = this.provider.context;
       let canvas = ctx.canvas;
       let rect = canvas.getBoundingClientRect();
-      let x1 = e.clientX - rect.left;
-      let y1 = Math.round(e.clientY - rect.top);
+      let x1;
+      let y1;
+      // https://developer.mozilla.org/en-US/docs/Web/API/Touch/clientX
+      if (e.changedTouches) {
+         x1 = e.changedTouches[0].clientX - rect.left;
+         y1 = Math.round(e.changedTouches[0].clientY - rect.top);
+      } else {
+        x1 = e.clientX - rect.left;
+        y1 = Math.round(e.clientY - rect.top);
+      }
+      
       let index = -1;
       for (let i = 0; i < this.$options.points.length; i++) {
         if (this.$options.points[i].contains(x1, y1)) {
@@ -97,7 +106,30 @@ export default {
       this.$root.$emit('onsetpcs');
       // console.log("set iroot : " + index);
     },
+    touchstart(e) {
+      if (e) {       
+         e.stopPropagation();  
+      }
+    },
+    touchend(e) {
+      if (!e) {
+        return
+      }
+      e.stopPropagation();
 
+      let index = this.getSelected(e);
+      
+      if (index < 0) {
+        return false;
+      }
+
+      if (index != this.iroot) {
+        if (this.ipcs.pcs[index] === 0) {
+          this.$set(this.ipcs.pcs, index, 1);
+        }
+        this.setIRoot(index);
+      }      
+    },
     mousemove(e) {
       // https://developer.mozilla.org/fr/docs/Web/API/MouseEvent
       let index = this.getSelected(e);
@@ -105,10 +137,14 @@ export default {
         console.log('mouse move : index/pitch selected = ' + index)
       }
     },
+    mousedown(e){
+       this.$options.dateMouseDone = new Date()
+    },
     mouseup(e) {
       let index = this.getSelected(e);
-
-      //TODO for smartphone ????
+      if (index < 0) {
+        return false;
+      }
 
       // https://stackoverflow.com/questions/2405771/is-right-click-a-javascript-event
       let isRightMB;
@@ -119,17 +155,23 @@ export default {
       else if ("button" in e)  // IE, Opera 
         isRightMB = e.button == 2;
 
+      let longClick = (new Date() - this.$options.dateMouseDone) >= 1000
+
       // right click ?
-      if (isRightMB) {
-        e.stopPropagation();// preventDefault();
+      if (isRightMB || longClick) {
+        e.stopPropagation();
         if (index != this.iroot) {
           this.setIRoot(index);
+          if (this.ipcs.pcs[index] === 0) {
+            this.$set(this.ipcs.pcs, index, 1);
+          }
         }
+        this.$options.dateMouseDone = null
         return false;
       }
 
       if (index >= 0 && index != this.iroot) {
-        console.log("mouse up : " + index);
+        // console.log("mouse up : " + index);
         this.$set(this.ipcs.pcs, index, (this.ipcs.pcs[index] === 1) ? 0 : 1);
 
         // musaic canvas no reactive... so send event
@@ -240,6 +282,9 @@ export default {
     if (!this.$options.setMouseEventDone) {
       this.provider.elt.addEventListener('mouseup', this.mouseup);
       this.provider.elt.addEventListener('mousedown', this.mousedown);
+      this.provider.elt.addEventListener('touchstart', this.touchstart, false);
+      this.provider.elt.addEventListener('touchend', this.touchend, false);
+
       window.oncontextmenu = function () {
         return false;     // cancel default menu right click
       }

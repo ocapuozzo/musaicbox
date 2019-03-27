@@ -34,6 +34,7 @@ export default {
       let chord = '[ ';
 
       let n = this.ipcs.pcs.length;
+
       for (let i = this.ipcs.iroot; i < n + this.ipcs.iroot; i++) {
         if (this.ipcs.pcs[i % n] === 1) {
           let note = lettersNotation[i % n];
@@ -53,6 +54,7 @@ export default {
   },
   methods: {
     refresh() {
+      // console.log(this.tune);
       // https://configurator.abcjs.net/visual/
       abcjs.renderAbc("paper", this.tune,
         {

@@ -58,9 +58,15 @@ const mutations = {
   },
 
   transpose(state, t) {
-    state.setIroot((state.iroot + t) % state.pcs.length)
+    state.ipcs = state.ipcs.transpose(t);
   },
 
+  // direction in (IPcsClass.NEXT_MODULATION, IPcsClass.PREV_MODULATION)
+  modulate(state, direction) {
+    state.ipcs = state.ipcs.modulate(direction)
+  },
+
+  
   /**
    * image of given array where each element is multipy by mult modulo n
    * (n is size of given array) plus - (mult-1) * iroot

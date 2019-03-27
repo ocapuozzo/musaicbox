@@ -1,6 +1,6 @@
 <template>
   <div class="panel-navigate">
-    <span v-on:click="module(-1, $event)">
+    <span v-on:click="module(2, $event)">
       -M
       <span>&nbsp;</span>
       <span v-on:click="module(1, $event)">M+</span>
@@ -35,11 +35,13 @@ export default {
   methods: {
     transpose(t, e) {
       e.stopPropagation();
-      console.log("transpose : " + t)
+      this.$store.commit('ipcs/transpose', t);
+      this.$root.$emit('onsetpcs');      
     },
-    module(t, e) {
+    module(direction, e) {
       e.stopPropagation();
-      console.log("module : " + t)
+      this.$store.commit('ipcs/modulate', direction);
+      this.$root.$emit('onsetpcs');      
     }
   }
 }
