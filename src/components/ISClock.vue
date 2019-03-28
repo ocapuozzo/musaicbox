@@ -36,7 +36,7 @@ export default {
   inject: ['provider'],
   dateMouseDone: null,
   points: [],
-
+  touchendOk : false,
 
   computed: {
     ipcs: {
@@ -124,6 +124,7 @@ export default {
       }
 
       if (index != this.iroot) {
+        this.touchendOk = true
         if (this.ipcs.pcs[index] === 1) {
           this.$set(this.ipcs.pcs, index, 0);
         } else {
@@ -144,7 +145,8 @@ export default {
     },
     mouseup(e) {
       let index = this.getSelected(e);
-      if (index < 0) {
+      if (index < 0 || this.touchendOk) {
+        this.touchendOk = false
         return false;
       }
 
