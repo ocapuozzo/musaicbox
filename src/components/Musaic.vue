@@ -4,9 +4,9 @@
       <canvas ref="mcanvas" id="mcanvas" style="border:1px solid #BBB;"></canvas>
     </div>
     <div class="extra content text-center aligned">
-      <img id="m11" ref="m11" src="img/m11.png" title="m11" class="actionable img-fluid" width="70">
-      <img id="m5" ref="m5" src="img/m5.png" title="m5" class="actionable img-fluid" width="70">
-      <img id="m7" ref="m7" src="img/m7.png" title="m7" class="actionable img-fluid" width="70">
+      <img id="m11" ref="m11" src="img/m11.png" title="m11" class="actionable img-fluid" width="60">
+      <img id="m5" ref="m5" src="img/m5.png" title="m5" class="actionable img-fluid" width="60">
+      <img id="m7" ref="m7" src="img/m7.png" title="m7" class="actionable img-fluid" width="60">
     </div>
   
     <!-- p>{{pcs}}</p -->

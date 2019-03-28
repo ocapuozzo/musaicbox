@@ -4,7 +4,7 @@ const NEXT_MODULATION = 1
 const PREV_MODULATION = 2
 
 const negativeToPositiveModulo = (i, n) => {
-  return n - ((i * -1) % n)
+	return n - ((i * -1) % n)
 }
 
 export default class IPcsClass {
@@ -41,11 +41,11 @@ export default class IPcsClass {
 	}
 
 	static get NEXT_MODULATION() {
-	  return NEXT_MODULATION
+		return NEXT_MODULATION
 	}
 
 	static get PREV_MODULATION() {
-	  return PREV_MODULATION
+		return PREV_MODULATION
 	}
 
 	/**
@@ -97,10 +97,11 @@ export default class IPcsClass {
 
 	dihedralPrimeForm() {
 		let cpf = this.cyclicPrimeForm();
-		let norm = cpf.pcs.slice();
-		norm = IPcsClass.getPermute(11, 1, this.iroot, norm);
-		let dpf = new IPcsClass(norm, this.iroot).cyclicPrimeForm();
-		return cpf.id() < dpf.id() ? cpf : dpf;
+		// let norm = cpf.pcs.slice();
+		// norm = IPcsClass.getPermute(11, 0, this.iroot, norm);
+		// let dpf = new IPcsClass(norm, this.iroot).cyclicPrimeForm();
+		let pcsM11 = cpf.affineOp(11, 0).cyclicPrimeForm();
+		return cpf.id() < pcsM11.id() ? cpf : pcsM11;
 	}
 
 	/**
@@ -121,7 +122,7 @@ export default class IPcsClass {
 		let n = abin.length
 		let j
 		if (t < 0) {
-      t = negativeToPositiveModulo(t, n)
+			t = negativeToPositiveModulo(t, n)
 			// t in [0..n[      
 		}
 		for (let i = 0; i < n; i++) {
@@ -171,7 +172,7 @@ export default class IPcsClass {
 			let n = this.pcs.length
 			let i = this.iroot - 1
 			if (i < 0) {
-        i = negativeToPositiveModulo(i, n)
+				i = negativeToPositiveModulo(i, n)
 			}
 			for (; i !== this.iroot;) {
 				if (this.pcs[i % n] === 1) {
@@ -180,7 +181,7 @@ export default class IPcsClass {
 				}
 				i--
 				if (i < 0) {
-          i = negativeToPositiveModulo(i, n)
+					i = negativeToPositiveModulo(i, n)
 				}
 			}
 		}
@@ -246,7 +247,7 @@ export default class IPcsClass {
 					res[i] = res[i] + 1;
 			}
 		}
-		// div last value by 2
+		// div last value by 2 (n==12)
 		res[res.length - 1] /= 2;
 		return res;
 	}
@@ -257,5 +258,13 @@ export default class IPcsClass {
 
 	toString() {
 		return JSON.stringify(this);
+	}
+
+	equals(other) {
+		if (other instanceof IPcsClass) {
+			return this.pcs.every((v, i) => v === other.pcs[i]) &&
+				this.iroot === other.iroot;
+		}
+		return false
 	}
 }

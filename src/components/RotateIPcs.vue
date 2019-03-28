@@ -1,15 +1,15 @@
 <template>
   <div class="panel-navigate">
-    <span v-on:click="module(2, $event)">
+    <span v-on:click="module(2, $event)" class="actionable">
       -M
       <span>&nbsp;</span>
-      <span v-on:click="module(1, $event)">M+</span>
+      <span v-on:click="module(1, $event)" class="actionable">M+</span>
     </span>
     
-    <span v-on:click="transpose(-1, $event)">
+    <span v-on:click="transpose(-1, $event)" class="actionable">
       -T
       <span>&nbsp;</span>
-      <span v-on:click="transpose(1, $event)">T+</span>
+      <span v-on:click="transpose(1, $event)" class="actionable"> T+</span>
     </span>
   </div>
 </template>
@@ -52,4 +52,8 @@ export default {
   display: flex;
   justify-content: space-between;
 }
+.actionable {
+  cursor: pointer;
+}
+
 </style>

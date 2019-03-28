@@ -2,16 +2,16 @@
   <div class_="container bg-white">
     <div class="row mr-1">
       <div class="p-2 shadow mb-5 bg-white rounded col" style="max-width:300px;">
-        <h4 class="text-center title-detail pb-2">Musaic</h4>
-        <div class="container ml-3">
-          <Musaic style="width: 220px; height: 350px;" _pcs="[1,0,0,1,0,0,0,1,0,0,0,0]"></Musaic>
+        <h5 class="text-center title-detail pb-2">Musaic</h5>
+        <div class="container ml-4">
+          <Musaic style="width: 200px; height: 350px;" _pcs="[1,0,0,1,0,0,0,1,0,0,0,0]"></Musaic>
         </div>
       </div>
       <div
         class="p-2 ml-2 shadow mb-5 bg-white rounded col"
         style="max-width:280px;min-width:280px;"
       >
-        <h4 class="text-center title-detail pb-2">iPCS</h4>
+        <h5 class="text-center title-detail pb-2">iPCS</h5>
         <div class="container ml-2">
           <div class="row">
             <div class="col-sm text-left">
@@ -26,7 +26,7 @@
       </div>
 
       <div class="p-2 ml-2 shadow mb-5 bg-white rounded col" style="min-width:350px;">
-        <h4 class="text-center title-detail pb-2">Analysis</h4>
+        <h5 class="text-center title-detail pb-2">Analysis</h5>
         <div class="container">
           <div class="row">
             <div class="col-sm text-left">
@@ -121,6 +121,9 @@ export default {
 <style scoped>
 h3 {
   text-align: left;
+}
+h5 {
+  font-size: 1.1rem;
 }
 .title-detail {
   border-bottom-style: solid;

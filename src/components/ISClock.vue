@@ -80,13 +80,13 @@ export default {
       let y1;
       // https://developer.mozilla.org/en-US/docs/Web/API/Touch/clientX
       if (e.changedTouches) {
-         x1 = e.changedTouches[0].clientX - rect.left;
-         y1 = Math.round(e.changedTouches[0].clientY - rect.top);
+        x1 = e.changedTouches[0].clientX - rect.left;
+        y1 = Math.round(e.changedTouches[0].clientY - rect.top);
       } else {
         x1 = e.clientX - rect.left;
         y1 = Math.round(e.clientY - rect.top);
       }
-      
+
       let index = -1;
       for (let i = 0; i < this.$options.points.length; i++) {
         if (this.$options.points[i].contains(x1, y1)) {
@@ -107,8 +107,8 @@ export default {
       // console.log("set iroot : " + index);
     },
     touchstart(e) {
-      if (e) {       
-         e.stopPropagation();  
+      if (e) {
+        e.stopPropagation();
       }
     },
     touchend(e) {
@@ -118,17 +118,14 @@ export default {
       e.stopPropagation();
 
       let index = this.getSelected(e);
-      
+
       if (index < 0) {
         return false;
       }
 
       if (index != this.iroot) {
-        if (this.ipcs.pcs[index] === 0) {
-          this.$set(this.ipcs.pcs, index, 1);
-        }
-        this.setIRoot(index);
-      }      
+        this._setIndexToOneOrIRoot(index)
+      }
     },
     mousemove(e) {
       // https://developer.mozilla.org/fr/docs/Web/API/MouseEvent
@@ -137,14 +134,16 @@ export default {
         console.log('mouse move : index/pitch selected = ' + index)
       }
     },
-    mousedown(e){
-       this.$options.dateMouseDone = new Date()
+    mousedown(e) {
+      this.$options.dateMouseDone = new Date()
     },
     mouseup(e) {
       let index = this.getSelected(e);
       if (index < 0) {
         return false;
       }
+
+      e.stopPropagation();
 
       // https://stackoverflow.com/questions/2405771/is-right-click-a-javascript-event
       let isRightMB;
@@ -155,16 +154,13 @@ export default {
       else if ("button" in e)  // IE, Opera 
         isRightMB = e.button == 2;
 
+      // long click ? (if down is 1 second or more)  
       let longClick = (new Date() - this.$options.dateMouseDone) >= 1000
 
-      // right click ?
+      // right click and long click => change iroot
       if (isRightMB || longClick) {
-        e.stopPropagation();
         if (index != this.iroot) {
-          this.setIRoot(index);
-          if (this.ipcs.pcs[index] === 0) {
-            this.$set(this.ipcs.pcs, index, 1);
-          }
+          this._setIndexToOneOrIRoot(index)
         }
         this.$options.dateMouseDone = null
         return false;
@@ -176,6 +172,14 @@ export default {
 
         // musaic canvas no reactive... so send event
         this.$root.$emit('onsetpcs');
+      }
+    },
+
+    _setIndexToOneOrIRoot(index) {
+      if (this.ipcs.pcs[index] === 0) {
+        this.$set(this.ipcs.pcs, index, 1);
+      } else {
+        this.setIRoot(index);
       }
     },
 
