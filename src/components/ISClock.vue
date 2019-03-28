@@ -124,7 +124,12 @@ export default {
       }
 
       if (index != this.iroot) {
-        this._setIndexToOneOrIRoot(index)
+        if (this.ipcs.pcs[index] === 1) {
+          this.$set(this.ipcs.pcs, index, 0);
+        } else {
+          this.$set(this.ipcs.pcs, index, 1);
+          this.setIRoot(index);
+        }
       }
     },
     mousemove(e) {
