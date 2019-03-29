@@ -108,14 +108,14 @@ export default {
     },
     touchstart(e) {
       if (e) {
-        e.stopPropagation();
+        e.preventDefault();
       }
     },
     touchend(e) {
       if (!e) {
         return
       }
-      e.stopPropagation();
+      e.preventDefault();
 
       let index = this.getSelected(e);
 
@@ -150,7 +150,7 @@ export default {
         return false;
       }
 
-      e.stopPropagation();
+      e.preventDefault();
 
       // https://stackoverflow.com/questions/2405771/is-right-click-a-javascript-event
       let isRightMB;
@@ -295,10 +295,11 @@ export default {
       this.provider.elt.addEventListener('mousedown', this.mousedown);
       this.provider.elt.addEventListener('touchstart', this.touchstart, false);
       this.provider.elt.addEventListener('touchend', this.touchend, false);
-
-      window.oncontextmenu = function () {
-        return false;     // cancel default menu right click
-      }
+      // right click => selected index 
+      this.provider.elt.addEventListener('contextmenu', this.mouseup);
+      // window.oncontextmenu = function () {
+      //   return false;     // cancel default menu right click
+      // }
       this.$options.setMouseEventDone = true;
     }
     const ctx = this.provider.context;
