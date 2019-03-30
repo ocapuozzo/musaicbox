@@ -1,15 +1,31 @@
 <template>
   <div class="panel-navigate">
     <span v-on:click="module(2, $event)" class="actionable">
-      -M
-      <span>&nbsp;</span>
-      <span v-on:click="module(1, $event)" class="actionable">M+</span>
+      <img src="img/t-.png" title="complement" class="actionable img-fluid" width="33" height="41">
+      <span>&nbsp;M&nbsp;</span>
+      <span v-on:click="module(1, $event)" class="actionable">
+        <img
+          src="img/t+.png"
+          title="complement"
+          class="actionable img-fluid"
+          width="33"
+          height="41"
+        >
+        </span>
     </span>
-    
+
     <span v-on:click="transpose(-1, $event)" class="actionable">
-      -T
-      <span>&nbsp;</span>
-      <span v-on:click="transpose(1, $event)" class="actionable"> T+</span>
+      <img src="img/t-.png" title="complement" class="actionable img-fluid" width="33" height="41">
+      <span>&nbsp;T&nbsp;</span>
+      <span v-on:click="transpose(1, $event)" class="actionable">
+        <img
+          src="img/t+.png"
+          title="complement"
+          class="actionable img-fluid"
+          width="33"
+          height="41"
+        >
+      </span>
     </span>
   </div>
 </template>
@@ -36,12 +52,12 @@ export default {
     transpose(t, e) {
       e.stopPropagation();
       this.$store.commit('ipcs/transpose', t);
-      this.$root.$emit('onsetpcs');      
+      this.$root.$emit('onsetpcs');
     },
     module(direction, e) {
       e.stopPropagation();
       this.$store.commit('ipcs/modulate', direction);
-      this.$root.$emit('onsetpcs');      
+      this.$root.$emit('onsetpcs');
     }
   }
 }
@@ -55,5 +71,4 @@ export default {
 .actionable {
   cursor: pointer;
 }
-
 </style>

@@ -78,3 +78,14 @@ test("IPcs equals ko ", () => {
 
 	expect(ipcs.equals(ipcs_other)).not.toBeTruthy();
 });
+
+test("IPcs complement ", () => {
+	const ipcs = new IPcsClass("0,2,4,5,7,9,11", 0)
+	const ipcs_complement = new IPcsClass("1,3,6,8,10", 1)
+	const complement = ipcs.complement()
+	
+	const cpltcplt = complement.complement()
+
+	expect(complement.equals(ipcs_complement)).toBeTruthy();
+	expect(cpltcplt.equals(ipcs)).toBeTruthy();	
+});

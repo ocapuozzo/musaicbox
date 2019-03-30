@@ -12,14 +12,14 @@
         style="max-width:280px;min-width:280px;"
       >
         <h5 class="text-center title-detail pb-2">iPCS</h5>
-        <div class="container ml-2">
+        <div class="container ">
           <div class="row">
             <div class="col-sm text-left">
-              <WrapCanvas id="ccanvas" style="width: 210px; height: 210px;">
+              <WrapCanvas id="ccanvas" class="clockpcs ml-3" style="width: 200px; height: 200px;">
                 <ISClock color="white"></ISClock>
               </WrapCanvas>
-              <MusicNotation :_ipcs="ipcs" style="width: 200px;"/>
-              <RotateIPcs />
+              <MusicNotation :_ipcs="ipcs" class="ml-2"/>
+              <RotateIPcs/>
             </div>
           </div>
         </div>
@@ -27,7 +27,7 @@
 
       <div class="p-2 ml-2 shadow mb-5 bg-white rounded col" style="min-width:350px;">
         <h5 class="text-center title-detail pb-2">Analysis</h5>
-        <div class="container">
+        <div class="container" style="height:70%">
           <div class="row">
             <div class="col-sm text-left">
               <p>
@@ -52,15 +52,15 @@
                 Forte :
                 <span class="analyse-pcs">{{ fortenum }}</span>
               </p>
-              <p>
-                (debug) iPCS :
-                <span class="analyse-pcs">{{ ipcs }}</span>
-              </p>
-              <div class="footer-copyright">
-                <span class="id-pcs">Id : {{ id }}</span>
-              </div>
             </div>
           </div>
+        </div>
+        <div class="p-3">
+          <p>
+            (debug) iPCS :
+            <span class="analyse-pcs">{{ ipcs }}</span> ~
+            <span class="id-pcs">Id : {{ id }}</span>
+          </p>
         </div>
       </div>
     </div>
@@ -141,4 +141,9 @@ h5 {
   background-color: blanchedalmond;
   font-size: 0.7rem;
 }
+
+.clockpcs_ {
+  width: 80%;
+}
+
 </style>

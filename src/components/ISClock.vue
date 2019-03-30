@@ -174,6 +174,12 @@ export default {
       }
 
       if (index >= 0 && index != this.iroot) {
+        if (this.ipcs.pcs[index] === 0 && this.ipcs.cardinal() == this.ipcs.pcs.length - 1) {
+           // cardinal in ]0..n-1[  because iroot must be always set 
+           // and pcs empty are not iroot, and  complement of complement of pcs empty also...
+           return;
+        }
+
         // console.log("mouse up : " + index);
         this.$set(this.ipcs.pcs, index, (this.ipcs.pcs[index] === 1) ? 0 : 1);
 
@@ -273,7 +279,7 @@ export default {
       }
     },
 
-    drawClock(ctx) {
+    drawClock(ctx) {      
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       let ox = ctx.canvas.width / 2;
       let oy = ctx.canvas.height / 2;

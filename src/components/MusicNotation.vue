@@ -1,5 +1,5 @@
 <template>
-  <div class="music-notation">
+  <div class="text-center">
     <div id="paper"></div>
   </div>
 </template>

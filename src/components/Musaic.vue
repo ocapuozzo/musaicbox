@@ -8,7 +8,12 @@
       <img id="m5" ref="m5" src="img/m5.png" title="m5" class="actionable img-fluid" width="60">
       <img id="m7" ref="m7" src="img/m7.png" title="m7" class="actionable img-fluid" width="60">
     </div>
-  
+    <div class="extra content text-center aligned">
+      <span v-on:click="complement" class="actionable" >
+          <img  src="img/cplt.png" title="complement" class="actionable img-fluid" width="40">
+        <!-- <font-awesome-icon icon="yin-yang"  size="lg"/> -->
+      </span>
+    </div>
     <!-- p>{{pcs}}</p -->
   </div>
 </template>
@@ -75,6 +80,11 @@ export default {
     forceCanvasUpdate() {
       this.transformsPcsAndDrawsMusaic(1);
     },
+    complement() {      
+      this.ipcs = this.ipcs.complement()
+      this.transformsPcsAndDrawsMusaic(1);
+      this.$root.$emit('onsetpcs');
+    },
     mousedown(e) {
       let mcanvas = this.$refs.mcanvas;
       let rect = mcanvas.getBoundingClientRect();
@@ -88,7 +98,8 @@ export default {
       // musaic invariant : pitch zero is always to 1
       // why ? for Bijective morphism (polymorphism) 
       // between algebra and geometry
-      if (indice != this.ipcs.iroot) {
+      // and always cardinal < 12 (for a iroot of complement...)
+      if (indice != this.ipcs.iroot && this.ipcs.cardinal() < this.ipcs.pcs.length-1 ) {
         this.$set(this.ipcs.pcs, indice, (this.ipcs.pcs[indice] === 1) ? 0 : 1);
         // call with neutral operation (1)
         this.transformsPcsAndDrawsMusaic(1);

@@ -8,13 +8,14 @@ const negativeToPositiveModulo = (i, n) => {
 }
 
 export default class IPcsClass {
-	constructor(pcs, iroot) {
+	constructor(pcs, iroot, prev_ipcs_cplt = null) {
 		if (typeof (pcs) === 'string') {
 			this.pcs = this._fromStringTobinArray(pcs);
 		} else { // assume array
 			this.pcs = pcs
 		}
 		this.iroot = iroot
+		this.prev_ipcs_cplt = prev_ipcs_cplt ? prev_ipcs_cplt : null
 	}
 
 	/**
@@ -252,12 +253,44 @@ export default class IPcsClass {
 		return res;
 	}
 
+	/**
+	 * get number of pitches of this
+	 */
 	cardinal() {
 		return this.pcs.filter(i => i === 1).length
 	}
 
+	/**
+	 * get complement of this.
+	 * if prev_ipcs_cplt is defined, return prev_ipcs_cplt 
+	 *  // default prev_ipcs_cplt is null
+	 * else 
+	 *   build complement of this and put this as prev_ipcs_cplt
+	 * why ? It is to allow to switch from one to another
+	 */
+	complement() {
+		if (this.prev_ipcs_cplt) {
+		   return this.prev_ipcs_cplt
+		}
+		let pcs_cpt = this.pcs.map(pc => (pc == 1 ? 0 : 1)) //;slice() and inverse 0/1
+		let new_iroot
+		let n = pcs_cpt.length
+		// iroot is lost... set a new iroot of complement
+		for (let i = this.iroot+1; i < this.iroot + n; i = (i + 1) % n) {
+            if (pcs_cpt[i] === 1) {
+			   new_iroot = i
+			   break
+			}			
+		}
+		return new IPcsClass(pcs_cpt, new_iroot, this)
+	}
+
+	
 	toString() {
-		return JSON.stringify(this);
+		 return JSON.stringify(this.pcs) + ", iroot : "
+		 + JSON.stringify(this.iroot) 
+		 + (this.prev_ipcs_cplt ? ', (cplt)': '') 
+	    //	return JSON.stringify(this);
 	}
 
 	equals(other) {

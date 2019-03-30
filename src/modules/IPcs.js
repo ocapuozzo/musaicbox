@@ -44,12 +44,12 @@ const actions = {}
 const mutations = {
 
   update(state, ipcs) {
-    console.log('ipcs mutation :' + ipcs);
+    // console.log('ipcs mutation :' + ipcs);
     state.ipcs = ipcs;
   },
 
   changepcs(state, pcs) {
-    console.log('mutation changepcs whith :' + pcs);
+    // console.log('mutation changepcs whith :' + pcs);
     state.ipcs.pcs = pcs;
   },
 
