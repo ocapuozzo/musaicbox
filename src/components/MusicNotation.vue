@@ -29,10 +29,10 @@ export default {
     tune: function () {
       if (!this.ipcs) return;
 
-      let suffix = 'X:1\nL: 1/4\n';
+      let suffix = 'X:1\nL: 1/4\nK:C\n';
       let notes = '';
       let chord = '[ ';
-
+      
       let n = this.ipcs.pcs.length;
 
       for (let i = this.ipcs.iroot; i < n + this.ipcs.iroot; i++) {
@@ -44,6 +44,12 @@ export default {
           if ((i % n === 10) && (this.ipcs.pcs[(i + 1) % n] !== 1)) {
             note = '_B';
           }
+          // make notes always up 
+          // http://abcnotation.com/blog/2010/01/31/how-to-understand-abc-the-basics/
+          if ( (i%n) < this.ipcs.iroot) {
+             note += "'"
+          }
+
           notes = notes + note + " ";
           chord = chord + note;
         }
@@ -54,7 +60,7 @@ export default {
   },
   methods: {
     refresh() {
-      // console.log(this.tune);
+      console.log(this.tune)
       // https://configurator.abcjs.net/visual/
       abcjs.renderAbc("paper", this.tune,
         {
