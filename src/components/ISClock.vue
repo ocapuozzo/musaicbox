@@ -36,7 +36,7 @@ export default {
   inject: ['provider'],
   dateMouseDone: null,
   points: [],
-  touchendOk : false,
+  touchendOk: false,
 
   computed: {
     ipcs: {
@@ -110,6 +110,7 @@ export default {
       if (e) {
         e.preventDefault();
       }
+      this.$options.dateMouseDone = new Date()
     },
     touchend(e) {
       if (!e) {
@@ -120,16 +121,25 @@ export default {
       let index = this.getSelected(e);
 
       if (index < 0) {
+        this.$options.dateMouseDone = null
         return false;
       }
 
+      let longClick = (new Date() - this.$options.dateMouseDone) >= 500
+      
+      this.$options.dateMouseDone = null
+      
       if (index != this.iroot) {
         this.touchendOk = true
-        if (this.ipcs.pcs[index] === 1) {
-          this.$set(this.ipcs.pcs, index, 0);
-        } else {
-          this.$set(this.ipcs.pcs, index, 1);
-         // this.setIRoot(index);
+        if (longClick) {
+          this._setIndexToOneOrIRoot(index)
+        } else {        
+          let pcs = this.ipcs.pcs.slice()
+          pcs[index] = pcs[index] ? 0 : 1
+          this.ipcs.pcs = pcs;
+
+          // musaic canvas no reactive... so send event
+          this.$root.$emit('onsetpcs');
         }
       }
     },
@@ -175,13 +185,15 @@ export default {
 
       if (index >= 0 && index != this.iroot) {
         if (this.ipcs.pcs[index] === 0 && this.ipcs.cardinal() == this.ipcs.pcs.length - 1) {
-           // cardinal in ]0..n-1[  because iroot must be always set 
-           // and pcs empty are not iroot, and  complement of complement of pcs empty also...
-           return;
+          // cardinal in ]0..n-1[  because iroot must be always set 
+          // and pcs empty are not iroot, and  complement of complement of pcs empty also...
+          return;
         }
 
         // console.log("mouse up : " + index);
-        this.$set(this.ipcs.pcs, index, (this.ipcs.pcs[index] === 1) ? 0 : 1);
+        let pcs = this.ipcs.pcs.slice()
+        pcs[index] = pcs[index] ? 0 : 1
+        this.ipcs.pcs = pcs;
 
         // musaic canvas no reactive... so send event
         this.$root.$emit('onsetpcs');
@@ -190,10 +202,13 @@ export default {
 
     _setIndexToOneOrIRoot(index) {
       if (this.ipcs.pcs[index] === 0) {
-        this.$set(this.ipcs.pcs, index, 1);
+        let pcs = this.ipcs.pcs.slice()
+        pcs[index] = 1
+        this.ipcs.pcs = pcs;
       } else {
         this.setIRoot(index);
       }
+      this.$root.$emit('onsetpcs');
     },
 
     drawCirclePitch(ctx, index, radius, lineWidth) {
@@ -279,7 +294,7 @@ export default {
       }
     },
 
-    drawClock(ctx) {      
+    drawClock(ctx) {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       let ox = ctx.canvas.width / 2;
       let oy = ctx.canvas.height / 2;
