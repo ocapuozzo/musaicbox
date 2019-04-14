@@ -6,7 +6,6 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "_deploy": "node ./node_modules/vue-gh-pages/index.js",
     "homepage": "https://github.com/ocapuozzo/musaicbox",
     "test:unit": "vue-cli-service test:unit"
   },
@@ -38,7 +37,6 @@
     "babel-jest": "^23.6.0",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0",
-    "vue-gh-pages": "^1.19.0",
     "vue-template-compiler": "^2.5.21"
   }
 }

@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     refresh() {
-      console.log(this.tune)
+      // console.log(this.tune)
       // https://configurator.abcjs.net/visual/
       abcjs.renderAbc("paper", this.tune,
         {

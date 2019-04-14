@@ -37,6 +37,7 @@ export default {
       },
       set(value) {
         this.$store.commit('ipcs/changepcs', value);
+        this.forceCanvasUpdate();
       }
     },
     ipcs: {
@@ -66,23 +67,21 @@ export default {
     canvas.width = canvas.parentElement.clientWidth;
     canvas.height = canvas.parentElement.clientWidth; //Height;
     canvas.addEventListener('mousedown', this.mousedown);
+    this.CEL_WIDTH = canvas.width / 13;
     if (this._pcs) {
       this.pcs = JSON.parse(this._pcs);
     } else {
       this.pcs = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     }
-    this.CEL_WIDTH = canvas.width / 13;
-    // call with neutral operation (1)
-    this.transformsPcsAndDrawsMusaic(1);
   },
 
   methods: {
     forceCanvasUpdate() {
+      // call with neutral operation (1)
       this.transformsPcsAndDrawsMusaic(1);
     },
     complement() {      
       this.ipcs = this.ipcs.complement()
-      this.transformsPcsAndDrawsMusaic(1);
       this.$root.$emit('onsetpcs');
     },
     mousedown(e) {
@@ -99,10 +98,12 @@ export default {
       // why ? for Bijective morphism (polymorphism) 
       // between algebra and geometry
       // and always cardinal < 12 (for a iroot of complement...)
-      if (indice != this.ipcs.iroot && this.ipcs.cardinal() < this.ipcs.pcs.length-1 ) {
-        this.$set(this.ipcs.pcs, indice, (this.ipcs.pcs[indice] === 1) ? 0 : 1);
+      if (indice !== this.ipcs.iroot && this.ipcs.cardinal() < this.ipcs.pcs.length-1 ) {
+
+        this.$store.commit("ipcs/toggleindexpcs", indice);
+        // this.$set(this.ipcs.pcs, indice, (this.ipcs.pcs[indice] === 1) ? 0 : 1);
         // call with neutral operation (1)
-        this.transformsPcsAndDrawsMusaic(1);
+        this.forceCanvasUpdate();
         this.$root.$emit('onsetpcs');
       }
     },
@@ -117,7 +118,7 @@ export default {
       if (!canvas.getContext) return;
 
       canvas.width = canvas.parentElement.clientWidth
-      canvas.height = canvas.parentElement.clientWidth;
+      canvas.height = canvas.width
 
       // Algebraic transformation
       //console.log("before op : " + this.pcs);
@@ -240,7 +241,6 @@ export default {
       this.transformsPcsAndDrawsMusaic(opTransf);
       this.$root.$emit('onsetpcs');
       // send to listeners new pcs (or not...)
-      // this.$emit('onpcs', this.pcs);       
       // clear css class      
       this.clearRotateClasses();
       this.enabledButtons();
@@ -250,7 +250,7 @@ export default {
      * return true is a cursor is on "wait" (m11 ou m5 or m7)
      */
     isCursorWait() {
-      return this.$refs["m11"].style.cursor == "wait";
+      return this.$refs["m11"].style.cursor === "wait";
     },
   }
 };

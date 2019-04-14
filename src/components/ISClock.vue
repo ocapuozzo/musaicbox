@@ -129,17 +129,13 @@ export default {
       
       this.$options.dateMouseDone = null
       
-      if (index != this.iroot) {
+      if (index !== this.iroot) {
         this.touchendOk = true
         if (longClick) {
           this._setIndexToOneOrIRoot(index)
-        } else {        
-          let pcs = this.ipcs.pcs.slice()
-          pcs[index] = pcs[index] ? 0 : 1
-          this.ipcs.pcs = pcs;
-
-          // musaic canvas no reactive... so send event
-          this.$root.$emit('onsetpcs');
+        } else {
+          this.$store.commit("ipcs/toggleindexpcs", index);
+          // this.$root.$emit('onsetpcs');
         }
       }
     },
@@ -183,32 +179,25 @@ export default {
         return false;
       }
 
-      if (index >= 0 && index != this.iroot) {
-        if (this.ipcs.pcs[index] === 0 && this.ipcs.cardinal() == this.ipcs.pcs.length - 1) {
+      if (index >= 0 && index !== this.iroot) {
+        if (this.ipcs.pcs[index] === 0 && this.ipcs.cardinal() === this.ipcs.pcs.length - 1) {
           // cardinal in ]0..n-1[  because iroot must be always set 
           // and pcs empty are not iroot, and  complement of complement of pcs empty also...
           return;
         }
 
-        // console.log("mouse up : " + index);
-        let pcs = this.ipcs.pcs.slice()
-        pcs[index] = pcs[index] ? 0 : 1
-        this.ipcs.pcs = pcs;
-
-        // musaic canvas no reactive... so send event
-        this.$root.$emit('onsetpcs');
+        this.$store.commit("ipcs/toggleindexpcs", index);
       }
     },
 
     _setIndexToOneOrIRoot(index) {
       if (this.ipcs.pcs[index] === 0) {
-        let pcs = this.ipcs.pcs.slice()
-        pcs[index] = 1
-        this.ipcs.pcs = pcs;
+        // set this.ipcs.pcs[index] to 1 (new array)
+        this.$store.commit("ipcs/toggleindexpcs", index);
       } else {
         this.setIRoot(index);
       }
-      this.$root.$emit('onsetpcs');
+
     },
 
     drawCirclePitch(ctx, index, radius, lineWidth) {
