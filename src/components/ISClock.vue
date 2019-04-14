@@ -143,7 +143,10 @@ export default {
       // https://developer.mozilla.org/fr/docs/Web/API/MouseEvent
       let index = this.getSelected(e);
       if (index >= 0) {
-        console.log('mouse move : index/pitch selected = ' + index)
+        this.provider.elt.style.cursor = 'pointer'
+        // console.log('mouse move : index/pitch selected = ' + index)
+      } else {
+        this.provider.elt.style.cursor = 'default'
       }
     },
     mousedown(e) {
@@ -303,13 +306,11 @@ export default {
     if (!this.$options.setMouseEventDone) {
       this.provider.elt.addEventListener('mouseup', this.mouseup);
       this.provider.elt.addEventListener('mousedown', this.mousedown);
+      this.provider.elt.addEventListener('mousemove', this.mousemove);
       this.provider.elt.addEventListener('touchstart', this.touchstart, false);
       this.provider.elt.addEventListener('touchend', this.touchend, false);
       // right click => selected index 
       this.provider.elt.addEventListener('contextmenu', this.mouseup);
-      // window.oncontextmenu = function () {
-      //   return false;     // cancel default menu right click
-      // }
       this.$options.setMouseEventDone = true;
     }
     const ctx = this.provider.context;

@@ -1,16 +1,16 @@
 <template>
   <div>
     <div>
-      <canvas ref="mcanvas" id="mcanvas" style="border:1px solid #BBB;"></canvas>
+      <canvas ref="mcanvas" id="mcanvas"  class="actionable" style="border:1px solid #BBB;"></canvas>
     </div>
     <div class="extra content text-center aligned">
-      <img id="m11" ref="m11" src="img/m11.png" title="m11" class="actionable img-fluid" width="60">
-      <img id="m5" ref="m5" src="img/m5.png" title="m5" class="actionable img-fluid" width="60">
-      <img id="m7" ref="m7" src="img/m7.png" title="m7" class="actionable img-fluid" width="60">
+      <img id="m11" ref="m11" src="img/m11.png" title="m11" class="actionable img-fluid anim-button" width="60">
+      <img id="m5" ref="m5" src="img/m5.png" title="m5" class="actionable img-fluid anim-button" width="60">
+      <img id="m7" ref="m7" src="img/m7.png" title="m7" class="actionable img-fluid anim-button" width="60">
     </div>
     <div class="extra content text-center aligned">
       <span v-on:click="complement" class="actionable" >
-          <img  src="img/cplt.png" title="complement" class="actionable img-fluid" width="40">
+          <img  src="img/cplt.png" title="complement" class="actionable img-fluid anim-button" width="40">
         <!-- <font-awesome-icon icon="yin-yang"  size="lg"/> -->
       </span>
     </div>
@@ -275,6 +275,20 @@ export default {
 .rotateM7 {
   animation-duration: 1.5s;
   animation-name: rotate-m7;
+}
+
+.anim-button:hover {
+  animation-duration: .5s;
+  animation-name: anim-button;
+}
+
+@keyframes anim-button {
+  from {
+    transform: scale(.9);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
 @keyframes rotate-m5 {
