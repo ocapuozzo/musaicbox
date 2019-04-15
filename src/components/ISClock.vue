@@ -135,7 +135,7 @@ export default {
           this._setIndexToOneOrIRoot(index)
         } else {
           this.$store.commit("ipcs/toggleindexpcs", index);
-          // this.$root.$emit('onsetpcs');
+          this.$root.$emit('onsetpcs');
         }
       }
     },
@@ -188,8 +188,8 @@ export default {
           // and pcs empty are not iroot, and  complement of complement of pcs empty also...
           return;
         }
-
         this.$store.commit("ipcs/toggleindexpcs", index);
+        this.$root.$emit('onsetpcs');
       }
     },
 
@@ -200,7 +200,7 @@ export default {
       } else {
         this.setIRoot(index);
       }
-
+      this.$root.$emit('onsetpcs');
     },
 
     drawCirclePitch(ctx, index, radius, lineWidth) {
