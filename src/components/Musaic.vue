@@ -50,11 +50,11 @@ export default {
     },
   },
   mounted() {
+
     // define event on root, which call by ISClock component
-    // bidirectionnal reactive
-    this.$root.$on('onsetpcs', () => {
-      // console.log('event onsetpcs');
-      this.forceCanvasUpdate();
+    // bidirectionnal reactive, and this !
+    this.$root.$on('onsetpcs', () => {     
+        this.forceCanvasUpdate();    
     });
 
     // console.log(this.$refs['mcanvas']);
@@ -77,8 +77,7 @@ export default {
 
   methods: {
     forceCanvasUpdate() {
-      // call with neutral operation (1)
-      this.transformsPcsAndDrawsMusaic(1);
+      this.drawsMusaic();
     },
     complement() {      
       this.ipcs = this.ipcs.complement()
@@ -103,7 +102,7 @@ export default {
         this.$store.commit("ipcs/toggleindexpcs", indice);
         // this.$set(this.ipcs.pcs, indice, (this.ipcs.pcs[indice] === 1) ? 0 : 1);
         // call with neutral operation (1)
-        this.forceCanvasUpdate();
+     
         this.$root.$emit('onsetpcs');
       }
     },
@@ -112,9 +111,7 @@ export default {
      * (algebric) and draw its musaic representation (geometric)
      * so, no change visualy if ok !
      */
-    transformsPcsAndDrawsMusaic(a) {
-
-      console.log("a:"+a)
+    drawsMusaic() {
 
       // get canvas direct from DOM
       let canvas = document.getElementById("mcanvas");
@@ -122,12 +119,6 @@ export default {
 
       canvas.width = canvas.parentElement.clientWidth
       canvas.height = canvas.width
-
-      // Algebraic transformation
-      //console.log("before op : " + this.pcs);
-      if (a > 1) {
-        this.$store.commit('ipcs/mult', a);
-      }
 
       let n = this.ipcs.pcs.length;
 
@@ -236,12 +227,14 @@ export default {
       // Now we perform the algebraic operation to replace the
       // transformed musaic with its transform (and delete its
       // class css from the past operation)
-      this.transformsPcsAndDrawsMusaic(opTransf);
-      this.$root.$emit('onsetpcs');
+      this.$store.commit('ipcs/mult', opTransf);
+      
       // send to listeners new pcs (or not...)
       // clear css class      
       this.clearRotateClasses();
       this.enabledButtons();
+
+      this.$root.$emit('onsetpcs');
     },
 
     /**
