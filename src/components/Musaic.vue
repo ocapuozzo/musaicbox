@@ -112,7 +112,10 @@ export default {
      * (algebric) and draw its musaic representation (geometric)
      * so, no change visualy if ok !
      */
-    transformsPcsAndDrawsMusaic(operation) {
+    transformsPcsAndDrawsMusaic(a) {
+
+      console.log("a:"+a)
+
       // get canvas direct from DOM
       let canvas = document.getElementById("mcanvas");
       if (!canvas.getContext) return;
@@ -122,8 +125,8 @@ export default {
 
       // Algebraic transformation
       //console.log("before op : " + this.pcs);
-      if (operation > 1) {
-        this.$store.commit('ipcs/mult', operation);
+      if (a > 1) {
+        this.$store.commit('ipcs/mult', a);
       }
 
       let n = this.ipcs.pcs.length;
@@ -216,18 +219,13 @@ export default {
      */
     listenerEndAnim(event) {
       let opTransf;
-
-      switch (event.target.className) {
-        case "rotateM11":
+      if (event.target.classList.contains("rotateM11")) {        
           opTransf = 11;
-          break;
-        case "rotateM5":
+      } else if (event.target.classList.contains("rotateM5")) {        
           opTransf = 5;
-          break;
-        case "rotateM7":
+      } else if (event.target.classList.contains("rotateM7")) { 
           opTransf = 7;
-          break;
-        default:
+      } else {
           // no transformation = id operation
           opTransf = 1;//this.opId;
       }
