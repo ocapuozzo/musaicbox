@@ -1,16 +1,42 @@
 <template>
   <div>
-    <div>
-      <canvas ref="mcanvas" id="mcanvas"  class="actionable" style="border:1px solid #BBB;"></canvas>
+    <div ref="containercanvas">
+      <canvas ref="mcanvas" id="mcanvas" class="actionable" style="border:1px solid #BBB;"></canvas>
     </div>
     <div class="extra content text-center aligned">
-      <img id="m11" ref="m11" src="img/m11.png" title="m11" class="actionable img-fluid anim-button" width="60">
-      <img id="m5" ref="m5" src="img/m5.png" title="m5" class="actionable img-fluid anim-button" width="60">
-      <img id="m7" ref="m7" src="img/m7.png" title="m7" class="actionable img-fluid anim-button" width="60">
+      <img
+        id="m11"
+        ref="m11"
+        src="img/m11.png"
+        title="m11"
+        class="actionable img-fluid anim-button"
+        width="60"
+      >
+      <img
+        id="m5"
+        ref="m5"
+        src="img/m5.png"
+        title="m5"
+        class="actionable img-fluid anim-button"
+        width="60"
+      >
+      <img
+        id="m7"
+        ref="m7"
+        src="img/m7.png"
+        title="m7"
+        class="actionable img-fluid anim-button"
+        width="60"
+      >
     </div>
     <div class="extra content text-center aligned">
-      <span v-on:click="complement" class="actionable" >
-          <img  src="img/cplt.png" title="complement" class="actionable img-fluid anim-button" width="40">
+      <span v-on:click="complement" class="actionable">
+        <img
+          src="img/cplt.png"
+          title="complement"
+          class="actionable img-fluid anim-button"
+          width="40"
+        >
         <!-- <font-awesome-icon icon="yin-yang"  size="lg"/> -->
       </span>
     </div>
@@ -19,6 +45,7 @@
 </template>
 
 <script>
+import { truncate } from 'fs';
 
 export default {
   name: "Musaic",
@@ -53,15 +80,18 @@ export default {
 
     // define event on root, which call by ISClock component
     // bidirectionnal reactive, and this !
-    this.$root.$on('onsetpcs', () => {     
-        this.forceCanvasUpdate();    
+    this.$root.$on('onsetpcs', () => {
+      this.forceCanvasUpdate();
     });
 
     // console.log(this.$refs['mcanvas']);
     let canvas = this.$refs.mcanvas;
 
     this.addOpTransfOnClickListeners();
-    this.$el.addEventListener("animationend", this.listenerEndAnim);
+
+    // attach listener event animationend to canvas only, not buttons
+    let containercanvas = this.$refs.containercanvas
+    containercanvas.addEventListener("animationend", this.listenerEndAnim);
 
     // We can't access the rendering context until the canvas is mounted to the DOM.
     canvas.width = canvas.parentElement.clientWidth;
@@ -79,7 +109,7 @@ export default {
     forceCanvasUpdate() {
       this.drawsMusaic();
     },
-    complement() {      
+    complement() {
       this.ipcs = this.ipcs.complement()
       this.$root.$emit('onsetpcs');
     },
@@ -97,12 +127,12 @@ export default {
       // why ? for Bijective morphism (polymorphism) 
       // between algebra and geometry
       // and always cardinal < 12 (for a iroot of complement...)
-      if (indice !== this.ipcs.iroot && this.ipcs.cardinal() < this.ipcs.pcs.length-1 ) {
+      if (indice !== this.ipcs.iroot && this.ipcs.cardinal() < this.ipcs.pcs.length - 1) {
 
         this.$store.commit("ipcs/toggleindexpcs", indice);
         // this.$set(this.ipcs.pcs, indice, (this.ipcs.pcs[indice] === 1) ? 0 : 1);
         // call with neutral operation (1)
-     
+
         this.$root.$emit('onsetpcs');
       }
     },
@@ -209,17 +239,22 @@ export default {
      *  transformsPcsAndDrawsMusaic()
      */
     listenerEndAnim(event) {
+      //  console.log("event.animationName:" + event.animationName)
       let opTransf;
-      if (event.target.classList.contains("rotateM11")) {        
-          opTransf = 11;
-      } else if (event.target.classList.contains("rotateM5")) {        
-          opTransf = 5;
-      } else if (event.target.classList.contains("rotateM7")) { 
-          opTransf = 7;
+      if (event.target.classList.contains("rotateM11")) {
+        opTransf = 11;
+      } else if (event.target.classList.contains("rotateM5")) {
+        opTransf = 5;
+      } else if (event.target.classList.contains("rotateM7")) {
+        opTransf = 7;
       } else {
-          // no transformation = id operation
-          opTransf = 1;//this.opId;
+        // no transformation = id operation
+        opTransf = 1;//this.opId;
       }
+      // send to listeners new pcs (or not...)
+      // clear css class      
+      this.clearRotateClasses();
+
       // The geometric transformation is finished and we have determined
       // the algebraic transformation operation (opTransformation) that exactly
       // matches the geometrical transformation.
@@ -228,13 +263,8 @@ export default {
       // transformed musaic with its transform (and delete its
       // class css from the past operation)
       this.$store.commit('ipcs/mult', opTransf);
-      
-      // send to listeners new pcs (or not...)
-      // clear css class      
-      this.clearRotateClasses();
-      this.enabledButtons();
-
       this.$root.$emit('onsetpcs');
+      this.enabledButtons();
     },
 
     /**
@@ -269,13 +299,13 @@ export default {
 }
 
 .anim-button:hover {
-  animation-duration: .5s;
+  animation-duration: 0.5s;
   animation-name: anim-button;
 }
 
 @keyframes anim-button {
   from {
-    transform: scale(.9);
+    transform: scale(0.9);
   }
   to {
     transform: scale(1);

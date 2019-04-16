@@ -55,14 +55,6 @@
         
       </ul>
 
-      <ul class="list-unstyled CTAs">
-        <li>
-          <a
-            href="#"
-            class="download"
-          >other</a>
-        </li>       
-      </ul>
     </nav>
 
     <!-- Page Content Holder -->
