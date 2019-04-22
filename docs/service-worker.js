@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/musaicbox/precache-manifest.82ddc5bd7f2f82689343e3cbdc6217ed.js"
+  "/musaicbox/precache-manifest.17a17f0f4e233e1b574bdd7e1822266f.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "musaicbox"});
