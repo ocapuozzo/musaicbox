@@ -4,7 +4,7 @@ const NEXT_MODULATION = 1
 const PREV_MODULATION = 2
 
 const negativeToPositiveModulo = (i, n) => {
-  return n - ((i * -1) % n)
+  return (n - ((i * -1) % n)) % n
 }
 
 export default class IPcs {
@@ -127,12 +127,31 @@ export default class IPcs {
       // t in [0..n[
     }
     for (let i = 0; i < n; i++) {
-      j = ((i * a) - (a - 1) * iroot - t) % n
-      // j may be negative...
-      permute[i] = abin[(j + n) % n]
+      j = (n + (((i * a) - (a - 1) * iroot - t) % n)) % n
+      // j may be negative... so n + (...) modulo n
+      permute[i] = abin[j]
     }
     return permute
   }
+
+
+  /**
+   * general transformation : affine operation ax + t
+   * general idea (composition of affine operations):
+   *  1/ translate :        1 + -iroot
+   *  2/ affine operation : ax + t
+   *  3/ translate :        1 + iroot
+   *  so : ax + ( -(a-1) * iroot + t ) (for each pc in pcs)
+   * @param  a    {number}
+   * @param  t    [0..11]
+   * @return {IPcs}
+   */
+  permute(a, t) {
+    // iroot is invariant
+    let newIRoot = negativeToPositiveModulo((this.iroot + t), this.pcs.length)
+    return new IPcs(IPcs.getPermute(a, t, this.iroot, this.pcs), newIRoot)
+  }
+
 
   /**
    * Transformation affine of this
@@ -141,8 +160,10 @@ export default class IPcs {
    * @returns {IPcs}
    */
   affineOp(a, t) {
-    return new IPcs(IPcs.getPermute(a, t, this.iroot, this.pcs),
-      (this.pcs.length + this.iroot + t) % this.pcs.length)
+    // return new IPcs(IPcs.getPermute(a, t, this.iroot, this.pcs),
+    //   (this.pcs.length + this.iroot + t) % this.pcs.length)
+    return this.permute(a, t)
+    // return IPcs.getPermuteIPcs(a, t, this.iroot, this.pcs)
   }
 
   /**
@@ -176,8 +197,8 @@ export default class IPcs {
         i = negativeToPositiveModulo(i, n)
       }
       for (; i !== this.iroot;) {
-        if (this.pcs[i % n] === 1) {
-          newIRoot = i % n
+        if (this.pcs[i] === 1) {
+          newIRoot = i
           break
         }
         i--
