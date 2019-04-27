@@ -127,7 +127,11 @@ test("IPcs cyclicPrimeForm", () => {
   expect(ipcs.cyclicPrimeForm()).toEqual(new IPcs("0", 0))
   ipcs = new IPcs("0,1,2,3,4,5,6,7,8,9,10,11", 7)
   expect(ipcs.cyclicPrimeForm()).toEqual(new IPcs("0,1,2,3,4,5,6,7,8,9,10,11", 0))
-
 });
 
-
+test("IPcs musaicPrimeForm", () => {
+  let ipcs = new IPcs("0, 3, 5, 8", 0)
+  // page 1171 de ToposOfMusic
+  let ipcsMusaicPF = new IPcs("0, 1, 3, 4", 0)
+  expect(ipcs.musaicPrimeForm()).toEqual(ipcsMusaicPF)
+});

@@ -106,12 +106,25 @@ export default class IPcs {
 
   dihedralPrimeForm() {
     let cpf = this.cyclicPrimeForm();
-    // let norm = cpf.pcs.slice();
-    // norm = IPcs.getPermute(11, 0, this.iroot, norm);
-    // let dpf = new IPcs(norm, this.iroot).cyclicPrimeForm();
     let pcsM11 = cpf.affineOp(11, 0).cyclicPrimeForm();
     return cpf.id() < pcsM11.id() ? cpf : pcsM11;
   }
+
+  affinePrimeForm() {
+    let cpf = this.dihedralPrimeForm();
+    let pcsM5 = cpf.affineOp(5, 0).cyclicPrimeForm();
+    // or M11xM7
+    // or M5xM7
+    return cpf.id() < pcsM5.id() ? cpf : pcsM5;
+  }
+
+  musaicPrimeForm() {
+    let cpf = this.affinePrimeForm();
+    let cpfCplt= this.complement().affinePrimeForm();
+    return cpf.id() < cpfCplt.id() ? cpf : cpfCplt;
+  }
+
+
 
   /**
    * general transformation : affine operation ax + t

@@ -83,14 +83,16 @@
                   </p>
                   <p>
                     Affine :
-                    <span class="analyse-pcs">TODO</span>
+                    <span class="analyse-pcs">{{ ipcs.affinePrimeForm().pcsStr }}</span>
                   </p>
                   <p>
                     Musaic :
-                    <span class="analyse-pcs">TODO</span>
+                    <span class="analyse-pcs">{{ ipcs.musaicPrimeForm().pcsStr }}</span>
                   </p>
+                <p>
+                 &nbsp;
+                </p>
               </fieldset>
-
             </div>
           </div>
           <div class="p-3">
@@ -192,7 +194,7 @@ h5 {
 fieldset.representation-border {
   display: inline;
   border: 1px groove #ddd !important;
-  padding: 0 1.4em 1.4em 1.4em !important;
+  padding: 0 1.4em 0.5em 1em !important;
   margin: 0 1em 1.5em 0 !important;
   -webkit-box-shadow: 0px 0px 0px 0px #000;
   box-shadow: 0px 0px 0px 0px #000;
