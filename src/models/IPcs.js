@@ -14,7 +14,14 @@ export default class IPcs {
     } else { // assume array
       this.pcs = pcs
     }
-    this.iroot = iroot
+    // test for futur include empty set (?) as valid pcs
+    if (!pcs) {
+      this.iroot = 0;
+    } else  {
+      // check iroot in pcs
+      this.setIroot(iroot)
+    }
+
     this.prev_ipcs_cplt = prev_ipcs_cplt ? prev_ipcs_cplt : null
   }
 
@@ -85,6 +92,7 @@ export default class IPcs {
     let norm = this.pcs.slice();
     let min = norm;
     let minInt = IPcs.id(this.pcs);
+
     for (let i = 0; i < n - 1; i++) {
       norm = IPcs.getPermute(1, 1, 0, norm);
       let curInt = IPcs.id(norm);
@@ -93,7 +101,7 @@ export default class IPcs {
         min = norm;
       }
     }
-    return new IPcs(min, this.iroot);
+    return new IPcs(min, 0);
   }
 
   dihedralPrimeForm() {
@@ -152,7 +160,6 @@ export default class IPcs {
     return new IPcs(IPcs.getPermute(a, t, this.iroot, this.pcs), newIRoot)
   }
 
-
   /**
    * Transformation affine of this
    * @param a
@@ -160,10 +167,7 @@ export default class IPcs {
    * @returns {IPcs}
    */
   affineOp(a, t) {
-    // return new IPcs(IPcs.getPermute(a, t, this.iroot, this.pcs),
-    //   (this.pcs.length + this.iroot + t) % this.pcs.length)
     return this.permute(a, t)
-    // return IPcs.getPermuteIPcs(a, t, this.iroot, this.pcs)
   }
 
   /**
@@ -179,6 +183,8 @@ export default class IPcs {
    * Modulate of this (change iroot)
    * @param direction which next or previus degree of modulation
    * @returns {IPcs} a new object
+   *
+   * TODO : set new iroot nearest
    */
   modulate(direction) {
     let newIRoot = this.iroot
@@ -279,6 +285,51 @@ export default class IPcs {
    */
   cardinal() {
     return this.pcs.filter(i => i === 1).length
+  }
+
+  /**
+   * get cardinal of all modes of this
+   * Examples :
+   * <pre>
+   * { 0, 3, 6, 9} => 1
+   * { 0, 4, 8} => 1
+   * { 0, 1, 6, 7} => 2
+   * { 0, 1, 2, 3} => 4
+   * </pre>
+   * @return {number}
+   */
+  cardOrbitMode() {
+    // if(this._modesOrbits) {
+    //   return this._modesOrbits.length
+    // }
+    // lazy loading
+    // this._modesOrbits = []
+    let cardinal = 0;
+    let pcs = this.pcs.slice()
+    let n = pcs.length
+    for (let i=(this.iroot+1) % n; i< pcs.length + this.iroot; i++) {
+      if (pcs[i%n] === 0) continue
+      cardinal++
+      let pcs2 = this.transpose(-i + this.iroot)
+      pcs2.setIroot(this.iroot) // for equals...
+      if (pcs2.equals(this)) {
+        return cardinal
+      } else {
+        // this._modesOrbits.push(pcs2)
+      }
+    }
+    // return this._modesOrbits.length
+    return cardinal +1
+  }
+
+  /**
+   * get number of distinct PCS in cyclic orbit of PCS.
+   *  formula derived from equality in these two ratios  : n/cardOrbitCyclic and cardinalPcs/cardOrbitMode
+   * @return {number}
+   */
+  cardOrbitCyclic() {
+    let n = this.pcs.length
+    return (n * this.cardOrbitMode())/this.cardinal()
   }
 
   /**
