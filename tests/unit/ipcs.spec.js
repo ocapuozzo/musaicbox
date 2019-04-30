@@ -68,7 +68,7 @@ test("IPcs equals ko ", () => {
 
 test("IPcs complement ", () => {
   const ipcs = new IPcs("0,2,4,5,7,9,11", 0)
-  const ipcs_complement = new IPcs("1,3,6,8,10", 1)
+  const ipcs_complement = new IPcs("1,3,6,8,10", 6)
   const complement = ipcs.complement()
 
   const cpltcplt = complement.complement()
@@ -77,14 +77,14 @@ test("IPcs complement ", () => {
   expect(cpltcplt.equals(ipcs)).toBeTruthy();
 });
 
-test("IPcs complement ko", () => {
+test("IPcs complement max/empty", () => {
   const ipcs12pc = new IPcs("0,1,2,3,4,5,6,7,8,9,10,11", 0)
-  const ipcs_complement = new IPcs("0", 0)
+  const ipcs_complement = new IPcs("", undefined)
   try {
     const complement = ipcs12pc.complement()
-    fail("impossible complement waiting (no iroot)")
+    // console.log("cpt : = " + complement)
   } catch (e) {
-    expect(e.toString()).toMatch("Cannot initialize iroot")
+    expect(e.toString()).toMatch("Not accept empty pcs ?")
   }
 });
 
@@ -120,13 +120,15 @@ test("IPcs cardOrbitCyclic", () => {
 
 test("IPcs cyclicPrimeForm", () => {
   let ipcsPF = new IPcs("0, 3, 6, 9", 0)
-  expect(ipcsPF.cyclicPrimeForm()).toEqual(ipcsPF)
+  expect(ipcsPF.cyclicPrimeForm().equals(ipcsPF)).toBeTruthy();
   let ipcs = new IPcs("1, 4, 7, 10", 1)
-  expect(ipcs.cyclicPrimeForm()).toEqual(ipcsPF)
+  expect(ipcs.cyclicPrimeForm().equals(ipcsPF)).toBeTruthy();
   ipcs = new IPcs("7", 7)
-  expect(ipcs.cyclicPrimeForm()).toEqual(new IPcs("0", 0))
+  let pcsExpected = new IPcs("0", 0)
+  expect(ipcs.cyclicPrimeForm().equals(pcsExpected)).toBeTruthy();
   ipcs = new IPcs("0,1,2,3,4,5,6,7,8,9,10,11", 7)
-  expect(ipcs.cyclicPrimeForm()).toEqual(new IPcs("0,1,2,3,4,5,6,7,8,9,10,11", 0))
+  pcsExpected = new IPcs("0,1,2,3,4,5,6,7,8,9,10,11", 0)
+  expect(ipcs.cyclicPrimeForm().equals(pcsExpected)).toBeTruthy();
 });
 
 test("IPcs musaicPrimeForm", () => {
@@ -134,4 +136,21 @@ test("IPcs musaicPrimeForm", () => {
   // page 1171 de ToposOfMusic
   let ipcsMusaicPF = new IPcs("0, 1, 3, 4", 0)
   expect(ipcs.musaicPrimeForm()).toEqual(ipcsMusaicPF)
+});
+
+test("IPcs Set by Map", () => {
+  let ipcs1 = new IPcs("1, 4, 6, 9", 1)
+  let ipcs2 = new IPcs("0, 3, 5, 8", 0)
+  let ipcs3 = new IPcs("0, 3, 5, 8", 0)
+  let map = new Map()
+  map.set(ipcs1.id(),ipcs1)
+  map.set(ipcs2.id(),ipcs2)
+  map.set(ipcs3.id(), ipcs3)
+  expect(map.size).toEqual(2)
+
+  // https://stackoverflow.com/questions/28718641/transforming-a-javascript-iterator-into-an-array
+  expect(Array.from(map.keys())[0]).toEqual(ipcs1.id())
+  // test sort
+  map = new Map([...map.entries()].sort())
+  expect(Array.from(map.keys())[0]).toEqual(ipcs2.id())
 });

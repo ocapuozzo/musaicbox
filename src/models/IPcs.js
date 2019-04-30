@@ -10,14 +10,14 @@ const negativeToPositiveModulo = (i, n) => {
 export default class IPcs {
   constructor(pcs, iroot, prev_ipcs_cplt = null) {
     if (typeof (pcs) === 'string') {
-      this.pcs = this._fromStringTobinArray(pcs);
+      this.pcs = this._fromStringTobinArray(pcs)
     } else { // assume array
-      this.pcs = pcs
+      this.pcs = pcs.slice()
     }
     // test for futur include empty set (?) as valid pcs
     if (!pcs) {
-      this.iroot = 0;
-    } else  {
+      this.iroot = 0 // undefined ?
+    } else {
       // check iroot in pcs
       this.setIroot(iroot)
     }
@@ -85,9 +85,16 @@ export default class IPcs {
   /**
    * Get cyclic PF
    *
-   * @return IPcs which binary pitches class set in cyclic prime form
+   * @return IPcs
    */
   cyclicPrimeForm() {
+    if (this.cardinal() === 0) {
+      return this
+    }
+    if (this._minCyclic){
+      return this._minCyclic
+    }
+    // lazy compute
     let n = this.pcs.length;
     let norm = this.pcs.slice();
     let min = norm;
@@ -101,7 +108,8 @@ export default class IPcs {
         min = norm;
       }
     }
-    return new IPcs(min, 0);
+    this._minCyclic = new IPcs(min, 0)
+    return this._minCyclic
   }
 
   dihedralPrimeForm() {
@@ -120,10 +128,9 @@ export default class IPcs {
 
   musaicPrimeForm() {
     let cpf = this.affinePrimeForm();
-    let cpfCplt= this.complement().affinePrimeForm();
+    let cpfCplt = this.complement().affinePrimeForm();
     return cpf.id() < cpfCplt.id() ? cpf : cpfCplt;
   }
-
 
 
   /**
@@ -169,6 +176,10 @@ export default class IPcs {
    */
   permute(a, t) {
     // iroot is invariant
+    if (this.cardinal() === 0) {
+      // empty pcs no change
+      return this
+    }
     let newIRoot = negativeToPositiveModulo((this.iroot + t), this.pcs.length)
     return new IPcs(IPcs.getPermute(a, t, this.iroot, this.pcs), newIRoot)
   }
@@ -312,6 +323,34 @@ export default class IPcs {
    * @return {number}
    */
   cardOrbitMode() {
+    if (this.iroot === undefined) {
+      return undefined
+    }
+    if (this._cardModesOrbits) {
+      return this._cardModesOrbits // _modesOrbits.length
+    }
+    // lazy loading
+    let modesOrbits = []
+    modesOrbits.push(this)
+    let cardinal = 0;
+    let pcs = this.pcs.slice()
+    let n = pcs.length
+    for (let i = (this.iroot + 1) % n; i < pcs.length + this.iroot; i++) {
+      if (pcs[i % n] === 0) continue
+      cardinal++
+      let pcs2 = this.transpose(-i + this.iroot)
+      pcs2.setIroot(this.iroot) // for equals...
+      if (pcs2.equals(this)) {
+        break
+      } else {
+        modesOrbits.push(pcs2)
+      }
+    }
+    return this._cardModesOrbits = modesOrbits.length
+    //return cardinal +1
+  }
+
+  _cardOrbitMode() {
     // if(this._modesOrbits) {
     //   return this._modesOrbits.length
     // }
@@ -320,8 +359,8 @@ export default class IPcs {
     let cardinal = 0;
     let pcs = this.pcs.slice()
     let n = pcs.length
-    for (let i=(this.iroot+1) % n; i< pcs.length + this.iroot; i++) {
-      if (pcs[i%n] === 0) continue
+    for (let i = (this.iroot + 1) % n; i < pcs.length + this.iroot; i++) {
+      if (pcs[i % n] === 0) continue
       cardinal++
       let pcs2 = this.transpose(-i + this.iroot)
       pcs2.setIroot(this.iroot) // for equals...
@@ -332,7 +371,7 @@ export default class IPcs {
       }
     }
     // return this._modesOrbits.length
-    return cardinal +1
+    return cardinal + 1
   }
 
   /**
@@ -342,7 +381,7 @@ export default class IPcs {
    */
   cardOrbitCyclic() {
     let n = this.pcs.length
-    return (n * this.cardOrbitMode())/this.cardinal()
+    return (n * this.cardOrbitMode()) / this.cardinal()
   }
 
   /**
@@ -359,20 +398,27 @@ export default class IPcs {
     }
     let pcs_cpt = this.pcs.map(pc => (pc === 1 ? 0 : 1)) //;slice() and inverse 0/1
     let new_iroot = undefined
+    let localIroot = this.iroot === undefined ?  0 : this.iroot
     let n = pcs_cpt.length
     // iroot is lost by complement... set a new iroot of complement
-    for (let i = this.iroot + 1; i < this.iroot + n; i++ ) {
-      if (pcs_cpt[i % n] === 1) {
-        new_iroot = i % n
-        break
+    // opposite is a good candidate when n is even
+    if ((n%2) === 0 && pcs_cpt[(localIroot + n/2) % n ] === 1 ){
+      new_iroot = (localIroot  + n/2) % n
+    } else {
+      // TODO best strategy to fin new iroot
+      // here the first in right circular research
+      for (let i = localIroot  + 1; i < localIroot  + n; i++) {
+        if (pcs_cpt[i % n] === 1) {
+          new_iroot = i % n
+          break
+        }
       }
     }
-    if (new_iroot === undefined){
-       throw new Error("Complement : Cannot initialize iroot !!!")
+    if (new_iroot === undefined && this.prev_ipcs_cplt) {
+      throw new Error("Complement : Cannot initialize iroot !!!??")
     }
     return new IPcs(pcs_cpt, new_iroot, this)
   }
-
 
   toString() {
     return JSON.stringify(this.pcs) + ", iroot : "

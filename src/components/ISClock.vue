@@ -181,13 +181,8 @@ export default {
         this.$options.dateMouseDone = null
         return false;
       }
-
-      if (index >= 0 && index !== this.iroot) {
-        if (this.ipcs.pcs[index] === 0 && this.ipcs.cardinal() === this.ipcs.pcs.length - 1) {
-          // cardinal in ]0..n-1[  because iroot must be always set 
-          // and pcs empty are not iroot, and  complement of complement of pcs empty also...
-          return;
-        }
+      // accept unset iroot when cardinal == 1 only
+      if (index >= 0 && (index !== this.iroot || this.ipcs.cardinal()===1)) {
         this.$store.commit("ipcs/toggleindexpcs", index);
         this.$root.$emit('onsetpcs');
       }

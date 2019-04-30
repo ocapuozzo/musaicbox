@@ -119,20 +119,16 @@ export default {
       let x = e.clientX - rect.left;
       let y = e.clientY - rect.top;
 
-      // from matrix coord to indice linear
-      let indice = ((5 * Math.floor(x / this.CEL_WIDTH))
-        + (Math.floor(y / this.CEL_WIDTH)) + this.ipcs.iroot) % this.ipcs.pcs.length;
+      // for compute with undefined
+      let localIroot = (this.ipcs.iroot === undefined) ? 0 : this.ipcs.iroot
 
-      // musaic invariant : pitch zero is always to 1
-      // why ? for Bijective morphism (polymorphism) 
-      // between algebra and geometry
-      // and always cardinal < 12 (for a iroot of complement...)
-      if (indice !== this.ipcs.iroot && this.ipcs.cardinal() < this.ipcs.pcs.length - 1) {
+        // from matrix coord to indice linear
+      let index = ((5 * Math.floor(x / this.CEL_WIDTH))
+        + (Math.floor(y / this.CEL_WIDTH)) + localIroot) % this.ipcs.pcs.length;
 
-        this.$store.commit("ipcs/toggleindexpcs", indice);
-        // this.$set(this.ipcs.pcs, indice, (this.ipcs.pcs[indice] === 1) ? 0 : 1);
-        // call with neutral operation (1)
-
+       // keep iroot until cardinal = 1
+       if (index !== this.iroot || this.ipcs.cardinal()===1) {
+        this.$store.commit("ipcs/toggleindexpcs", index);
         this.$root.$emit('onsetpcs');
       }
     },

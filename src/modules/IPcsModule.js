@@ -59,12 +59,23 @@ const mutations = {
    * @param index
    */
   toggleindexpcs(state, index) {
-    state.ipcs.pcs  = state.ipcs.pcs.map((value, i) => {
+    let newPcs = state.ipcs.pcs.map((value, i) => {
       if (i === index) {
         return (value === 1) ? 0 : 1
       }
       return value
     })
+    // assume index <> iroot if cardinal > 1
+    let newIRoot =  state.ipcs.iroot
+
+    let newCardinal  = newPcs.filter(i => i === 1).length
+    // empty pcset has not iroot
+    if (newCardinal === 0 ) {
+      newIRoot = undefined
+    } else if (newCardinal === 1) {
+      newIRoot = newPcs.findIndex(pc => pc === 1)
+    }
+    state.ipcs = new IPcs(newPcs, newIRoot)
   },
 
   /**
@@ -73,12 +84,18 @@ const mutations = {
    * @param payload an object { index, value }
    */
   changevalueatindex(state, payload) {
-    state.ipcs.pcs  = state.ipcs.pcs.map((value, i) => {
+    let newPcs = state.ipcs.pcs.map((value, i) => {
       if (i === payload.index) {
         return payload.value
       }
       return value
     })
+    let newIRoot =  state.ipcs.iroot
+    if (!newPcs ) {
+      newIRoot = undefined // empty set has not iroot
+    }
+    // if (payload.value == 0 && payload.index == state.ipcs.iroot )
+    state.ipcs = new IPcs(newPcs, newIRoot)
   },
 
 
@@ -105,7 +122,6 @@ const mutations = {
    * update ipcs
    */
   mult(state, mult) {
-    // console.log('NEW mutation multiplication by :' + mult);
     state.ipcs = state.ipcs.affineOp(mult, 0);
   }
 };
