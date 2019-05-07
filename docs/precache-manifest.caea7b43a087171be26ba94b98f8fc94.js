@@ -1,15 +1,15 @@
 self.__precacheManifest = [
   {
-    "revision": "08017f7d1e579386257f",
-    "url": "/musaicbox/js/about.8c223fdb.js"
+    "revision": "f3a737514484d1be2e90",
+    "url": "/musaicbox/js/about.1a4d52aa.js"
   },
   {
-    "revision": "b0afdb2c27bce79b6b2b",
-    "url": "/musaicbox/css/app.039a6e2e.css"
+    "revision": "125165600c9e31775042",
+    "url": "/musaicbox/css/app.1bed5b9c.css"
   },
   {
-    "revision": "b0afdb2c27bce79b6b2b",
-    "url": "/musaicbox/js/app.4ab0fd75.js"
+    "revision": "125165600c9e31775042",
+    "url": "/musaicbox/js/app.7016cda6.js"
   },
   {
     "revision": "3e3a2c23810f291aed67",
@@ -20,7 +20,7 @@ self.__precacheManifest = [
     "url": "/musaicbox/js/chunk-vendors.e6bcf712.js"
   },
   {
-    "revision": "77c2968797982c695d33d9bcd0e68c4d",
+    "revision": "15e9dc0988e22022c43fbc2d60de8258",
     "url": "/musaicbox/index.html"
   },
   {
@@ -52,12 +52,12 @@ self.__precacheManifest = [
     "url": "/musaicbox/img/t+.png"
   },
   {
-    "revision": "be4c2865cd0cbd1f62e28d06586bdaeb",
-    "url": "/musaicbox/img/twotone-rotate_left-24px.svg"
-  },
-  {
     "revision": "d40a1aac7d940696332fbfe242951c63",
     "url": "/musaicbox/img/twotone-rotate_left-24px.png"
+  },
+  {
+    "revision": "be4c2865cd0cbd1f62e28d06586bdaeb",
+    "url": "/musaicbox/img/twotone-rotate_left-24px.svg"
   },
   {
     "revision": "e8309ca65e41dfc1262f4923475319a4",

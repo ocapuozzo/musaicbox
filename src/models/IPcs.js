@@ -14,14 +14,17 @@ export default class IPcs {
     } else { // assume array
       this.pcs = pcs.slice()
     }
-    // test for futur include empty set (?) as valid pcs
-    if (!pcs) {
-      this.iroot = 0 // undefined ?
+    // empty set as valid pcs
+    if (this.cardinal() === 0) {
+      this.iroot = undefined
     } else {
       // check iroot in pcs
-      this.setIroot(iroot)
+      if (this.pcs[iroot] === 1) {
+        this.iroot = iroot
+      } else {
+        throw new Error("Can't create IPcs instance (bad iroot = " + iroot + " for pcs " + this.pcs + ")")
+      }
     }
-
     this.prev_ipcs_cplt = prev_ipcs_cplt ? prev_ipcs_cplt : null
   }
 
@@ -41,9 +44,11 @@ export default class IPcs {
       (strpcs[0] === '{' && strpcs[strpcs.length - 1] === '}')) {
       strpcs = strpcs.substring(1, strpcs.length - 1);
     }
-    let pitches = strpcs.split(',');
-    for (let i = 0; i < pitches.length; i++) {
-      bin[Number(pitches[i])] = 1;
+    if (strpcs) {
+      let pitches = strpcs.split(',');
+      for (let i = 0; i < pitches.length; i++) {
+        bin[Number(pitches[i])] = 1;
+      }
     }
     return bin;
   }
@@ -60,7 +65,7 @@ export default class IPcs {
    * int identify of PCS Bin Array representtion (abin)
    *  is function polynomial + 2^12 * cardinal
    *   for order relation (select min in hasse diagram)
-   * @param abin
+   * @param {array} abin
    * @returns {number}
    */
   static id(abin) {
@@ -175,13 +180,12 @@ export default class IPcs {
    * @return {IPcs}
    */
   permute(a, t) {
-    // iroot is invariant
     if (this.cardinal() === 0) {
       // empty pcs no change
       return this
     }
     let newIRoot = negativeToPositiveModulo((this.iroot + t), this.pcs.length)
-    return new IPcs(IPcs.getPermute(a, t, this.iroot, this.pcs), newIRoot)
+    return new IPcs(IPcs.getPermute(a, t, newIRoot, this.pcs), newIRoot)
   }
 
   /**
@@ -338,40 +342,15 @@ export default class IPcs {
     for (let i = (this.iroot + 1) % n; i < pcs.length + this.iroot; i++) {
       if (pcs[i % n] === 0) continue
       cardinal++
-      let pcs2 = this.transpose(-i + this.iroot)
-      pcs2.setIroot(this.iroot) // for equals...
-      if (pcs2.equals(this)) {
+      let ipcs2 = this.transpose(-i + this.iroot)
+      // compare pcs without iroot
+      if (ipcs2.equalsPcs(this)) {
         break
       } else {
-        modesOrbits.push(pcs2)
+        modesOrbits.push(ipcs2)
       }
     }
     return this._cardModesOrbits = modesOrbits.length
-    //return cardinal +1
-  }
-
-  _cardOrbitMode() {
-    // if(this._modesOrbits) {
-    //   return this._modesOrbits.length
-    // }
-    // lazy loading
-    // this._modesOrbits = []
-    let cardinal = 0;
-    let pcs = this.pcs.slice()
-    let n = pcs.length
-    for (let i = (this.iroot + 1) % n; i < pcs.length + this.iroot; i++) {
-      if (pcs[i % n] === 0) continue
-      cardinal++
-      let pcs2 = this.transpose(-i + this.iroot)
-      pcs2.setIroot(this.iroot) // for equals...
-      if (pcs2.equals(this)) {
-        return cardinal
-      } else {
-        // this._modesOrbits.push(pcs2)
-      }
-    }
-    // return this._modesOrbits.length
-    return cardinal + 1
   }
 
   /**
@@ -386,6 +365,7 @@ export default class IPcs {
 
   /**
    * get complement of this.
+   * Important : complement loses iroot pivot
    * if prev_ipcs_cplt is defined, return prev_ipcs_cplt
    *   (default prev_ipcs_cplt is null)
    * else
@@ -431,6 +411,13 @@ export default class IPcs {
     if (other instanceof IPcs) {
       return this.pcs.every((v, i) => v === other.pcs[i]) &&
         this.iroot === other.iroot;
+    }
+    return false
+  }
+
+  equalsPcs(other) {
+    if (other instanceof IPcs) {
+      return this.pcs.every((v, i) => v === other.pcs[i])
     }
     return false
   }

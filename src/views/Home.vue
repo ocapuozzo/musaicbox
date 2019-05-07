@@ -8,8 +8,8 @@
         </div>
       </div>
       <div
-        class="p-2 ml-2 shadow mb-5 bg-white rounded col"
-        style="max-width:280px;min-width:280px;"
+          class="p-2 ml-2 shadow mb-5 bg-white rounded col"
+          style="max-width:280px;min-width:280px;"
       >
         <h5 class="text-center title-detail pb-2">iPCS</h5>
         <div class="container">
@@ -51,46 +51,46 @@
               <fieldset class="representation-border">
                 <legend class="representation-border">Fecundity</legend>
                 <p>
-                  cardOrbitMode :
+                  #Modes :
                   <span class="analyse-pcs">{{ ipcs.cardOrbitMode() }}</span>
                 </p>
                 <p>
-                  cardOrbitCyclic :
+                  #OrbitCyclic :
                   <span class="analyse-pcs">{{ ipcs.cardOrbitCyclic() }}</span>
                 </p>
                 <p>
-                  cardOrbitDihedral :
+                  #OrbitDihedral :
                   <span class="analyse-pcs">TODO</span>
                 </p>
                 <p>
-                  cardOrbitAffine :
+                  #OrbitAffine :
                   <span class="analyse-pcs">TODO</span>
                 </p>
                 <p>
-                  cardOrbitMusaic :
+                  #OrbitMusaic :
                   <span class="analyse-pcs">TODO</span>
                 </p>
               </fieldset>
               <fieldset class="representation-border">
                 <legend class="representation-border">Prime Form</legend>
-                  <p>
-                  Cyclic :
-                    <span class="analyse-pcs">{{ cyclicPF.pcsStr }}</span>
-                  </p>
-                  <p>
-                    Dihedral :
-                    <span class="analyse-pcs">{{ ipcs.dihedralPrimeForm().pcsStr }}</span>
-                  </p>
-                  <p>
-                    Affine :
-                    <span class="analyse-pcs">{{ ipcs.affinePrimeForm().pcsStr }}</span>
-                  </p>
-                  <p>
-                    Musaic :
-                    <span class="analyse-pcs">{{ ipcs.musaicPrimeForm().pcsStr }}</span>
-                  </p>
                 <p>
-                 &nbsp;
+                  Cyclic :
+                  <span class="analyse-pcs">{{ cyclicPF.pcsStr }}</span>
+                </p>
+                <p>
+                  Dihedral :
+                  <span class="analyse-pcs">{{ ipcs.dihedralPrimeForm().pcsStr }}</span>
+                </p>
+                <p>
+                  Affine :
+                  <span class="analyse-pcs">{{ ipcs.affinePrimeForm().pcsStr }}</span>
+                </p>
+                <p>
+                  Musaic :
+                  <span class="analyse-pcs">{{ ipcs.musaicPrimeForm().pcsStr }}</span>
+                </p>
+                <p>
+                  &nbsp;
                 </p>
               </fieldset>
             </div>
@@ -109,105 +109,108 @@
 </template>
 
 <script>
-// @ is an alias to /src
-import Musaic from "@/components/Musaic.vue";
-import ISClock from "@/components/ISClock.vue";
-import WrapCanvas from "@/components/WrapCanvas.vue";
-import MusicNotation from "@/components/MusicNotation.vue";
-import RotateIPcs from "@/components/RotateIPcs.vue";
+  // @ is an alias to /src
+  import Musaic from "@/components/Musaic.vue";
+  import ISClock from "@/components/ISClock.vue";
+  import WrapCanvas from "@/components/WrapCanvas.vue";
+  import MusicNotation from "@/components/MusicNotation.vue";
+  import RotateIPcs from "@/components/RotateIPcs.vue";
 
-import { mapGetters, mapState } from 'vuex'
+  import {mapGetters, mapState} from 'vuex'
 
-export default {
-  name: "home",
-  mounted() {
-    // see manifest.json
-    let q = this.$route.query.load
-    console.log(q)
-  },
-  computed: {
-    pcs: {
-      get() {
-        return this.$store.state.ipcs.ipcs.pcs
-      },
-      set(value) {
-        this.$store.commit('ipcs/changepcs', value);
-      }
+  export default {
+    name: "home",
+    mounted() {
+      // see manifest.json
+      let q = this.$route.query.load
+      console.log(q)
     },
-    ipcs: {
-      get() {
-        return this.$store.state.ipcs.ipcs
+    computed: {
+      pcs: {
+        get() {
+          return this.$store.state.ipcs.ipcs.pcs
+        },
+        set(value) {
+          this.$store.commit('ipcs/changepcs', value);
+        }
       },
-      set(value) {
-        this.$store.commit('ipcs/update', value);
-      }
+      ipcs: {
+        get() {
+          return this.$store.state.ipcs.ipcs
+        },
+        set(value) {
+          this.$store.commit('ipcs/update', value);
+        }
+      },
+
+      ...mapGetters('ipcs', {
+        pcsCard: 'pcsCard',
+        'iv': 'iv',
+        'id': 'id',
+        'cyclicPF': 'cyclicPF',
+        'pcsstr': 'pcsstr',
+        'fortenum': 'fortenum'
+      }),
+
     },
-
-    ...mapGetters('ipcs', {
-      pcsCard: 'pcsCard',
-      'iv': 'iv',
-      'id': 'id',
-      'cyclicPF': 'cyclicPF',
-      'pcsstr': 'pcsstr',
-      'fortenum': 'fortenum'
-    }),
-
-  },
-  components: {
-    Musaic,
-    WrapCanvas,
-    ISClock,
-    MusicNotation,
-    RotateIPcs
-  }
-};
+    components: {
+      Musaic,
+      WrapCanvas,
+      ISClock,
+      MusicNotation,
+      RotateIPcs
+    }
+  };
 </script>
 
 <style scoped>
-h3 {
-  text-align: left;
-}
-h5 {
-  font-size: 1.1rem;
-}
-.title-detail {
-  border-bottom-style: solid;
-  border-width: 1px;
-  border-bottom-color: lightgray;
-}
-.analyse-pcs {
-  text-decoration-color: brown;
-  font-size: 1rem;
-  background-color: blanchedalmond;
-}
+  h3 {
+    text-align: left;
+  }
 
-.id-pcs {
-  text-decoration-color: brown;
-  background-color: blanchedalmond;
-  font-size: 0.7rem;
-}
+  h5 {
+    font-size: 1.1rem;
+  }
 
-.clockpcs_ {
-  width: 80%;
-}
+  .title-detail {
+    border-bottom-style: solid;
+    border-width: 1px;
+    border-bottom-color: lightgray;
+  }
 
-fieldset.representation-border {
-  display: inline;
-  border: 1px groove #ddd !important;
-  padding: 0 1.4em 0.5em 1em !important;
-  margin: 0 1em 1.5em 0 !important;
-  -webkit-box-shadow: 0px 0px 0px 0px #000;
-  box-shadow: 0px 0px 0px 0px #000;
-}
+  .analyse-pcs {
+    text-decoration-color: brown;
+    font-size: 1rem;
+    background-color: blanchedalmond;
+  }
 
-legend.representation-border {
-  font-size: 1em !important;
-  font-weight: bold !important;
-  font-style: italic;
-  text-align: left !important;
-  width: auto;
-  padding: 0 10px;
-  border-bottom: none;
-}
+  .id-pcs {
+    text-decoration-color: brown;
+    background-color: blanchedalmond;
+    font-size: 0.7rem;
+  }
+
+  .clockpcs_ {
+    width: 80%;
+  }
+
+  fieldset.representation-border {
+    display: inline;
+    border: 1px groove #ddd !important;
+    padding: 0 1.4em 0.5em 1em !important;
+    margin: 0 1em 1.5em 0 !important;
+    -webkit-box-shadow: 0px 0px 0px 0px #000;
+    box-shadow: 0px 0px 0px 0px #000;
+  }
+
+  legend.representation-border {
+    font-size: 1em !important;
+    font-weight: bold !important;
+    font-style: italic;
+    text-align: left !important;
+    width: auto;
+    padding: 0 10px;
+    border-bottom: none;
+  }
 
 </style>

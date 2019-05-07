@@ -61,10 +61,18 @@ test("IPcs equals ok ", () => {
 
 test("IPcs equals ko ", () => {
   const ipcs = new IPcs("0,4,11", 0)
-  const ipcs_other = new IPcs("0,4,11", 1)
+  const ipcs_other = new IPcs("0,4,11", 11)
 
   expect(ipcs.equals(ipcs_other)).not.toBeTruthy();
 });
+
+test("IPcs equalsPcs ", () => {
+  const ipcs = new IPcs("0,4,11", 0)
+  const ipcs_other = new IPcs("0,4,11", 4)
+
+  expect(ipcs.equalsPcs(ipcs_other)).toBeTruthy();
+});
+
 
 test("IPcs complement ", () => {
   const ipcs = new IPcs("0,2,4,5,7,9,11", 0)
@@ -80,6 +88,7 @@ test("IPcs complement ", () => {
 test("IPcs complement max/empty", () => {
   const ipcs12pc = new IPcs("0,1,2,3,4,5,6,7,8,9,10,11", 0)
   const ipcs_complement = new IPcs("", undefined)
+  new IPcs("{]", undefined)
   try {
     const complement = ipcs12pc.complement()
     // console.log("cpt : = " + complement)
@@ -150,7 +159,26 @@ test("IPcs Set by Map", () => {
 
   // https://stackoverflow.com/questions/28718641/transforming-a-javascript-iterator-into-an-array
   expect(Array.from(map.keys())[0]).toEqual(ipcs1.id())
-  // test sort
+  // test sort (integer order)
   map = new Map([...map.entries()].sort())
   expect(Array.from(map.keys())[0]).toEqual(ipcs2.id())
+});
+
+
+test("IPcs Set by Array", () => {
+  let ipcs1 = new IPcs("1, 4, 6, 9", 1)
+  let ipcs2 = new IPcs("0, 3, 5, 8", 0)
+  let ipcs3 = new IPcs("0, 3, 5, 8", 0)
+  let tab = []
+  tab.push(ipcs1)
+  tab.push(ipcs2)
+  if (!tab.find(ipcs => ipcs.id() === ipcs3.id()))
+      tab.push(ipcs3)
+
+  expect(tab.length).toEqual(2)
+
+  let tabsort = tab.sort( (pcsa, pcsb) => pcsa.id() - pcsb.id())
+
+  // get min
+  expect(tabsort[0].equals(ipcs2)).toBeTruthy();
 });
