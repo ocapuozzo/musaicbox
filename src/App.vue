@@ -52,9 +52,7 @@
         <li>
           <router-link to="/about">About</router-link>
         </li>
-        
       </ul>
-
     </nav>
 
     <!-- Page Content Holder -->
@@ -106,19 +104,17 @@
 </template>
 
 <script>
-import JQuery from 'jquery'
-let $ = JQuery
 
 export default {
   mounted: function () {
-    $(document).ready(function () {
-      $("#sidebarCollapse").on("click", function () {
-        $("#sidebar").toggleClass("active");
-        $(this).toggleClass("active");
-      });
-    });
+      document.getElementById("sidebarCollapse").onclick = function (e) {
+        e.preventDefault();
+        document.getElementById("sidebar").classList.toggle("active");
+        document.getElementById("sidebarCollapse").classList.toggle("active");
+      }
   }
-};
+}
+
 </script>
 
 <style>
@@ -131,7 +127,6 @@ export default {
 
 #nav {
   padding: 30px;
-   
 }
 
 #nav a {
