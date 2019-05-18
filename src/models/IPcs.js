@@ -61,10 +61,31 @@ export default class IPcs {
     return PREV_MODULATION
   }
 
+
+  /**
+   * int identify of PCS Bin Array representtion (abin)
+   *  function polynomial (bijective function)
+   * @param {array} abin
+   * @returns {number}
+   */
+  static pid(abin) {
+    let n = abin.length;
+    let res = 0;
+    let pow = 1;
+    let card = 0;
+    for (let i = 0; i < n; i++) {
+      res += abin[i] * pow;
+      pow *= 2;
+      if (abin[i] === 1)
+        card++;
+    }
+    return res;
+  }
+
   /**
    * int identify of PCS Bin Array representtion (abin)
    *  is function polynomial + 2^12 * cardinal
-   *   for order relation (select min in hasse diagram)
+   *   for order relation (select min with weight cardinal)
    * @param {array} abin
    * @returns {number}
    */
@@ -86,6 +107,11 @@ export default class IPcs {
   id() {
     return IPcs.id(this.pcs);
   }
+
+  pid() {
+    return IPcs.pid(this.pcs);
+  }
+
 
   /**
    * Get cyclic PF
@@ -126,9 +152,15 @@ export default class IPcs {
   affinePrimeForm() {
     let cpf = this.dihedralPrimeForm();
     let pcsM5 = cpf.affineOp(5, 0).cyclicPrimeForm();
-    // or M11xM7
-    // or M5xM7
-    return cpf.id() < pcsM5.id() ? cpf : pcsM5;
+    let pcsM7 = cpf.affineOp(7, 0).cyclicPrimeForm();
+
+    if (cpf.id() < pcsM5.id() && cpf.id() < pcsM7.id())
+       return cpf
+
+    if (pcsM5.id() < pcsM7.id())
+       return pcsM5
+
+    return pcsM7
   }
 
   musaicPrimeForm() {

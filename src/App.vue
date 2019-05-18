@@ -15,6 +15,9 @@
           <router-link to="/">Interactive</router-link>
         </li>
         <li>
+          <router-link to="/group">Group & Action Explorer</router-link>
+        </li>
+        <!-- li>
           <a
             href="#homeSubmenu"
             data-toggle="collapse"
@@ -48,7 +51,7 @@
               </ul>
             </li>
           </ul>
-        </li>
+        </li -->
         <li>
           <router-link to="/about">About</router-link>
         </li>

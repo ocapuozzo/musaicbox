@@ -37,21 +37,17 @@ test("MusaicPcsOp testActionOn", () => {
 test("MusaicPcsOp test sort", () => {
   let opCM7_T5 = new MusaicPcsOperation(12, 7, 5, true);
   let opM1_T0 = new MusaicPcsOperation(12, 1, 0, false);
+  let opM1_T3 = new MusaicPcsOperation(12, 1, 3, false);
   let opM1_T11 = new MusaicPcsOperation(12, 1, 11, false);
   let opM7_T5 = new MusaicPcsOperation(12, 7, 5, false);
 
-  let ops = []
-  ops.push(opCM7_T5);
-  ops.push(opM1_T0);
-  ops.push(opM7_T5);
-  ops.push(opM1_T11);
+  let ops = [opCM7_T5, opM1_T3, opM1_T0, opM7_T5, opM1_T11]
 
-  let opsSortedWaiting = []
-  opsSortedWaiting.push(opM1_T0);
-  opsSortedWaiting.push(opM1_T11);
-  opsSortedWaiting.push(opM7_T5);
-  opsSortedWaiting.push(opCM7_T5);
+  let opsSortedWaiting = [opM1_T0, opM1_T3, opM1_T11, opM7_T5, opCM7_T5]
 
-  ops.sort(MusaicPcsOperation.compareTo);
+  expect(ops).not.toEqual(opsSortedWaiting)
+
+  ops.sort(MusaicPcsOperation.compareTo)
+  
   expect(ops).toEqual(opsSortedWaiting)
 })

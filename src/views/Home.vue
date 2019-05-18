@@ -73,6 +73,7 @@
               </fieldset>
               <fieldset class="representation-border">
                 <legend class="representation-border">Prime Form</legend>
+                <p>&nbsp;</p>
                 <p>
                   Cyclic :
                   <span class="analyse-pcs">{{ cyclicPF.pcsStr }}</span>
@@ -89,9 +90,6 @@
                   Musaic :
                   <span class="analyse-pcs">{{ ipcs.musaicPrimeForm().pcsStr }}</span>
                 </p>
-                <p>
-                  &nbsp;
-                </p>
               </fieldset>
             </div>
           </div>
@@ -99,7 +97,7 @@
             <p>
               (debug) iPCS :
               <span class="analyse-pcs">{{ ipcs }}</span> ~
-              <span class="id-pcs">Id : {{ id }}</span>
+              <span class="id-pcs">id : {{ id }}</span> ~ <span class="id-pcs">pid : {{ ipcs.pid() }}</span>
             </p>
           </div>
         </div>

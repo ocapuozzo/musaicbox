@@ -182,3 +182,22 @@ test("IPcs Set by Array", () => {
   // get min
   expect(tabsort[0].equals(ipcs2)).toBeTruthy();
 });
+
+test("IPcs id ", () => {
+  let ipcs1 = new IPcs("", undefined)
+  let ipcs2 = new IPcs("0", 0)
+  let ipcs3 = new IPcs("0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11", 0)
+  expect(ipcs1.id()).toEqual(0)
+  expect(ipcs2.id()).toEqual(1 + Math.pow(2, 12))
+  expect(ipcs3.id()).toEqual(Math.pow(2, 12) - 1 + 12 * Math.pow(2, 12))
+})
+
+test("IPcs id by simple polynomial function", () => {
+  let ipcs1 = new IPcs("", undefined)
+  let ipcs2 = new IPcs("0", 0)
+  let ipcs3 = new IPcs("0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11", 0)
+  expect(ipcs1.pid()).toEqual(0)
+  expect(ipcs2.pid()).toEqual(1 )
+  expect(ipcs3.pid()).toEqual(Math.pow(2, 12) - 1)
+})
+
