@@ -98,7 +98,7 @@ export default {
     },
 
     isSelected(i) {
-      return this.ipcs.pcs[i] == 1;
+      return this.ipcs.pcs[i] === 1;
     },
 
     setIRoot(index) {
@@ -202,24 +202,27 @@ export default {
       let grad;
       ctx.beginPath();
       ctx.arc(0, 0, radius, 0, 2 * Math.PI);
+      ctx.stroke()
       // console.log("index : " + index + " selected : " + this.isSelected(index));
       let color = (this.isSelected(index)) ? (index == this.iroot) ? 'red' : 'yellow' : 'white'
       ctx.fillStyle = color;
       ctx.fill();
-      grad = ctx.createRadialGradient(0, 0, radius * 0.8, 0, 0, radius * 1.2);
-      grad.addColorStop(0, '#333');
-      grad.addColorStop(0.5, 'white');
-      grad.addColorStop(1, '#333');
-      ctx.strokeStyle = grad;
-      ctx.lineWidth = lineWidth; //radius*0.1;
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.fillStyle = '#333';
-      ctx.fill();
-      if (index < 10) {
-        ctx.fillText(index.toString(), - .1, 1);
-      } else {
-        ctx.fillText(index.toString(), -.4, 1)
+      if (radius > 6) {
+        grad = ctx.createRadialGradient(0, 0, radius * 0.8, 0, 0, radius * 1.2);
+        grad.addColorStop(0, '#333');
+        grad.addColorStop(0.5, 'white');
+        grad.addColorStop(1, '#333');
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = lineWidth; //radius*0.1;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.fillStyle = '#333';
+        ctx.fill();
+        if (index < 10) {
+          ctx.fillText(index.toString(), -.1, 1);
+        } else {
+          ctx.fillText(index.toString(), -.4, 1)
+        }
       }
     },
 

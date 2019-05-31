@@ -1,53 +1,75 @@
+/*
+ * Copyright (c) 2019. Olivier Capuozzo
+ */
+
 import MusaicPcsOperation from "@/models/MusaicPcsOperation";
 import IPcs from "@/models/IPcs";
+import Group from "@/models/Group";
 
-test("MusaicPcsOp testEqualsObject ", () => {
-  let op1 = new MusaicPcsOperation(12, 7, 5, true);
-  let op2 = new MusaicPcsOperation(12, 7, 5, true);
-  expect(op1.equals(op2)).toEqual(true);
-  op2 = new MusaicPcsOperation(12, 7, 5, false);
-  expect(op1.equals(op2)).not.toBeTruthy();
-  op1 = new MusaicPcsOperation(12, 7, 5, false)
-  expect(op1.equals(op2)).toBeTruthy();
-});
+const getRandomInt = max => {
+ return Math.floor(Math.random() * Math.floor(max))
+}
 
-test("MusaicPcsOp compose", () => {
-  let opCM7_T5 = new MusaicPcsOperation(12, 7, 5, true);
-  let opCM7    = new MusaicPcsOperation(12, 7, 0, true);
-  let opT5     = new MusaicPcsOperation(12, 1, 5, false);
-
-  // action CM7 first and T5 second
-  expect(opCM7_T5.equals(opT5.compose(opCM7))).toBeTruthy();
-});
-
-test("MusaicPcsOp testActionOn", () => {
-  let pcs = new IPcs("0,3,4,7,8,11", 0);
-  let opCM7_T5 = new MusaicPcsOperation(12, 7, 5, true);
-  // n = 12, CM7_T5 is stabilizer for Pcs("0,3,4,7,8,11")
-
-  let newPcs = opCM7_T5.actionOn(pcs)
-
-  expect(pcs.equalsPcs(newPcs)).toBeTruthy();
-
-  let opCM7 = new MusaicPcsOperation(12, 7, 0, true);
-  let opT5 = new MusaicPcsOperation(12, 1, 5, false);
-  expect(pcs.equalsPcs(opT5.actionOn(opCM7.actionOn(pcs)))).toBeTruthy();
-});
-
-test("MusaicPcsOp test sort", () => {
-  let opCM7_T5 = new MusaicPcsOperation(12, 7, 5, true);
+test("Generator group from M1T0", () => {
   let opM1_T0 = new MusaicPcsOperation(12, 1, 0, false);
-  let opM1_T3 = new MusaicPcsOperation(12, 1, 3, false);
-  let opM1_T11 = new MusaicPcsOperation(12, 1, 11, false);
-  let opM7_T5 = new MusaicPcsOperation(12, 7, 5, false);
-
-  let ops = [opCM7_T5, opM1_T3, opM1_T0, opM7_T5, opM1_T11]
-
-  let opsSortedWaiting = [opM1_T0, opM1_T3, opM1_T11, opM7_T5, opCM7_T5]
-
-  expect(ops).not.toEqual(opsSortedWaiting)
-
-  ops.sort(MusaicPcsOperation.compareTo)
-  
-  expect(ops).toEqual(opsSortedWaiting)
+  let someOps = [opM1_T0]
+  let opsWaiting = someOps
+  let allOps = Group.generator(someOps)
+  expect(allOps).toEqual(opsWaiting)
 })
+
+test("Generator group from M1T1", () => {
+  let opM1_T1 = new MusaicPcsOperation(12, 1, 1, false);
+  let someOps = [opM1_T1]
+  let opsWaiting = []
+  for (let i = 0; i<12; i++) {
+    opsWaiting.push(new MusaicPcsOperation(12, i, 0, false))
+  }
+  let allops = Group.generator(someOps)
+  expect(allops).not.toEqual(opsWaiting)
+})
+
+test("testCayleyGenerateOperationsAffine", () => {
+  let someOperations = []
+  let order = 12;
+  let a = 1;
+  let t = 1;
+  let complement = false;
+  someOperations.push(new MusaicPcsOperation(order, a, t, complement));
+  a = 5;
+  someOperations.push(new MusaicPcsOperation(order, a, t, complement));
+  a = 7;
+  someOperations.push(new MusaicPcsOperation(order, a, t, complement));
+  a = 11;
+  someOperations.push(new MusaicPcsOperation(order, a, t, complement));
+
+  // generate 48 operations : 12 * each a
+  expect(Group.generator(someOperations).length).toEqual(order*4)
+})
+
+test("testCayleyGenerateOperationsMusaic", () => {
+  let someOperations = []
+  let order = 12;
+  let a = 1;
+  let t = 1;
+  let complement = false;
+  someOperations.push(new MusaicPcsOperation(order, a, t, complement));
+  a = 5;
+  someOperations.push(new MusaicPcsOperation(order, a, t, complement));
+  a = 7;
+  someOperations.push(new MusaicPcsOperation(order, a, t, complement));
+  complement = true;
+  someOperations.push(new MusaicPcsOperation(order, a, t, complement));
+
+  t = getRandomInt(12)
+  let aleaOp = new MusaicPcsOperation(order, 11, t, complement)
+
+  let allOps = Group.generator(someOperations)
+
+  // test if aleaOp is in allOps
+  expect(allOps.find( (e) => e.getHashCode() === aleaOp.getHashCode())).toBeTruthy()
+
+  // waiting 96 operations : 12 * each a = 48 and each complement (*2)
+  expect(allOps.length).toEqual(order*4*2)
+})
+

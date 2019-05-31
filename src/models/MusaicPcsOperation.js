@@ -63,11 +63,11 @@ export default class MusaicPcsOperation {
 _makeHashCode() {
   const prime = 31;
   let _hashcode = 1;
-  _hashcode = prime * _hashcode + a * n * 2;
-  _hashcode = prime * _hashcode + (complement ? 1231 : 1237);
-  _hashcode = prime * _hashcode + n;
-  _hashcode = prime * _hashcode + t;
-  return _hashcode;
+  _hashcode = prime * _hashcode + this.a * this.n * 2;
+  _hashcode = prime * _hashcode + (this.complement ? 1231 : 1237);
+  _hashcode = prime * _hashcode + this.n;
+  _hashcode = prime * _hashcode + this.t;
+  return this._hashcode = _hashcode;
 }
 
 equals(obj) {
@@ -173,6 +173,13 @@ addFixedPcs(ipcs) {
 
 getFixedPcs() {
   return this.fixedPcs;
+}
+
+getHashCode() {
+  if (!this._hashcode) {
+    this._makeHashCode()
+  }
+  return this._hashcode
 }
 
 

@@ -10,13 +10,22 @@ const negativeToPositiveModulo = (i, n) => {
 export default class IPcs {
   constructor(pcs, iroot, prev_ipcs_cplt = null) {
     if (typeof (pcs) === 'string') {
-      this.pcs = this._fromStringTobinArray(pcs)
-    } else { // assume array
+      this.pcs = this._fromStringTobinArray(pcs, 12)
+    } else if (typeof (pcs) === 'object' && !Array.isArray(pcs)) {
+      // waiting object as { strpcs a string attribut and n an integer }
+      this.pcs = this._fromStringTobinArray(pcs.strpcs, pcs.n)
+    } else if (Array.isArray(pcs)) {
+      // assume pcs bin vector [1,0,1, ... ]
       this.pcs = pcs.slice()
+    } else { // assume array
+      throw new Error("Can't create IPcs instance (bad args = "+ pcs + ")")
     }
     // empty set as valid pcs
     if (this.cardinal() === 0) {
       this.iroot = undefined
+    } else if (!iroot && iroot !== 0) {
+      //iroot is min pc
+      this.iroot = this.pcs.findIndex( ( pc => pc === 1 ))
     } else {
       // check iroot in pcs
       if (this.pcs[iroot] === 1) {
@@ -26,22 +35,26 @@ export default class IPcs {
       }
     }
     this.prev_ipcs_cplt = prev_ipcs_cplt ? prev_ipcs_cplt : null
+    this.n = this.pcs.length
   }
 
   /**
    * bin array image of PCS string
-   * Example : "0, 1, 7" => [1,1,0,0,0,0,0,1,0,0,0,0]
-   * @returns {string}
+   * Example : "0, 1, 7" => [1,1,0,0,0,0,0,1,0,0,0,0] (default n = 12)
+   * Example : "0, 1, 3", 5 => [1,1,0,1,0] (n = 5)
    *
-   * @param strpcs
-   * @returns {int[]}
+   * @param {string} strpcs
+   * @param {number} n vector dimension
+   * @returns {int[]} vector (length == n)
    */
-  _fromStringTobinArray(strpcs) {
-    let bin = new Array(12).fill(0);
+  _fromStringTobinArray(strpcs, n=12) {
+    // assume length = 12
+    let bin = new Array(n).fill(0);
+
     //  if "[1,3,5]" => "1,3,5"
     //  if "{1,3,5}" => "1,3,5"
     if ((strpcs[0] === '[' && strpcs[strpcs.length - 1] === ']') ||
-      (strpcs[0] === '{' && strpcs[strpcs.length - 1] === '}')) {
+        (strpcs[0] === '{' && strpcs[strpcs.length - 1] === '}')) {
       strpcs = strpcs.substring(1, strpcs.length - 1);
     }
     if (strpcs) {
@@ -60,7 +73,6 @@ export default class IPcs {
   static get PREV_MODULATION() {
     return PREV_MODULATION
   }
-
 
   /**
    * int identify of PCS Bin Array representtion (abin)
@@ -169,7 +181,6 @@ export default class IPcs {
     return cpf.id() < cpfCplt.id() ? cpf : cpfCplt;
   }
 
-
   /**
    * general transformation : affine operation ax + t
    * general idea (composition of affine operations):
@@ -178,8 +189,8 @@ export default class IPcs {
    *  3/ translate :        1 + iroot
    *  so : ax + ( -(a-1) * iroot + t )
    * @param  a    {number}
-   * @param  t    [0..11]
-   * @param iroot [0..11]
+   * @param  t    [0..this.n[
+   * @param iroot [0..this.n[
    * @param  abin binary array
    * @return {int[]}
    */
@@ -198,7 +209,6 @@ export default class IPcs {
     }
     return permute
   }
-
 
   /**
    * general transformation : affine operation ax + t
@@ -311,8 +321,8 @@ export default class IPcs {
    * @param iroot
    */
   setIroot(iroot) {
-    this.iroot = iroot;
     this.pcs[iroot] = 1;
+    this.iroot = iroot;
   }
 
   /**
@@ -452,5 +462,15 @@ export default class IPcs {
       return this.pcs.every((v, i) => v === other.pcs[i])
     }
     return false
+  }
+
+  /**
+   *
+   * @param ipcs1
+   * @param ipcs2
+   * @return {number} as waiting by Array sort
+   */
+  static compare(ipcs1, ipcs2) {
+    return ipcs1.id() - ipcs2.id()
   }
 }

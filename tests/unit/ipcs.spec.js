@@ -1,5 +1,15 @@
 import IPcs from "@/models/IPcs";
 
+test("IPcs constructor with no iroot = 0", () => {
+  const ipcs = new IPcs("0,4,7")
+  expect(ipcs.iroot).toEqual(0);
+});
+
+test("IPcs constructor with no iroot > 0", () => {
+  const ipcs = new IPcs("3,4,7")
+  expect(ipcs.iroot).toEqual(3);
+});
+
 test("IPcs cardinal", () => {
   const ipcs = new IPcs("0,4,7", 0)
   expect(ipcs.cardinal()).toEqual(3);
@@ -70,6 +80,9 @@ test("IPcs equalsPcs ", () => {
   const ipcs = new IPcs("0,4,11", 0)
   const ipcs_other = new IPcs("0,4,11", 4)
 
+  // not equals because iroot are not same
+  expect(ipcs.equals(ipcs_other)).not.toBeTruthy();
+  // ok
   expect(ipcs.equalsPcs(ipcs_other)).toBeTruthy();
 });
 
@@ -147,7 +160,7 @@ test("IPcs musaicPrimeForm", () => {
   expect(ipcs.musaicPrimeForm()).toEqual(ipcsMusaicPF)
 });
 
-test("IPcs Set by Map", () => {
+test("IPcs Set by Map then sort and convert to Array", () => {
   let ipcs1 = new IPcs("1, 4, 6, 9", 1)
   let ipcs2 = new IPcs("0, 3, 5, 8", 0)
   let ipcs3 = new IPcs("0, 3, 5, 8", 0)
@@ -159,9 +172,14 @@ test("IPcs Set by Map", () => {
 
   // https://stackoverflow.com/questions/28718641/transforming-a-javascript-iterator-into-an-array
   expect(Array.from(map.keys())[0]).toEqual(ipcs1.id())
-  // test sort (integer order)
+
+  // test sort (integer order on id)
   map = new Map([...map.entries()].sort())
   expect(Array.from(map.keys())[0]).toEqual(ipcs2.id())
+
+  // get ordered array from map object
+  let theIpcs = Array.from(map.values());
+  expect(theIpcs[0]).toEqual(ipcs2)
 });
 
 
@@ -177,7 +195,8 @@ test("IPcs Set by Array", () => {
 
   expect(tab.length).toEqual(2)
 
-  let tabsort = tab.sort( (pcsa, pcsb) => pcsa.id() - pcsb.id())
+  // let tabsort = tab.sort( (pcsa, pcsb) => pcsa.id() - pcsb.id())
+  let tabsort = tab.sort( IPcs.compare)
 
   // get min
   expect(tabsort[0].equals(ipcs2)).toBeTruthy();
@@ -192,12 +211,12 @@ test("IPcs id ", () => {
   expect(ipcs3.id()).toEqual(Math.pow(2, 12) - 1 + 12 * Math.pow(2, 12))
 })
 
-test("IPcs id by simple polynomial function", () => {
+test("IPcs pid by simple polynomial function", () => {
   let ipcs1 = new IPcs("", undefined)
   let ipcs2 = new IPcs("0", 0)
   let ipcs3 = new IPcs("0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11", 0)
   expect(ipcs1.pid()).toEqual(0)
-  expect(ipcs2.pid()).toEqual(1 )
+  expect(ipcs2.pid()).toEqual(1)
   expect(ipcs3.pid()).toEqual(Math.pow(2, 12) - 1)
 })
 

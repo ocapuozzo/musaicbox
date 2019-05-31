@@ -156,7 +156,7 @@ export default {
 
       // Draws musaic
       // loop n+1 for exact correlation between geometry ops and algebra ops
-      // display *iroot centred* for bijection geometry <-> algebra
+      // display *iroot centered* for bijective relation geometry <-> algebra
       // Example. 
       //   ipcs : ({0, 3, 6, 9}, iroot=0) 
       //   ipcs : ({1, 4, 7, 10}, iroot=1)  
