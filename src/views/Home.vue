@@ -73,7 +73,10 @@
               </fieldset>
               <fieldset class="representation-border">
                 <legend class="representation-border">Prime Form</legend>
-                <p>&nbsp;</p>
+                <p>
+                  Modal :
+                  <span class="analyse-pcs" v-html="modalPF"></span>
+                </p>
                 <p>
                   Cyclic :
                   <span class="analyse-pcs">{{ cyclicPF.pcsStr }}</span>
@@ -140,7 +143,12 @@
           this.$store.commit('ipcs/update', value);
         }
       },
-
+      modalPF: {
+        get() {
+          let mpf = this.ipcs.modalPrimeForm()
+          return mpf.pcsStr + "<span style='font-variant-position: sub;'>" + mpf.iroot + "</span>"
+        }
+      },
       ...mapGetters('ipcs', {
         pcsCard: 'pcsCard',
         'iv': 'iv',

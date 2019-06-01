@@ -7,11 +7,9 @@
           <label class="input-group-text " for="inputGroupSelect01"> N </label>
         </div>
         <select class="custom-select " id="inputGroupSelect01" @change="onChangeN($event)" v-model="n">
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
+          <option v-for="index in [3,4,5,6,7,8,9,10,11]"  :key="index"  >
+            {{index}}
+          </option>
           <option value="12" selected>12</option>
         </select>
       </div>

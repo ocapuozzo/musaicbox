@@ -124,6 +124,13 @@ export default class IPcs {
     return IPcs.pid(this.pcs);
   }
 
+  /**
+   * return this with iroot minimal
+   * @return {IPcs}
+   */
+  modalPrimeForm() {
+    return new IPcs(this.pcs, this.pcs.findIndex( ( pc => pc === 1 )))
+  }
 
   /**
    * Get cyclic PF

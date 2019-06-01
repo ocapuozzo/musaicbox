@@ -220,3 +220,13 @@ test("IPcs pid by simple polynomial function", () => {
   expect(ipcs3.pid()).toEqual(Math.pow(2, 12) - 1)
 })
 
+test("IPcs modal prime form", () => {
+  let ipcs1 = new IPcs("", undefined)
+  let ipcs2 = new IPcs("0", 0)
+  let ipcs3 = new IPcs("0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11", 4)
+  let ipcs4 = new IPcs("0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11", 0)
+  expect(ipcs3.modalPrimeForm()).toEqual(ipcs4)
+  expect(ipcs2.modalPrimeForm()).toEqual(ipcs2)
+  expect(ipcs1.modalPrimeForm()).toEqual(ipcs1)
+})
+
