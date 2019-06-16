@@ -228,5 +228,11 @@ test("IPcs modal prime form", () => {
   expect(ipcs3.modalPrimeForm()).toEqual(ipcs4)
   expect(ipcs2.modalPrimeForm()).toEqual(ipcs2)
   expect(ipcs1.modalPrimeForm()).toEqual(ipcs1)
+  let majBass3 = new IPcs("0, 4, 7", 4)
+  let minB6 = new IPcs("0, 3, 8", 0)
+  expect(majBass3.modalPrimeForm()).toEqual(minB6)
+  let minBass3 = new IPcs("0, 3, 7", 3)
+  let maj6 = new IPcs("0, 4, 9", 0)
+  expect(minBass3.modalPrimeForm()).toEqual(maj6)
 })
 

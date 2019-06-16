@@ -8,16 +8,18 @@ const negativeToPositiveModulo = (i, n) => {
 }
 
 export default class IPcs {
+  // TODO change signature add "destructured bloc" as parameter
   constructor(pcs, iroot, prev_ipcs_cplt = null) {
     if (typeof (pcs) === 'string') {
       this.pcs = this._fromStringTobinArray(pcs, 12)
     } else if (typeof (pcs) === 'object' && !Array.isArray(pcs)) {
-      // waiting object as { strpcs a string attribut and n an integer }
+      // waiting object as { strpcs a string attribute and n an integer }
+      // example { "strpcs" : "[0,3,4]", "n" : 7 }
       this.pcs = this._fromStringTobinArray(pcs.strpcs, pcs.n)
     } else if (Array.isArray(pcs)) {
       // assume pcs bin vector [1,0,1, ... ]
       this.pcs = pcs.slice()
-    } else { // assume array
+    } else {
       throw new Error("Can't create IPcs instance (bad args = "+ pcs + ")")
     }
     // empty set as valid pcs
@@ -125,11 +127,15 @@ export default class IPcs {
   }
 
   /**
-   * return this with iroot minimal
+   * return this by transpose iroot to zero
    * @return {IPcs}
    */
   modalPrimeForm() {
-    return new IPcs(this.pcs, this.pcs.findIndex( ( pc => pc === 1 )))
+    // if iroot is undefined or already equals to zero, return this
+    if (!this.iroot) {
+      return this
+    }
+    return this.transpose(-this.iroot)
   }
 
   /**

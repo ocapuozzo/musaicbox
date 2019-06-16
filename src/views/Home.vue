@@ -32,7 +32,7 @@
             <div class="col-sm text-left">
               <p>
                 PCS :
-                <span class="analyse-pcs">{{ pcsstr }}</span> &nbsp;
+                <span class="analyse-pcs" v-html="ipcsStr"></span> &nbsp;
                 Card :
                 <span class="analyse-pcs">#{{ pcsCard }}</span>
               </p>
@@ -147,6 +147,11 @@
         get() {
           let mpf = this.ipcs.modalPrimeForm()
           return mpf.pcsStr + "<span style='font-variant-position: sub;'>" + mpf.iroot + "</span>"
+        }
+      },
+      ipcsStr: {
+        get() {
+          return this.pcsstr+ "<span style='font-variant-position: sub;'>" + this.ipcs.iroot + "</span>"
         }
       },
       ...mapGetters('ipcs', {

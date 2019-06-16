@@ -14,7 +14,7 @@ test("Generator group from M1T0", () => {
   let opM1_T0 = new MusaicPcsOperation(12, 1, 0, false);
   let someOps = [opM1_T0]
   let opsWaiting = someOps
-  let allOps = Group.generator(someOps)
+  let allOps = Group.operationsGroupGenerator(someOps)
   expect(allOps).toEqual(opsWaiting)
 })
 
@@ -25,7 +25,7 @@ test("Generator group from M1T1", () => {
   for (let i = 0; i<12; i++) {
     opsWaiting.push(new MusaicPcsOperation(12, i, 0, false))
   }
-  let allops = Group.generator(someOps)
+  let allops = Group.operationsGroupGenerator(someOps)
   expect(allops).not.toEqual(opsWaiting)
 })
 
@@ -44,7 +44,7 @@ test("testCayleyGenerateOperationsAffine", () => {
   someOperations.push(new MusaicPcsOperation(order, a, t, complement));
 
   // generate 48 operations : 12 * each a
-  expect(Group.generator(someOperations).length).toEqual(order*4)
+  expect(Group.operationsGroupGenerator(someOperations).length).toEqual(order*4)
 })
 
 test("testCayleyGenerateOperationsMusaic", () => {
@@ -64,7 +64,7 @@ test("testCayleyGenerateOperationsMusaic", () => {
   t = getRandomInt(12)
   let aleaOp = new MusaicPcsOperation(order, 11, t, complement)
 
-  let allOps = Group.generator(someOperations)
+  let allOps = Group.operationsGroupGenerator(someOperations)
 
   // test if aleaOp is in allOps
   expect(allOps.find( (e) => e.getHashCode() === aleaOp.getHashCode())).toBeTruthy()
