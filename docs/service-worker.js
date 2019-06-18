@@ -14,10 +14,10 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/musaicbox/precache-manifest.b2754f76a054d7dee3a94a62b4e57dd3.js"
+  "/musaicbox/precache-manifest.f7b0c49eebc46ab66b4f4f4dd9e8f0fe.js"
 );
 
-workbox.core.setCacheNameDetails({prefix: "musaicbox"});
+workbox.core.setCacheNameDetails({prefix: "testvuecli3"});
 
 /**
  * The workboxSW.precacheAndRoute() method efficiently caches and responds to

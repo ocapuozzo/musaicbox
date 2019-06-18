@@ -1,35 +1,31 @@
 self.__precacheManifest = [
   {
-    "revision": "b307c4aa79ebb19d1eff",
+    "revision": "d681a9f47e0581b0770a",
     "url": "/musaicbox/css/about.72b17612.css"
   },
   {
-    "revision": "b307c4aa79ebb19d1eff",
-    "url": "/musaicbox/js/about.2e76682a.js"
+    "revision": "d681a9f47e0581b0770a",
+    "url": "/musaicbox/js/about.a3d82319.js"
   },
   {
-    "revision": "6c6191bf3e838a6c0285",
-    "url": "/musaicbox/css/app.74c3724a.css"
+    "revision": "7092e440dcd941bea424",
+    "url": "/musaicbox/css/app.d42a3b34.css"
   },
   {
-    "revision": "6c6191bf3e838a6c0285",
-    "url": "/musaicbox/js/app.01300bae.js"
+    "revision": "7092e440dcd941bea424",
+    "url": "/musaicbox/js/app.ec415b1d.js"
   },
   {
-    "revision": "74a7927dc2a4cdb380d6",
+    "revision": "6d8c8d9ee5a629468e2d",
     "url": "/musaicbox/css/chunk-vendors.6acb9ff2.css"
   },
   {
-    "revision": "74a7927dc2a4cdb380d6",
-    "url": "/musaicbox/js/chunk-vendors.023eb4e8.js"
+    "revision": "6d8c8d9ee5a629468e2d",
+    "url": "/musaicbox/js/chunk-vendors.7067dc15.js"
   },
   {
-    "revision": "1c756f5db481277b4fe9106e7a8d1845",
+    "revision": "6930b4b352284f0edda09568ea05641c",
     "url": "/musaicbox/index.html"
-  },
-  {
-    "revision": "139b7ad41f580e330da051fc2a3ce0b2",
-    "url": "/musaicbox/favicon.png"
   },
   {
     "revision": "7e826a81c500d1c8114838168d080de5",
