@@ -15,7 +15,7 @@
           <router-link to="/">Interactive</router-link>
         </li>
         <li>
-          <router-link to="/about">Group & Action Explorer</router-link>
+          <router-link to="/group">Group & Action Explorer</router-link>
         </li>
         <!-- li>
           <a
