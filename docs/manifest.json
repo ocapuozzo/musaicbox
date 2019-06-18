@@ -1,6 +1,6 @@
 {
-  "name": "testvuecli3",
-  "short_name": "testvuecli3",
+  "name": "musaicbox",
+  "short_name": "musaicbox",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",
