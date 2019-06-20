@@ -21,7 +21,7 @@ test("MusaicPcsOp compose", () => {
 });
 
 test("MusaicPcsOp testActionOn", () => {
-  let pcs = new IPcs("0,3,4,7,8,11", 0);
+  let pcs = new IPcs({strPcs:"0,3,4,7,8,11"});
   let opCM7_T5 = new MusaicPcsOperation(12, 7, 5, true);
   // n = 12, CM7_T5 is stabilizer for Pcs("0,3,4,7,8,11")
 
