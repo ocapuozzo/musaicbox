@@ -1,86 +1,86 @@
 import IPcs from "@/models/IPcs";
 
-test("IPcs constructor with no iroot = 0", () => {
-  const ipcs = new IPcs("0,4,7")
-  expect(ipcs.iroot).toEqual(0);
+test("IPcs constructor with no iPivot = 0", () => {
+  const ipcs = new IPcs({strPcs:"0,4,7"})
+  expect(ipcs.iPivot).toEqual(0);
 });
 
-test("IPcs constructor with no iroot > 0", () => {
-  const ipcs = new IPcs("3,4,7")
-  expect(ipcs.iroot).toEqual(3);
+test("IPcs constructor with no iPivot > 0", () => {
+  const ipcs = new IPcs({strPcs:"3,4,7"})
+  expect(ipcs.iPivot).toEqual(3);
 });
 
 test("IPcs cardinal", () => {
-  const ipcs = new IPcs("0,4,7", 0)
+  const ipcs = new IPcs({strPcs:"0,4,7", iPivot:0})
   expect(ipcs.cardinal()).toEqual(3);
 });
 
 test("IPcs transpose + 1", () => {
-  const ipcs = new IPcs("0,4,11", 0)
-  const ipcs_plus_one = new IPcs("1,5,0", 1)
+  const ipcs = new IPcs({strPcs:"0,4,11", iPivot:0})
+  const ipcs_plus_one = new IPcs({strPcs:"1,5,0", iPivot:1})
 
   expect(ipcs.transpose(1)).toEqual(ipcs_plus_one);
 });
 
 test("IPcs transpose - 1", () => {
-  const ipcs = new IPcs("0,4,11", 0)
-  const ipcs_minus_one = new IPcs("11,3,10", 11)
+  const ipcs = new IPcs({strPcs:"0,4,11", irrot:0})
+  const ipcs_minus_one = new IPcs({strPcs:"11,3,10", iPivot:11})
 
   expect(ipcs.transpose(-1)).toEqual(ipcs_minus_one);
 });
 
 test("IPcs transpose - 12", () => {
-  const ipcs = new IPcs("0,4,11", 0)
-  const ipcs_other = new IPcs("0,11,4", 0)
+  const ipcs = new IPcs({strPcs:"0,4,11", iPivot:0})
+  const ipcs_other = new IPcs({strPcs:"0,11,4", iPivot:0})
 
   expect(ipcs.transpose(-12)).toEqual(ipcs_other);
 });
 
 test("IPcs transpose + 12+6", () => {
-  const ipcs = new IPcs("0,4,11", 0)
-  const ipcs_other = new IPcs("6,10,5", 6)
+  const ipcs = new IPcs({strPcs:"0,4,11", iPivot:0})
+  const ipcs_other = new IPcs({strPcs:"6,10,5", iPivot:6})
 
   expect(ipcs.transpose(18)).toEqual(ipcs_other);
 });
 
 test("IPcs modulate NEXT ", () => {
-  const ipcs = new IPcs("0,4,11", 0)
+  const ipcs = new IPcs({strPcs:"0,4,11", iPivot:0})
   let ipcs_other1
-  let ipcs_other2 = new IPcs("0,4,11", 4)
+  let ipcs_other2 = new IPcs({strPcs:"0,4,11", iPivot:4})
 
   expect(ipcs.modulate(IPcs.NEXT_MODULATION)).toEqual(ipcs_other2);
-  ipcs_other1 = new IPcs("0,4,11", 11)
+  ipcs_other1 = new IPcs({strPcs:"0,4,11", iPivot:11})
   expect(ipcs_other2.modulate(IPcs.NEXT_MODULATION)).toEqual(ipcs_other1);
-  ipcs_other2 = new IPcs("0,4,11", 0)
+  ipcs_other2 = new IPcs({strPcs:"0,4,11", iPivot:0})
   expect(ipcs_other1.modulate(IPcs.NEXT_MODULATION)).toEqual(ipcs_other2);
 });
 
 test("IPcs cardinal PREVIOUS", () => {
-  const ipcs = new IPcs("0,4,11", 0)
-  const ipcs_other = new IPcs("0,4,11", 11)
+  const ipcs = new IPcs({strPcs:"0,4,11", iPivot:0})
+  const ipcs_other = new IPcs({strPcs:"0,4,11", iPivot:11})
 
   expect(ipcs.modulate(IPcs.PREV_MODULATION)).toEqual(ipcs_other);
 });
 
 test("IPcs equals ok ", () => {
-  const ipcs = new IPcs("0,4,11", 0)
-  const ipcs_other = new IPcs("11,4,0", 0)
+  const ipcs = new IPcs({strPcs:"0,4,11", iPivot:0})
+  const ipcs_other = new IPcs({strPcs:"11,4,0", iPivot:0})
 
   expect(ipcs.equals(ipcs_other)).toBeTruthy();
 });
 
 test("IPcs equals ko ", () => {
-  const ipcs = new IPcs("0,4,11", 0)
-  const ipcs_other = new IPcs("0,4,11", 11)
+  const ipcs = new IPcs({strPcs:"0,4,11", iPivot:0})
+  const ipcs_other = new IPcs({strPcs:"0,4,11", iPivot:11})
 
   expect(ipcs.equals(ipcs_other)).not.toBeTruthy();
 });
 
 test("IPcs equalsPcs ", () => {
-  const ipcs = new IPcs("0,4,11", 0)
-  const ipcs_other = new IPcs("0,4,11", 4)
+  const ipcs = new IPcs({strPcs:"0,4,11", iPivot:0})
+  const ipcs_other = new IPcs({strPcs:"0,4,11", iPivot:4})
 
-  // not equals because iroot are not same
+  // not equals because iPivot are not same
   expect(ipcs.equals(ipcs_other)).not.toBeTruthy();
   // ok
   expect(ipcs.equalsPcs(ipcs_other)).toBeTruthy();
@@ -88,8 +88,8 @@ test("IPcs equalsPcs ", () => {
 
 
 test("IPcs complement ", () => {
-  const ipcs = new IPcs("0,2,4,5,7,9,11", 0)
-  const ipcs_complement = new IPcs("1,3,6,8,10", 6)
+  const ipcs = new IPcs({strPcs:"0,2,4,5,7,9,11", iPivot:0})
+  const ipcs_complement = new IPcs({strPcs:"1,3,6,8,10", iPivot:6})
   const complement = ipcs.complement()
 
   const cpltcplt = complement.complement()
@@ -99,9 +99,7 @@ test("IPcs complement ", () => {
 });
 
 test("IPcs complement max/empty", () => {
-  const ipcs12pc = new IPcs("0,1,2,3,4,5,6,7,8,9,10,11", 0)
-  const ipcs_complement = new IPcs("", undefined)
-  new IPcs("{]", undefined)
+  const ipcs12pc = new IPcs({strPcs:"0,1,2,3,4,5,6,7,8,9,10,11", iPivot:0})
   try {
     const complement = ipcs12pc.complement()
     // console.log("cpt : = " + complement)
@@ -111,59 +109,59 @@ test("IPcs complement max/empty", () => {
 });
 
 test("IPcs cardOrbitMode", () => {
-  let ipcs = new IPcs("0, 3, 6, 9", 0)
+  let ipcs = new IPcs({strPcs:"0, 3, 6, 9", iPivot:0})
   expect(ipcs.cardOrbitMode()).toEqual(1)
-  ipcs = new IPcs("1, 4, 7, 10", 1)
+  ipcs = new IPcs({strPcs:"1, 4, 7, 10", iPivot:1})
   expect(ipcs.cardOrbitMode()).toEqual(1)
-  ipcs = new IPcs("0, 4, 8", 0)
+  ipcs = new IPcs({strPcs:"0, 4, 8", iPivot:0})
   expect(ipcs.cardOrbitMode()).toEqual(1)
-  ipcs = new IPcs("0, 1, 6, 7", 0)
+  ipcs = new IPcs({strPcs:"0, 1, 6, 7", iPivot:0})
   expect(ipcs.cardOrbitMode()).toEqual(2)
-  ipcs = new IPcs("0, 1, 2, 3", 0)
+  ipcs = new IPcs({strPcs:"0, 1, 2, 3", iPivot:0})
   expect(ipcs.cardOrbitMode()).toEqual(4)
-  ipcs = new IPcs("0, 2, 4, 5, 7, 9, 11", 0)
+  ipcs = new IPcs({strPcs:"0, 2, 4, 5, 7, 9, 11", iPivot:0})
   expect(ipcs.cardOrbitMode()).toEqual(7)
 });
 
 test("IPcs cardOrbitCyclic", () => {
-  let ipcs = new IPcs("0, 3, 6, 9", 0)
+  let ipcs = new IPcs({strPcs:"0, 3, 6, 9", iPivot:0})
   expect(ipcs.cardOrbitCyclic()).toEqual(3)
-  ipcs = new IPcs("0, 4, 8", 0)
+  ipcs = new IPcs({strPcs:"0, 4, 8", iPivot:0})
   expect(ipcs.cardOrbitCyclic()).toEqual(4);
-  ipcs = new IPcs("0, 1, 6, 7", 0)
+  ipcs = new IPcs({strPcs:"0, 1, 6, 7", iPivot:0})
   expect(ipcs.cardOrbitCyclic()).toEqual(6);
-  ipcs = new IPcs("0, 1, 2, 3", 0)
+  ipcs = new IPcs({strPcs:"0, 1, 2, 3", iPivot:0})
   expect(ipcs.cardOrbitCyclic()).toEqual(12);
-  ipcs = new IPcs("0, 2, 4, 5, 7, 9, 11", 0)
+  ipcs = new IPcs({strPcs:"0, 2, 4, 5, 7, 9, 11", iPivot:0})
   expect(ipcs.cardOrbitCyclic()).toEqual(12);
-  ipcs = new IPcs("0, 1, 3, 5, 6, 8, 10", 0)
+  ipcs = new IPcs({strPcs:"0, 1, 3, 5, 6, 8, 10", iPivot:0})
   expect(ipcs.cardOrbitCyclic()).toEqual(12);
 });
 
 test("IPcs cyclicPrimeForm", () => {
-  let ipcsPF = new IPcs("0, 3, 6, 9", 0)
+  let ipcsPF = new IPcs({strPcs:"0, 3, 6, 9", iPivot:0})
   expect(ipcsPF.cyclicPrimeForm().equals(ipcsPF)).toBeTruthy();
-  let ipcs = new IPcs("1, 4, 7, 10", 1)
+  let ipcs = new IPcs({strPcs:"1, 4, 7, 10", iPivot:1})
   expect(ipcs.cyclicPrimeForm().equals(ipcsPF)).toBeTruthy();
-  ipcs = new IPcs("7", 7)
-  let pcsExpected = new IPcs("0", 0)
+  ipcs = new IPcs({strPcs:"7", iPivot:7})
+  let pcsExpected = new IPcs({strPcs:"0", iPivot:0})
   expect(ipcs.cyclicPrimeForm().equals(pcsExpected)).toBeTruthy();
-  ipcs = new IPcs("0,1,2,3,4,5,6,7,8,9,10,11", 7)
-  pcsExpected = new IPcs("0,1,2,3,4,5,6,7,8,9,10,11", 0)
+  ipcs = new IPcs({strPcs:"0,1,2,3,4,5,6,7,8,9,10,11", iPivot:7})
+  pcsExpected = new IPcs({strPcs:"0,1,2,3,4,5,6,7,8,9,10,11", iPivot:0})
   expect(ipcs.cyclicPrimeForm().equals(pcsExpected)).toBeTruthy();
 });
 
 test("IPcs musaicPrimeForm", () => {
-  let ipcs = new IPcs("0, 3, 5, 8", 0)
+  let ipcs = new IPcs({strPcs:"0, 3, 5, 8", iPivot:0})
   // page 1171 de ToposOfMusic
-  let ipcsMusaicPF = new IPcs("0, 1, 3, 4", 0)
+  let ipcsMusaicPF = new IPcs({strPcs:"0, 1, 3, 4", iPivot:0})
   expect(ipcs.musaicPrimeForm()).toEqual(ipcsMusaicPF)
 });
 
 test("IPcs Set by Map then sort and convert to Array", () => {
-  let ipcs1 = new IPcs("1, 4, 6, 9", 1)
-  let ipcs2 = new IPcs("0, 3, 5, 8", 0)
-  let ipcs3 = new IPcs("0, 3, 5, 8", 0)
+  let ipcs1 = new IPcs({strPcs:"1, 4, 6, 9", iPivot:1})
+  let ipcs2 = new IPcs({strPcs:"0, 3, 5, 8", iPivot:0})
+  let ipcs3 = new IPcs({strPcs:"0, 3, 5, 8"})
   let map = new Map()
   map.set(ipcs1.id(),ipcs1)
   map.set(ipcs2.id(),ipcs2)
@@ -184,9 +182,9 @@ test("IPcs Set by Map then sort and convert to Array", () => {
 
 
 test("IPcs Set by Array", () => {
-  let ipcs1 = new IPcs("1, 4, 6, 9", 1)
-  let ipcs2 = new IPcs("0, 3, 5, 8", 0)
-  let ipcs3 = new IPcs("0, 3, 5, 8", 0)
+  let ipcs1 = new IPcs({strPcs:"1, 4, 6, 9", iPivot:1})
+  let ipcs2 = new IPcs({strPcs:"0, 3, 5, 8"})
+  let ipcs3 = new IPcs({strPcs:"0, 3, 5, 8"})
   let tab = []
   tab.push(ipcs1)
   tab.push(ipcs2)
@@ -203,36 +201,36 @@ test("IPcs Set by Array", () => {
 });
 
 test("IPcs id ", () => {
-  let ipcs1 = new IPcs("", undefined)
-  let ipcs2 = new IPcs("0", 0)
-  let ipcs3 = new IPcs("0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11", 0)
+  let ipcs1 = new IPcs({strPcs:""})
+  let ipcs2 = new IPcs({strPcs:"0"})
+  let ipcs3 = new IPcs({strPcs:"0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11"})
   expect(ipcs1.id()).toEqual(0)
   expect(ipcs2.id()).toEqual(1 + Math.pow(2, 12))
   expect(ipcs3.id()).toEqual(Math.pow(2, 12) - 1 + 12 * Math.pow(2, 12))
 })
 
 test("IPcs pid by simple polynomial function", () => {
-  let ipcs1 = new IPcs("", undefined)
-  let ipcs2 = new IPcs("0", 0)
-  let ipcs3 = new IPcs("0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11", 0)
+  let ipcs1 = new IPcs({strPcs:""})
+  let ipcs2 = new IPcs({strPcs:"0"})
+  let ipcs3 = new IPcs({strPcs:"0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11"})
   expect(ipcs1.pid()).toEqual(0)
   expect(ipcs2.pid()).toEqual(1)
   expect(ipcs3.pid()).toEqual(Math.pow(2, 12) - 1)
 })
 
 test("IPcs modal prime form", () => {
-  let ipcs1 = new IPcs("", undefined)
-  let ipcs2 = new IPcs("0", 0)
-  let ipcs3 = new IPcs("0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11", 4)
-  let ipcs4 = new IPcs("0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11", 0)
+  let ipcs1 = new IPcs({strPcs:""})
+  let ipcs2 = new IPcs({strPcs:"0"})
+  let ipcs3 = new IPcs({strPcs:"0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11", iPivot:4})
+  let ipcs4 = new IPcs({strPcs:"0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11", iPivot:0})
   expect(ipcs3.modalPrimeForm()).toEqual(ipcs4)
   expect(ipcs2.modalPrimeForm()).toEqual(ipcs2)
   expect(ipcs1.modalPrimeForm()).toEqual(ipcs1)
-  let majBass3 = new IPcs("0, 4, 7", 4)
-  let minB6 = new IPcs("0, 3, 8", 0)
+  let majBass3 = new IPcs({strPcs:"0, 4, 7", iPivot:4})
+  let minB6 = new IPcs({strPcs:"0, 3, 8", iPivot:0})
   expect(majBass3.modalPrimeForm()).toEqual(minB6)
-  let minBass3 = new IPcs("0, 3, 7", 3)
-  let maj6 = new IPcs("0, 4, 9", 0)
+  let minBass3 = new IPcs({strPcs:"0, 3, 7", iPivot:3})
+  let maj6 = new IPcs({strPcs:"0, 4, 9", iPivot:0})
   expect(minBass3.modalPrimeForm()).toEqual(maj6)
 })
 

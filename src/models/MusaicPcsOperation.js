@@ -48,7 +48,7 @@ export default class MusaicPcsOperation {
    * @param t translation value
    * @param complement boolean
    */
-  constructor(n, a, t, complement) {
+  constructor(n, a, t, complement=false) {
   this.a = a;
   this.t = t;
   this.n = n;
@@ -103,7 +103,7 @@ equals(obj) {
  * <li>t is integer into [0..n[ </li>
  * <li>c is boolean (complement or not) </li>
  * </ul>
- * @param {MusaicPcsOperation} other (a',t',c')
+ * @param {...*} other (a',t',c')
  * @return {MusaicPcsOperation} (this.a,this.t,this.c) (a',t',c') = (aa', at' + t, c xor c'), a new instance
  */
 compose(other) {

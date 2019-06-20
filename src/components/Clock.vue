@@ -45,7 +45,7 @@
     points: [],
     n : 0,
     props: {
-      _ipcs: null,
+      _ipcs: Object,
       pc_color: {
         type: String,
         default: function () {
@@ -85,7 +85,7 @@
         ctx.arc(0, 0, radius, 0, 2 * Math.PI);
         ctx.stroke()
         // console.log("index : " + index + " selected : " + this.isSelected(index));
-        let color = (this.isSelected(index)) ? (index ===  this.ipcs.iroot) ? this.pc_pivot_color : this.pc_color : 'white'
+        let color = (this.isSelected(index)) ? (index ===  this.ipcs.iPivot) ? this.pc_pivot_color : this.pc_color : 'white'
         ctx.fillStyle = color;
         ctx.fill();
         if (radius > 6) {
@@ -188,11 +188,14 @@
       let len = Math.min(this.$refs['canvas'].clientWidth, this.$refs['canvas'].clientHeight)
       this.$refs['canvas'].width = len
       this.$refs['canvas'].height = len
+
       if (this._ipcs) {
-        this.ipcs = new IPcs(this._ipcs)
+        this.ipcs = new IPcs({strPcs:this._ipcs.strPcs, n:this._ipcs.n})
       } else {
-        this.ipcs = new IPcs({"strpcs":"[1, 5, 6]", "n":7})
+        this.ipcs = new IPcs({strPcs:"[1, 5, 6]", n:7})
       }
+
+
       this.n = this.ipcs.pcs.length
     },
     watch: {

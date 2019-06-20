@@ -1,12 +1,12 @@
 <template>
   <div class="group-action">
-    <h2>Group & group action explorer </h2>
+    <h2>Group & group action explorer <span v-show="waitingCompute" class="status"> wait, compute in progress...</span> </h2>
     <div class="d-flex flex-row">
       <div class="input-group group-dim ">
         <div class="input-group-prepend ">
           <label class="input-group-text " for="inputGroupSelect01"> N </label>
         </div>
-        <select class="custom-select " id="inputGroupSelect01" @change="onChangeN($event)" v-model="n">
+        <select class="custom-select " id="inputGroupSelect01" @change="onChangeN()" v-model="n">
           <option v-for="index in [3,4,5,6,7,8,9,10,11]" :key="index">
             {{index}}
           </option>
@@ -22,7 +22,7 @@
               <input v-if="generator ===1" class="form-check-input" type="checkbox" v-model="opMultChoices"
                      :value="generator" disabled>
               <input v-else class="form-check-input" type="checkbox" v-model="opMultChoices" :value="generator"
-                     @change="buildAllOperationsOfGroup(opMultChoices)">
+                     @change="buildAllOperationsOfGroup()">
               <label class="form-check-label">M{{generator}}</label>
             </div>
           </fieldset>
@@ -34,21 +34,23 @@
             </div>
             <div v-for="(t, index) in Math.ceil(n/2)" :key="index" class="form-check form-check-inline">
               <input class="form-check-input" type="checkbox" v-model="opTransChoices" :value="t"
-                     @change="buildAllOperationsOfGroup(opTransChoices)">
+                     @change="buildAllOperationsOfGroup()">
               <label class="form-check-label">T{{t}}</label>
             </div>
           </fieldset>
           <div class="form-check">
             <input class="form-check-input" type="checkbox" v-model="opComplement" :value="false"
-                   @change="buildAllOperationsOfGroup(opComplement)">
+                   @change="buildAllOperationsOfGroup()">
             <label class="form-check-label">Complement</label>
           </div>
+
         </fieldset>
       </div>
       <div class="pl-2">
 
       </div>
     </div>
+
 
     <div class="p-2">
       <fieldset class="representation-border p-2">
@@ -58,16 +60,21 @@
         </div>
       </fieldset>
     </div>
+
     <div class="p-2">
       <fieldset class="representation-border p-2">
-        <legend class="representation-border">Orbits results</legend>
-        <div><span>ops Multiplication selected : {{ opMultChoices }}</span></div>
+        <legend class="representation-border">Orbits results {{orbits.length}}</legend>
+        <fieldset v-for="(orbit, index) in orbits" :key="index" class="representation-border p-2">
+          <legend class="representation-border">Orbits {{orbit.ipcsset.length}}</legend>
+          <clock :_ipcs="{strPcs:orbit.getPcsMin().pcsStr, n:orbit.getPcsMin().n}" class="m-1 clock-pcs"/>
+        </fieldset>
+        <!--<div><span>ops Multiplication selected : {{ opMultChoices }}</span></div>
         <div><span>ops Transposition selected : {{ opTransChoices }}</span></div>
         <div><span>ops Complement : {{ opComplement }}</span></div>
         <clock _ipcs="[0,4,7,10]" class="m-1 clock-pcs"/>
         <clock _ipcs="[0,3,6,9]" class="m-1 clock-pcs"/>
         <clock _ipcs="[0,1,2,3]" class="m-1 clock-pcs"/>
-        <clock _ipcs="[0,1,2,8]" class="m-1 clock-pcs"/>
+        <clock _ipcs="[0,1,2,8]" class="m-1 clock-pcs"/>-->
         <clock class="m-1 clock-pcs"/>
       </fieldset>
     </div>
@@ -78,6 +85,7 @@
   import Clock from "../components/Clock";
   import Group from "../models/Group";
   import MusaicPcsOperation from "../models/MusaicPcsOperation";
+  import MusaicActionGroup from "../models/MusaicActionGroup";
 
   export default {
     data() {
@@ -88,37 +96,68 @@
         opTransChoices: [0],
         opComplement: false,
         // array with neutral operation
-        groupOperations: [new MusaicPcsOperation(this.n, 1, 0)]
+        groupOperations: [new MusaicPcsOperation(this.n, 1, 0)],
+        actionOfGroup: null,
+        orbits: [],
+        waitingCompute: false
       }
     },
+    mounted() {
+      //this.onChangeN()
+    },
     methods: {
-      onChangeN(event) {
+      doubleRaf(callback) {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(callback)
+        })
+      },
+      onChangeN() {
         // console.log(event.target.value) == this.n (v-model)
-        this.primesWithN = Group.phiEulerElements(this.n);
-        this.opMultChoices = [1];
-        this.opTransChoices = [0];
-        this.groupOperations = [];
-        this.buildAllOperationsOfGroup();
+        this.waitingCompute = true
+        this.doubleRaf(() => {
+          this.primesWithN = Group.phiEulerElements(this.n);
+          this.opMultChoices = [1];
+          this.opTransChoices = [0, 1];
+          this.actionOfGroup = null;
+          //this.buildAllOperationsOfGroup();
+
+          this.buildAllOperationsOfGroup();
+          this.$nextTick(() => {
+            this.waitingCompute = false
+          })
+
+        });
       },
       /**
        * Get all operations group from user choices
-       * @param source type of choice (multiplication, translation or complement)
+       *
        */
-      buildAllOperationsOfGroup(source) {
-        this.groupOperations = [];
-        this.groupOperations = Group.operationsGroupGenerator(this.buildOperationsFromUI());
+      buildAllOperationsOfGroup() {
+        this.waitingCompute = true
+        this.doubleRaf(() => {
+          this.groupOperations = [];
+          this.groupOperations = Group.buildOperationsGroupByCaylayTable(this.getGeneratedSetOperationsFromUI());
+          // this.waitingCompute = true
+          this.actionOfGroup = new MusaicActionGroup({n: this.n, someMusaicOperations: this.groupOperations});
+          this.orbits = this.actionOfGroup.orbits
+          this.$nextTick(() => {
+            this.waitingCompute = false
+          })
+        });
+        //
       },
       /**
-       * Get generated operations of group, as selected by user
+       * Get generated set operations of group, as selected by user
        * @return {Array} array of MusaicPcsOperation
        */
-      buildOperationsFromUI() {
-        let someOperations = []; // [new MusaicPcsOperation(this.n, 1, 0)];
-        // add neutral complemented operation if waiting
+      getGeneratedSetOperationsFromUI() {
+        let someOperations = [];
+
+        // add complemented operation to neutral op if complement operation is selected
         if (this.opComplement === true) {
           someOperations.push(new MusaicPcsOperation(this.n, 1, 0, true))
         }
-
+        // include neutral operation
         for (let i = 0; i < this.opMultChoices.length; i++)
           for (let j = 0; j < this.opTransChoices.length; j++) {
             someOperations.push(new MusaicPcsOperation(this.n, this.opMultChoices[i], this.opTransChoices[j]))
@@ -138,6 +177,7 @@
     max-width: 100px;
     max-height: 38px;
   }
+
   .operation {
     display: inline-flex;
     background-color: #6d7fcc;
@@ -173,4 +213,14 @@
     min-height: 40px;
   }
 
+  .status {
+    font-size: 0.5em !important;
+    font-weight: bold !important;
+    font-style: italic;
+    text-align: left !important;
+    width: auto;
+    padding: 0 10px;
+    border-bottom: none;
+    color: red;
+  }
 </style>

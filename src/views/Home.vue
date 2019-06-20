@@ -146,12 +146,12 @@
       modalPF: {
         get() {
           let mpf = this.ipcs.modalPrimeForm()
-          return mpf.pcsStr + "<span style='font-variant-position: sub;'>" + mpf.iroot + "</span>"
+          return mpf.pcsStr + "<sub>" + mpf.iPivot + "</sub>"
         }
       },
       ipcsStr: {
         get() {
-          return this.pcsstr+ "<span style='font-variant-position: sub;'>" + this.ipcs.iroot + "</span>"
+          return this.pcsstr+ "<sub>" + this.ipcs.iPivot + "</sub>"
         }
       },
       ...mapGetters('ipcs', {

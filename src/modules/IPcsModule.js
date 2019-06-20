@@ -1,7 +1,7 @@
 import IPcs from "../models/IPcs";
 
 const state = {
-  ipcs : new IPcs("0,4,7", 0)
+  ipcs : new IPcs({strPcs:"0,4,7"})
 }
 
 const getters = {
@@ -65,17 +65,17 @@ const mutations = {
       }
       return value
     })
-    // assume index <> iroot if cardinal > 1
-    let newIRoot =  state.ipcs.iroot
+    // assume index <> iPivot if cardinal > 1
+    let newPivot =  state.ipcs.iPivot
 
     let newCardinal  = newPcs.filter(i => i === 1).length
-    // empty pcset has not iroot
+    // empty pcset has not iPivot
     if (newCardinal === 0 ) {
-      newIRoot = undefined
+      newPivot = undefined
     } else if (newCardinal === 1) {
-      newIRoot = newPcs.findIndex(pc => pc === 1)
+      newPivot = newPcs.findIndex(pc => pc === 1)
     }
-    state.ipcs = new IPcs(newPcs, newIRoot)
+    state.ipcs = new IPcs({binPcs:newPcs, iPivot:newPivot})
   },
 
   /**
@@ -90,17 +90,17 @@ const mutations = {
       }
       return value
     })
-    let newIRoot =  state.ipcs.iroot
+    let newPivot =  state.ipcs.iPivot
     if (!newPcs ) {
-      newIRoot = undefined // empty set has not iroot
+      newPivot = undefined // empty set has not iPivot
     }
-    // if (payload.value == 0 && payload.index == state.ipcs.iroot )
-    state.ipcs = new IPcs(newPcs, newIRoot)
+    // if (payload.value == 0 && payload.index == state.ipcs.iPivot )
+    state.ipcs = new IPcs({binPcs:newPcs, iPivot:newPivot})
   },
 
 
-  setIRoot(state, iroot) {
-    state.ipcs.setIroot(iroot);
+  setiPivot(state, iPivot) {
+    state.ipcs.setiPivot(iPivot);
   },
 
   transpose(state, t) {
@@ -115,7 +115,7 @@ const mutations = {
   
   /**
    * image of given array where each element is multipy by mult modulo n
-   * (n is size of given array) plus - (mult-1) * iroot
+   * (n is size of given array) plus - (mult-1) * iPivot
    *
    * @param state
    * @param mult

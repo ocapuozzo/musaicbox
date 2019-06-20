@@ -1,4 +1,5 @@
 import forte from "./ForteMap";
+import Orbit from "./Orbit";
 
 const NEXT_MODULATION = 1
 const PREV_MODULATION = 2
@@ -8,36 +9,39 @@ const negativeToPositiveModulo = (i, n) => {
 }
 
 export default class IPcs {
-  // TODO change signature add "destructured bloc" as parameter
-  constructor(pcs, iroot, prev_ipcs_cplt = null) {
-    if (typeof (pcs) === 'string') {
-      this.pcs = this._fromStringTobinArray(pcs, 12)
-    } else if (typeof (pcs) === 'object' && !Array.isArray(pcs)) {
-      // waiting object as { strpcs a string attribute and n an integer }
-      // example { "strpcs" : "[0,3,4]", "n" : 7 }
-      this.pcs = this._fromStringTobinArray(pcs.strpcs, pcs.n)
-    } else if (Array.isArray(pcs)) {
+
+  constructor({idVal = -1, strPcs = null, binPcs = null, n = 12, iPivot = undefined, prev_ipcs_cplt = null}) {
+    if (idVal >= 0) {
+      this.pcs = IPcs.intToBinArray(idVal, n)
+    } else if (typeof (strPcs) === 'string') {
+      this.pcs = this._fromStringTobinArray(strPcs, n)
+      /*} else if (typeof (pcs) === 'object' && !Array.isArray(pcs)) {
+        // waiting object as { strpcs a string attribute and n an integer }
+        // example { "strpcs" : "[0,3,4]", "n" : 7 }
+        this.pcs = this._fromStringTobinArray(pcs.strpcs, pcs.n)*/
+    } else if (Array.isArray(binPcs)) {
       // assume pcs bin vector [1,0,1, ... ]
-      this.pcs = pcs.slice()
+      this.pcs = binPcs.slice()
     } else {
-      throw new Error("Can't create IPcs instance (bad args = "+ pcs + ")")
+      throw new Error("Can't create IPcs instance (bad args = " + strPcs + ")")
     }
     // empty set as valid pcs
     if (this.cardinal() === 0) {
-      this.iroot = undefined
-    } else if (!iroot && iroot !== 0) {
-      //iroot is min pc
-      this.iroot = this.pcs.findIndex( ( pc => pc === 1 ))
+      this.iPivot = undefined
+    } else if (!iPivot && iPivot !== 0) {
+      // iPivot is min pc
+      this.iPivot = this.pcs.findIndex((pc => pc === 1))
     } else {
-      // check iroot in pcs
-      if (this.pcs[iroot] === 1) {
-        this.iroot = iroot
+      // check iPivot in pcs
+      if (this.pcs[iPivot] === 1) {
+        this.iPivot = iPivot
       } else {
-        throw new Error("Can't create IPcs instance (bad iroot = " + iroot + " for pcs " + this.pcs + ")")
+        throw new Error("Can't create IPcs instance (bad iPivot = " + iPivot + " for pcs " + this.pcs + ")")
       }
     }
     this.prev_ipcs_cplt = prev_ipcs_cplt ? prev_ipcs_cplt : null
     this.n = this.pcs.length
+    this.orbit = new Orbit()
   }
 
   /**
@@ -49,14 +53,14 @@ export default class IPcs {
    * @param {number} n vector dimension
    * @returns {int[]} vector (length == n)
    */
-  _fromStringTobinArray(strpcs, n=12) {
+  _fromStringTobinArray(strpcs, n = 12) {
     // assume length = 12
     let bin = new Array(n).fill(0);
 
     //  if "[1,3,5]" => "1,3,5"
     //  if "{1,3,5}" => "1,3,5"
     if ((strpcs[0] === '[' && strpcs[strpcs.length - 1] === ']') ||
-        (strpcs[0] === '{' && strpcs[strpcs.length - 1] === '}')) {
+      (strpcs[0] === '{' && strpcs[strpcs.length - 1] === '}')) {
       strpcs = strpcs.substring(1, strpcs.length - 1);
     }
     if (strpcs) {
@@ -66,6 +70,26 @@ export default class IPcs {
       }
     }
     return bin;
+  }
+
+  /**
+   * Convert a integer in binary pitches class set
+   *
+   * @param ipcs
+   *           integer value to convert
+   * @param dim
+   *           vector length
+   *
+   * @return {Array} (binary pitches class set)
+   */
+  static intToBinArray(intpcs, dim) {
+    let pitchesArray = []
+    pitchesArray.length = dim;
+    pitchesArray.fill(0);
+    for (let i = 0; i < dim && intpcs > 0; i++, intpcs = Math.floor(intpcs / 2)) {
+      pitchesArray[i] = intpcs % 2;
+    }
+    return pitchesArray;
   }
 
   static get NEXT_MODULATION() {
@@ -127,15 +151,15 @@ export default class IPcs {
   }
 
   /**
-   * return this by transpose iroot to zero
+   * return this by transpose iPivot to zero
    * @return {IPcs}
    */
   modalPrimeForm() {
-    // if iroot is undefined or already equals to zero, return this
-    if (!this.iroot) {
+    // if iPivot is undefined or already equals to zero, return this
+    if (!this.iPivot) {
       return this
     }
-    return this.transpose(-this.iroot)
+    return this.transpose(-this.iPivot)
   }
 
   /**
@@ -147,7 +171,7 @@ export default class IPcs {
     if (this.cardinal() === 0) {
       return this
     }
-    if (this._minCyclic){
+    if (this._minCyclic) {
       return this._minCyclic
     }
     // lazy compute
@@ -164,7 +188,7 @@ export default class IPcs {
         min = norm;
       }
     }
-    this._minCyclic = new IPcs(min, 0)
+    this._minCyclic = new IPcs({binPcs: min, iPivot: 0})
     return this._minCyclic
   }
 
@@ -180,10 +204,10 @@ export default class IPcs {
     let pcsM7 = cpf.affineOp(7, 0).cyclicPrimeForm();
 
     if (cpf.id() < pcsM5.id() && cpf.id() < pcsM7.id())
-       return cpf
+      return cpf
 
     if (pcsM5.id() < pcsM7.id())
-       return pcsM5
+      return pcsM5
 
     return pcsM7
   }
@@ -197,17 +221,17 @@ export default class IPcs {
   /**
    * general transformation : affine operation ax + t
    * general idea (composition of affine operations):
-   *  1/ translate :        1 + -iroot
+   *  1/ translate :        1 + -iPivot
    *  2/ affine operation : ax + t
-   *  3/ translate :        1 + iroot
-   *  so : ax + ( -(a-1) * iroot + t )
+   *  3/ translate :        1 + iPivot
+   *  so : ax + ( -(a-1) * iPivot + t )
    * @param  a    {number}
    * @param  t    [0..this.n[
-   * @param iroot [0..this.n[
+   * @param iPivot [0..this.n[
    * @param  abin binary array
    * @return {int[]}
    */
-  static getPermute(a, t, iroot, abin) {
+  static getPermute(a, t, iPivot, abin) {
     let permute = abin.slice()
     let n = abin.length
     let j
@@ -216,7 +240,7 @@ export default class IPcs {
       // t in [0..n[
     }
     for (let i = 0; i < n; i++) {
-      j = (n + (((i * a) - (a - 1) * iroot - t) % n)) % n
+      j = (n + (((i * a) - (a - 1) * iPivot - t) % n)) % n
       // j may be negative... so n + (...) modulo n
       permute[i] = abin[j]
     }
@@ -226,10 +250,10 @@ export default class IPcs {
   /**
    * general transformation : affine operation ax + t
    * general idea (composition of affine operations):
-   *  1/ translate :        1 + -iroot
+   *  1/ translate :        1 + -iPivot
    *  2/ affine operation : ax + t
-   *  3/ translate :        1 + iroot
-   *  so : ax + ( -(a-1) * iroot + t ) (for each pc in pcs)
+   *  3/ translate :        1 + iPivot
+   *  so : ax + ( -(a-1) * iPivot + t ) (for each pc in pcs)
    * @param  a    {number}
    * @param  t    [0..11]
    * @return {IPcs}
@@ -239,8 +263,8 @@ export default class IPcs {
       // empty pcs no change
       return this
     }
-    let newIRoot = negativeToPositiveModulo((this.iroot + t), this.pcs.length)
-    return new IPcs(IPcs.getPermute(a, t, newIRoot, this.pcs), newIRoot)
+    let newPivot = negativeToPositiveModulo((this.iPivot + t), this.pcs.length)
+    return new IPcs({binPcs: IPcs.getPermute(a, t, newPivot, this.pcs), iPivot: newPivot})
   }
 
   /**
@@ -263,31 +287,31 @@ export default class IPcs {
   }
 
   /**
-   * Modulate of this (change iroot)
+   * Modulate of this (change iPivot)
    * @param direction which next or previus degree of modulation
    * @returns {IPcs} a new object
    *
-   * TODO : set new iroot nearest
+   * TODO : set new iPivot nearest
    */
   modulate(direction) {
-    let newIRoot = this.iroot
+    let newiPivot = this.iPivot
     if (direction === IPcs.NEXT_MODULATION) {
       let n = this.pcs.length
-      for (let i = this.iroot + 1; i < n + this.iroot; i++) {
+      for (let i = this.iPivot + 1; i < n + this.iPivot; i++) {
         if (this.pcs[i % n] === 1) {
-          newIRoot = i % n
+          newiPivot = i % n
           break
         }
       }
     } else if (direction === IPcs.PREV_MODULATION) {
       let n = this.pcs.length
-      let i = this.iroot - 1
+      let i = this.iPivot - 1
       if (i < 0) {
         i = negativeToPositiveModulo(i, n)
       }
-      for (; i !== this.iroot;) {
+      for (; i !== this.iPivot;) {
         if (this.pcs[i] === 1) {
-          newIRoot = i
+          newiPivot = i
           break
         }
         i--
@@ -296,7 +320,7 @@ export default class IPcs {
         }
       }
     }
-    return new IPcs(this.pcs.slice(), newIRoot)
+    return new IPcs({binPcs: this.pcs.slice(), iPivot: newiPivot})
   }
 
   /**
@@ -330,12 +354,12 @@ export default class IPcs {
   }
 
   /**
-   * Change iroot and set 1 to this index
-   * @param iroot
+   * Change iPivot and set 1 to this index
+   * @param iPivot
    */
-  setIroot(iroot) {
-    this.pcs[iroot] = 1;
-    this.iroot = iroot;
+  setiPivot(iPivot) {
+    this.pcs[iPivot] = 1;
+    this.iPivot = iPivot;
   }
 
   /**
@@ -382,7 +406,7 @@ export default class IPcs {
    * @return {number}
    */
   cardOrbitMode() {
-    if (this.iroot === undefined) {
+    if (this.iPivot === undefined) {
       return undefined
     }
     if (this._cardModesOrbits) {
@@ -394,11 +418,11 @@ export default class IPcs {
     let cardinal = 0;
     let pcs = this.pcs.slice()
     let n = pcs.length
-    for (let i = (this.iroot + 1) % n; i < pcs.length + this.iroot; i++) {
+    for (let i = (this.iPivot + 1) % n; i < pcs.length + this.iPivot; i++) {
       if (pcs[i % n] === 0) continue
       cardinal++
-      let ipcs2 = this.transpose(-i + this.iroot)
-      // compare pcs without iroot
+      let ipcs2 = this.transpose(-i + this.iPivot)
+      // compare pcs without iPivot
       if (ipcs2.equalsPcs(this)) {
         break
       } else {
@@ -420,7 +444,7 @@ export default class IPcs {
 
   /**
    * get complement of this.
-   * Important : complement loses iroot pivot
+   * Important : complement loses iPivot pivot
    * if prev_ipcs_cplt is defined, return prev_ipcs_cplt
    *   (default prev_ipcs_cplt is null)
    * else
@@ -432,32 +456,32 @@ export default class IPcs {
       return this.prev_ipcs_cplt
     }
     let pcs_cpt = this.pcs.map(pc => (pc === 1 ? 0 : 1)) //;slice() and inverse 0/1
-    let new_iroot = undefined
-    let localIroot = this.iroot === undefined ?  0 : this.iroot
+    let new_iPivot = undefined
+    let localiPivot = this.iPivot === undefined ? 0 : this.iPivot
     let n = pcs_cpt.length
-    // iroot is lost by complement... set a new iroot of complement
+    // iPivot is lost by complement... set a new iPivot of complement
     // opposite is a good candidate when n is even
-    if ((n%2) === 0 && pcs_cpt[(localIroot + n/2) % n ] === 1 ){
-      new_iroot = (localIroot  + n/2) % n
+    if ((n % 2) === 0 && pcs_cpt[(localiPivot + n / 2) % n] === 1) {
+      new_iPivot = (localiPivot + n / 2) % n
     } else {
-      // TODO best strategy to fin new iroot
+      // TODO best strategy to fin new iPivot
       // here the first in right circular research
-      for (let i = localIroot  + 1; i < localIroot  + n; i++) {
+      for (let i = localiPivot + 1; i < localiPivot + n; i++) {
         if (pcs_cpt[i % n] === 1) {
-          new_iroot = i % n
+          new_iPivot = i % n
           break
         }
       }
     }
-    if (new_iroot === undefined && this.prev_ipcs_cplt) {
-      throw new Error("Complement : Cannot initialize iroot !!!??")
+    if (new_iPivot === undefined && this.prev_ipcs_cplt) {
+      throw new Error("Complement : Cannot initialize iPivot !!!??")
     }
-    return new IPcs(pcs_cpt, new_iroot, this)
+    return new IPcs({binPcs: pcs_cpt, iPivot: new_iPivot, prev_ipcs_cplt: this})
   }
 
   toString() {
-    return JSON.stringify(this.pcs) + ", iroot : "
-      + JSON.stringify(this.iroot)
+    return JSON.stringify(this.pcs) + ", iPivot : "
+      + JSON.stringify(this.iPivot)
       + (this.prev_ipcs_cplt ? ', (cplt)' : '')
     //	return JSON.stringify(this);
   }
@@ -465,7 +489,7 @@ export default class IPcs {
   equals(other) {
     if (other instanceof IPcs) {
       return this.pcs.every((v, i) => v === other.pcs[i]) &&
-        this.iroot === other.iroot;
+        this.iPivot === other.iPivot;
     }
     return false
   }
@@ -485,5 +509,18 @@ export default class IPcs {
    */
   static compare(ipcs1, ipcs2) {
     return ipcs1.id() - ipcs2.id()
+  }
+
+  /**
+   *
+   * @param {IPcs} other to compare
+   * @return {number} as waiting by Array sort
+   */
+  compareTo(ipcs2) {
+    return IPcs.compare(this, ipcs2)
+  }
+
+  addInOrbit(newIPcs) {
+    this.orbit.addIPcsIfNotPresent(newIPcs)
   }
 }

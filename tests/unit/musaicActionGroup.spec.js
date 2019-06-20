@@ -2,74 +2,83 @@
  * Copyright (c) 2019. Olivier Capuozzo
  */
 
-import MusaicPcsOperation from "@/models/MusaicPcsOperation";
+import MusaicActionGroup from "@/models/MusaicActionGroup"
 import IPcs from "@/models/IPcs";
-import Group from "@/models/Group";
+import MusaicPcsOperation from "@/models/MusaicPcsOperation";
 
-const getRandomInt = max => {
- return Math.floor(Math.random() * Math.floor(max))
-}
 
-test("Generator group from M1T0", () => {
-  let opM1_T0 = new MusaicPcsOperation(12, 1, 0, false);
-  let someOps = [opM1_T0]
-  let opsWaiting = someOps
-  let allOps = Group.operationsGroupGenerator(someOps)
-  expect(allOps).toEqual(opsWaiting)
-})
+test("All subsets of n = 5 ", () => {
+  let powerset5 = MusaicActionGroup.buildPowerSetOfIPcs(5);
+  // let musaicGroup5 = Array.from(MusaicActionGroup.buildPowerSetOfIPcs(5).keys()).sort();
+  expect(powerset5.size).toEqual(Math.pow(2, 5))
+  // let minPcs = new IPcs({strPcs:"", n:5})
+  // let maxPcs = new IPcs({strPcs:"0,1,2,3,4", n:5})
+  // expect(minPcs).toEqual(powerset5[0])
+  // //musaicGroup5.forEach(pcs => console.log(pcs))
+  // expect(maxPcs).toEqual(powerset5[powerset5.length-1])
+});
 
-test("Generator group from M1T1", () => {
-  let opM1_T1 = new MusaicPcsOperation(12, 1, 1, false);
-  let someOps = [opM1_T1]
-  let opsWaiting = []
-  for (let i = 0; i<12; i++) {
-    opsWaiting.push(new MusaicPcsOperation(12, i, 0, false))
-  }
-  let allops = Group.operationsGroupGenerator(someOps)
-  expect(allops).not.toEqual(opsWaiting)
-})
+test("Powerset n = 12", () => {
+  let musaicGroup12 = MusaicActionGroup.buildPowerSetOfIPcs(12);
+  expect(musaicGroup12.size).toEqual(Math.pow(2, 12))
+  //
+  // let minPcs = new IPcs({strPcs:"", n:12})
+  // let maxPcs = new IPcs({strPcs:"0,1,2,3,4,5,6,7,8,9,10,11", n:12})
+  // expect(minPcs).toEqual(musaicGroup12[0])
+  // //musaicGroup5.forEach(pcs => console.log(pcs))
+  // expect(maxPcs).toEqual(musaicGroup12[musaicGroup12.length-1])
+});
 
-test("testCayleyGenerateOperationsAffine", () => {
-  let someOperations = []
-  let order = 12;
-  let a = 1;
-  let t = 1;
-  let complement = false;
-  someOperations.push(new MusaicPcsOperation(order, a, t, complement));
-  a = 5;
-  someOperations.push(new MusaicPcsOperation(order, a, t, complement));
-  a = 7;
-  someOperations.push(new MusaicPcsOperation(order, a, t, complement));
-  a = 11;
-  someOperations.push(new MusaicPcsOperation(order, a, t, complement));
+test("Action group trivial n = 12 ", () => {
+  let complemented = false
+  let opNeutral = new MusaicPcsOperation(12, 1, 0, complemented);
+  let musaicGroup12 = new MusaicActionGroup({n:12, someMusaicOperations:[opNeutral]});
+  expect(musaicGroup12.powerset.size).toEqual(Math.pow(2, 12))
+  expect(musaicGroup12.orbits.length).toEqual(Math.pow(2, 12))
+});
 
-  // generate 48 operations : 12 * each a
-  expect(Group.operationsGroupGenerator(someOperations).length).toEqual(order*4)
-})
+test("Action group cyclic n = 12 ", () => {
+  let complemented = false
+  let opNeutral = new MusaicPcsOperation(12, 1, 0, complemented);
+  let opT1 = new MusaicPcsOperation(12, 1, 1, complemented);
+  let musaicGroup12 = new MusaicActionGroup({n:12, someMusaicOperations:[opNeutral, opT1]});
+  expect(musaicGroup12.operations.length).toEqual(12)
+  expect(musaicGroup12.powerset.size).toEqual(Math.pow(2, 12))
+  expect(musaicGroup12.orbits.length).toEqual(352)
+});
 
-test("testCayleyGenerateOperationsMusaic", () => {
-  let someOperations = []
-  let order = 12;
-  let a = 1;
-  let t = 1;
-  let complement = false;
-  someOperations.push(new MusaicPcsOperation(order, a, t, complement));
-  a = 5;
-  someOperations.push(new MusaicPcsOperation(order, a, t, complement));
-  a = 7;
-  someOperations.push(new MusaicPcsOperation(order, a, t, complement));
-  complement = true;
-  someOperations.push(new MusaicPcsOperation(order, a, t, complement));
 
-  t = getRandomInt(12)
-  let aleaOp = new MusaicPcsOperation(order, 11, t, complement)
+test("Action group dihedral n = 12 ", () => {
+  let complemented = false
+  let opNeutral = new MusaicPcsOperation(12, 1, 0, complemented);
+  let opT1 = new MusaicPcsOperation(12, 1, 1, complemented);
+  let opM11 = new MusaicPcsOperation(12, 11, 1, complemented);
+  let musaicGroup12 = new MusaicActionGroup({n:12, someMusaicOperations:[opNeutral, opT1, opM11]});
+  expect(musaicGroup12.operations.length).toEqual(24)
+  expect(musaicGroup12.powerset.size).toEqual(Math.pow(2, 12))
+  expect(musaicGroup12.orbits.length).toEqual(224)
+});
 
-  let allOps = Group.operationsGroupGenerator(someOperations)
+test("Action group affine n = 12 ", () => {
+  let complemented = false
+  let opNeutral = new MusaicPcsOperation(12, 1, 0, complemented);
+  let opT1 = new MusaicPcsOperation(12, 1, 1, complemented);
+  let opM5 = new MusaicPcsOperation(12, 5, 1, complemented);
+  let opM7 = new MusaicPcsOperation(12, 7, 1, complemented);
+  let musaicGroup12 = new MusaicActionGroup({n:12, someMusaicOperations:[opNeutral, opT1, opM5, opM7]});
+  expect(musaicGroup12.operations.length).toEqual(48)
+  expect(musaicGroup12.powerset.size).toEqual(Math.pow(2, 12))
+  expect(musaicGroup12.orbits.length).toEqual(158)
+});
 
-  // test if aleaOp is in allOps
-  expect(allOps.find( (e) => e.getHashCode() === aleaOp.getHashCode())).toBeTruthy()
-
-  // waiting 96 operations : 12 * each a = 48 and each complement (*2)
-  expect(allOps.length).toEqual(order*4*2)
-})
-
+test("Action group musaic n = 12 ", () => {
+  let complemented = true
+  let opNeutral = new MusaicPcsOperation(12, 1, 0, complemented);
+  let opCT1 = new MusaicPcsOperation(12, 1, 1, !complemented);
+  let opM5 = new MusaicPcsOperation(12, 5, 1, !complemented);
+  let opM7 = new MusaicPcsOperation(12, 7, 1, !complemented);
+  let musaicGroup12 = new MusaicActionGroup({n:12, someMusaicOperations:[opNeutral, opCT1, opM5, opM7]});
+  expect(musaicGroup12.operations.length).toEqual(96)
+  expect(musaicGroup12.powerset.size).toEqual(Math.pow(2, 12))
+  expect(musaicGroup12.orbits.length).toEqual(88)
+});

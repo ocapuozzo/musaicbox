@@ -120,14 +120,14 @@ export default {
       let y = e.clientY - rect.top;
 
       // for compute with undefined
-      let localIroot = (this.ipcs.iroot === undefined) ? 0 : this.ipcs.iroot
+      let localPivot = (this.ipcs.iPivot === undefined) ? 0 : this.ipcs.iPivot
 
         // from matrix coord to indice linear
       let index = ((5 * Math.floor(x / this.CEL_WIDTH))
-        + (Math.floor(y / this.CEL_WIDTH)) + localIroot) % this.ipcs.pcs.length;
+        + (Math.floor(y / this.CEL_WIDTH)) + localPivot) % this.ipcs.pcs.length;
 
-       // keep iroot until cardinal = 1
-       if (index !== this.iroot || this.ipcs.cardinal()===1) {
+       // keep iPivot until cardinal = 1
+       if (index !== this.iPivot || this.ipcs.cardinal()===1) {
         this.$store.commit("ipcs/toggleindexpcs", index);
         this.$root.$emit('onsetpcs');
       }
@@ -156,14 +156,14 @@ export default {
 
       // Draws musaic
       // loop n+1 for exact correlation between geometry ops and algebra ops
-      // display *iroot centered* for bijective relation geometry <-> algebra
+      // display *iPivot centered* for bijective relation geometry <-> algebra
       // Example. 
-      //   ipcs : ({0, 3, 6, 9}, iroot=0) 
-      //   ipcs : ({1, 4, 7, 10}, iroot=1)  
+      //   ipcs : ({0, 3, 6, 9}, iPivot=0) 
+      //   ipcs : ({1, 4, 7, 10}, iPivot=1)  
       // are same IS, are same Musaic representation 
       for (let i = 0; i <= n; i++) {
         for (let j = 0; j <= n; j++) {
-          if (this.ipcs.pcs[(i + this.ipcs.iroot + j * 5) % n] === 1) {
+          if (this.ipcs.pcs[(i + this.ipcs.iPivot + j * 5) % n] === 1) {
             ctx.fillStyle = "rgb(0, 0, 0)";
             ctx.fillRect(j * CEL_WIDTH, i * CEL_WIDTH, CEL_WIDTH, CEL_WIDTH);
             ctx.strokeRect(j * CEL_WIDTH, i * CEL_WIDTH, CEL_WIDTH, CEL_WIDTH);

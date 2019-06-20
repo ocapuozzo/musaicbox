@@ -55,12 +55,12 @@ export default {
         this.$store.commit('ipcs/changepcs', value);
       }
     },
-    iroot: {
+    iPivot: {
       get() {
-        return this.$store.state.ipcs.ipcs.iroot
+        return this.$store.state.ipcs.ipcs.iPivot
       },
       set(value) {
-        this.$store.commit('ipcs/setIRoot', value);
+        this.$store.commit('ipcs/setiPivot', value);
       }
     },
 
@@ -101,10 +101,10 @@ export default {
       return this.ipcs.pcs[i] === 1;
     },
 
-    setIRoot(index) {
-      this.iroot = index;
+    setiPivot(index) {
+      this.iPivot = index;
       this.$root.$emit('onsetpcs');
-      // console.log("set iroot : " + index);
+      // console.log("set iPivot : " + index);
     },
     touchstart(e) {
       if (e) {
@@ -129,10 +129,10 @@ export default {
       
       this.$options.dateMouseDone = null
       
-      if (index !== this.iroot) {
+      if (index !== this.iPivot) {
         this.touchendOk = true
         if (longClick) {
-          this._setIndexToOneOrIRoot(index)
+          this._setIndexToOneOriPivot(index)
         } else {
           this.$store.commit("ipcs/toggleindexpcs", index);
           this.$root.$emit('onsetpcs');
@@ -173,27 +173,27 @@ export default {
       // long click ? (if down is 1 second or more)  
       let longClick = (new Date() - this.$options.dateMouseDone) >= 1000
 
-      // right click and long click => change iroot
+      // right click and long click => change iPivot
       if (isRightMB || longClick) {
-        if (index != this.iroot) {
-          this._setIndexToOneOrIRoot(index)
+        if (index != this.iPivot) {
+          this._setIndexToOneOriPivot(index)
         }
         this.$options.dateMouseDone = null
         return false;
       }
-      // accept unset iroot when cardinal == 1 only
-      if (index >= 0 && (index !== this.iroot || this.ipcs.cardinal()===1)) {
+      // accept unset iPivot when cardinal == 1 only
+      if (index >= 0 && (index !== this.iPivot || this.ipcs.cardinal()===1)) {
         this.$store.commit("ipcs/toggleindexpcs", index);
         this.$root.$emit('onsetpcs');
       }
     },
 
-    _setIndexToOneOrIRoot(index) {
+    _setIndexToOneOriPivot(index) {
       if (this.ipcs.pcs[index] === 0) {
         // set this.ipcs.pcs[index] to 1 (new array)
         this.$store.commit("ipcs/toggleindexpcs", index);
       } else {
-        this.setIRoot(index);
+        this.setiPivot(index);
       }
       this.$root.$emit('onsetpcs');
     },
@@ -204,7 +204,7 @@ export default {
       ctx.arc(0, 0, radius, 0, 2 * Math.PI);
       ctx.stroke()
       // console.log("index : " + index + " selected : " + this.isSelected(index));
-      let color = (this.isSelected(index)) ? (index == this.iroot) ? 'red' : 'yellow' : 'white'
+      let color = (this.isSelected(index)) ? (index == this.iPivot) ? 'red' : 'yellow' : 'white'
       ctx.fillStyle = color;
       ctx.fill();
       if (radius > 6) {

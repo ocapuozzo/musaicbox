@@ -4,10 +4,19 @@
 
 <template>
   <div class="hello">
-    <h1>(404) Page NotFound</h1>
+    <h3>(404) Page Not Found</h3>
+    <p><a href="/">Go to home</a></p>
+    <h3> </h3>
   </div>
 </template>
 
 <script>
   export default {};
 </script>
+
+<style scoped>
+  
+ h3 {
+   margin-bottom: 2rem;
+ }
+</style>

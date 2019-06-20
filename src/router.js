@@ -3,6 +3,7 @@ import Router from "vue-router";
 import Home from "./views/Home.vue";
 import About from "./views/About.vue";
 import Group from "./views/Group.vue";
+import NotFound from './views/404.vue';
 
 Vue.use(Router);
 
@@ -33,6 +34,9 @@ export default new Router({
       component: Group
         // () => import(/* webpackChunkName: "about" */ "./views/Group.vue")
     },
-    { path: '*', redirect: '/' },
+    {
+      path: '*',
+      component: NotFound
+    }
   ]
 });
