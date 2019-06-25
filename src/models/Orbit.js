@@ -3,15 +3,17 @@
  */
 
 import IPcs from "./IPcs";
+import Utils from "../utils/Utils";
 
 export default class Orbit {
 
   constructor({stabs = [], ipcsSet = []}={}) {
-    this.stabilizers = stabs;
-    this.ipcsset = ipcsSet;
+    this.stabilizers = stabs
+    this.ipcsset = ipcsSet
+    this._hashcode = null
 
     if (stabs === null) {
-      this.stabilizers = [];
+      this.stabilizers = []
     }
     if (ipcsSet == null) {
       this.ipcsset = []
@@ -25,10 +27,9 @@ export default class Orbit {
   addIPcsIfNotPresent(newIPcs) {
     if (!this.ipcsset.find(ipcs => ipcs.id() === newIPcs.id())) {
       this.ipcsset.push(newIPcs)
+      this._hashcode = null
     }
   }
-
-
 
   /**
    *
@@ -64,7 +65,7 @@ export default class Orbit {
   */
   /**
    *
-   * @return {IPcs} the min IPcs of ipcsset
+   * @return {IPcs} the min IPcs of elements of orbit (min elt in ipcsset)
    */
   getPcsMin() {
     if (this.ipcsset.length === 0)
@@ -74,7 +75,18 @@ export default class Orbit {
 
   toString() {
     return "Orbit (" + this.ipcsset.length + ") stabilizers=" + this.stabilizers
-      + "] min = " + this.getPcsMin().toString();
+      + " ipcsset : " + this.ipcsset + "  min = " + this.getPcsMin().toString();
+  }
+
+  hashCode(){
+    if (!this._hashcode) {
+      let res= ""
+      this.stabilizers.forEach(stab => res += stab.hashCode())
+      this.ipcsset.forEach(pcs => res += pcs.id())
+      this._hashcode = res //Utils.stringHashCode(this.toString())
+    }
+
+    return  this._hashcode
   }
 
   /**
@@ -100,5 +112,47 @@ export default class Orbit {
   getPrimeForms() {
     return this.ipcsset.map((ipcs) => ipcs.cyclicPrimeForm())
   }
+
+  /**
+   * Get stabilizers by action group on powerset Ex : [M1-T0] is maximal
+   * stabilizer for pcs that have not more stabilizers (sub-group)
+   * post-assert :
+   *  each pcs of powerset has his maximal stabilizer Ex : pcs=100110101100
+   * has [M1-T0, M5-T0, M7-T0, M11-T0] as maxstabilizer
+   *
+   * @return {Array} list of stabilizers
+   *
+   */
+  /**
+  computeMaxStabilizersAndFixs() {
+    stabilizers = []
+    this.ipcsset.forEach((pcs) => {
+      Stabilizer newStab = new Stabilizer();
+      for (MusaicPcsOperation op : operations) {
+        if (pcs.equals(op.actionOn(pcs))) {
+          newStab.addFixedPcs(pcs);
+          newStab.addOperation(op);
+
+          pcs.addOperationAsStabilizer(op);
+          op.addFixedPcs(pcs);
+        }
+      }
+      // note : stab identity is based on their operations
+      if (!stabilizers.contains(newStab)) {
+        stabilizers.add(newStab);
+      } else {
+        Stabilizer stab = stabilizers.get(stabilizers.indexOf(newStab));
+        // add fixed pcs
+        stab.addFixedPcs(pcs);
+        Collections.sort(stab.getFix().pcsset, new PcsSymmetryComparator());
+      }
+
+    })
+
+    }
+    stabilizers.sort(new ComparatorStab());
+    return stabilizers;
+  }
+*/
 
 }

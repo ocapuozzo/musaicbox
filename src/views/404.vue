@@ -5,7 +5,7 @@
 <template>
   <div class="hello">
     <h3>(404) Page Not Found</h3>
-    <p><a href="/">Go to home</a></p>
+    <router-link :to="{name: 'home'}">Go to home</router-link>
     <h3> </h3>
   </div>
 </template>

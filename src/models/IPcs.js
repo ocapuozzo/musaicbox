@@ -10,9 +10,9 @@ const negativeToPositiveModulo = (i, n) => {
 
 export default class IPcs {
 
-  constructor({idVal = -1, strPcs = null, binPcs = null, n = 12, iPivot = undefined, prev_ipcs_cplt = null}) {
-    if (idVal >= 0) {
-      this.pcs = IPcs.intToBinArray(idVal, n)
+  constructor({pidVal: pidVal = -1, strPcs = null, binPcs = null, n = 12, iPivot = undefined, prev_ipcs_cplt = null}) {
+    if (pidVal >= 0) {
+      this.pcs = IPcs.intToBinArray(pidVal, n)
     } else if (typeof (strPcs) === 'string') {
       this.pcs = this._fromStringTobinArray(strPcs, n)
       /*} else if (typeof (pcs) === 'object' && !Array.isArray(pcs)) {
@@ -214,7 +214,7 @@ export default class IPcs {
 
   musaicPrimeForm() {
     let cpf = this.affinePrimeForm();
-    let cpfCplt = this.complement().affinePrimeForm();
+    let cpfCplt = cpf.complement().affinePrimeForm();
     return cpf.id() < cpfCplt.id() ? cpf : cpfCplt;
   }
 

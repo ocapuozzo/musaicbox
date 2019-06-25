@@ -26,6 +26,8 @@
  *
  */
 
+import Utils from "../utils/Utils";
+
 export default class MusaicPcsOperation {
   /*
   public final int n;
@@ -53,21 +55,15 @@ export default class MusaicPcsOperation {
   this.t = t;
   this.n = n;
   this.complement = complement;
-  let prefix = complement ? "C" : "";
-  this._strRepr = prefix + "M" + a + "-T" + t; // n ?
+  let prefix = this.complement ? "C" : "";
+  this._strRepr = prefix + "M" + this.a + "-T" + this.t; // n ?
   this._strReprWithoutTransp = prefix + "M" + a;
   this.fixedPcs = []  // new ArrayList<Pcs>();
   this.stabilizers = [] // new ArrayList<Stabilizer>();
 }
 
 _makeHashCode() {
-  const prime = 31;
-  let _hashcode = 1;
-  _hashcode = prime * _hashcode + this.a * this.n * 2;
-  _hashcode = prime * _hashcode + (this.complement ? 1231 : 1237);
-  _hashcode = prime * _hashcode + this.n;
-  _hashcode = prime * _hashcode + this.t;
-  return this._hashcode = _hashcode;
+  return Utils.stringHashCode(this._strRepr)
 }
 
 equals(obj) {
@@ -114,7 +110,7 @@ compose(other) {
     this.n,
    (this.a * other.a) % this.n,
    (this.a * other.t + this.t) % this.n,
-   (this.complement ^ other.complement) ? true : false)
+   this.complement !== other.complement)  // xor logical
 }
 
 /**
@@ -165,9 +161,13 @@ static compareTo( op1, op2) {
   return comp;
 }
 
+compare(other) {
+  return MusaicPcsOperation.compareTo(this, other)
+}
+
 addFixedPcs(ipcs) {
-  if (!this.fixedPcs.contains(ipcs)) {
-    this.fixedPcs.add(ipcs);
+  if (!this.fixedPcs.find(p => p.id() === ipcs.id())) {
+    this.fixedPcs.push(ipcs);
   }
 }
 
@@ -177,7 +177,7 @@ getFixedPcs() {
 
 getHashCode() {
   if (!this._hashcode) {
-    this._makeHashCode()
+    this._hashcode = this._makeHashCode()
   }
   return this._hashcode
 }

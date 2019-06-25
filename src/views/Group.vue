@@ -1,6 +1,8 @@
 <template>
   <div class="group-action">
-    <h2>Group & group action explorer <span v-show="waitingCompute" class="status"> wait, compute in progress...</span> </h2>
+    <h2>Group & group action explorer <span v-show="waitingCompute"  class="btn status" >
+      <span class="spinner-border spinner-border-sm status" role="status" aria-hidden="true"></span>
+      Working... </span>  </h2>
     <div class="d-flex flex-row">
       <div class="input-group group-dim ">
         <div class="input-group-prepend ">
@@ -32,7 +34,12 @@
               <input class="form-check-input" type="checkbox" v-model="opTransChoices" :value="0" disabled>
               <label class="form-check-label">T0</label>
             </div>
-            <div v-for="(t, index) in Math.ceil(n/2)" :key="index" class="form-check form-check-inline">
+            <div v-if="opComplement || opTransChoices.find(op => op===1)" class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" v-model="opTransChoices" :value="1"
+                     :disabled="opComplement" @change="buildAllOperationsOfGroup()">
+              <label class="form-check-label">T1</label>
+            </div>
+            <div v-else v-for="(t, index) in Math.ceil(n/2)" :key="index" class="form-check form-check-inline">
               <input class="form-check-input" type="checkbox" v-model="opTransChoices" :value="t"
                      @change="buildAllOperationsOfGroup()">
               <label class="form-check-label">T{{t}}</label>
@@ -51,31 +58,34 @@
       </div>
     </div>
 
-
     <div class="p-2">
       <fieldset class="representation-border p-2">
         <legend class="representation-border">Group operations ({{ groupOperations.length }})</legend>
         <div v-for="(operation, index) in groupOperations" :key="index" class="form-check form-check-inline">
-          <div class="operation">{{operation}}</div>
+<!--          <div class="operation">{{operation}}</div>-->
+          <div class="form-check operation">
+            <input class="form-check-input" type="checkbox" @change="checkComplementedOp" :value="false">
+            <label class="form-check-label">{{operation}}</label>
+          </div>
         </div>
       </fieldset>
     </div>
-
     <div class="p-2">
-      <fieldset class="representation-border p-2">
+      <button type="button" class="btn btn-primary" @click="showOrbits">Show orbits ({{this.preReactOrbits.length}})</button>
+    </div>
+    <div class="p-2">
+      <fieldset class="representation-border p-2 ">
         <legend class="representation-border">Orbits results {{orbits.length}}</legend>
-        <fieldset v-for="(orbit, index) in orbits" :key="index" class="representation-border p-2">
-          <legend class="representation-border">Orbits {{orbit.ipcsset.length}}</legend>
-          <clock :_ipcs="{strPcs:orbit.getPcsMin().pcsStr, n:orbit.getPcsMin().n}" class="m-1 clock-pcs"/>
+        <fieldset v-for="(orbit, index) in orbits" :key="orbit.hashCode()" class="representation-border p-2 text-center">
+          <legend class="representation-border">Orbit n° {{index+1}} ({{orbit.ipcsset.length}})</legend>
+          <clock :_ipcs="{strPcs:orbit.getPcsMin().pcsStr, n:orbit.getPcsMin().n}" class="clock-pcs"/>
+          <p class="text-center label-ipcs">{{orbit.getPcsMin().pcsStr}}</p>
         </fieldset>
-        <!--<div><span>ops Multiplication selected : {{ opMultChoices }}</span></div>
+        <!--
+        <div><span>ops Multiplication selected : {{ opMultChoices }}</span></div>
         <div><span>ops Transposition selected : {{ opTransChoices }}</span></div>
         <div><span>ops Complement : {{ opComplement }}</span></div>
-        <clock _ipcs="[0,4,7,10]" class="m-1 clock-pcs"/>
-        <clock _ipcs="[0,3,6,9]" class="m-1 clock-pcs"/>
-        <clock _ipcs="[0,1,2,3]" class="m-1 clock-pcs"/>
-        <clock _ipcs="[0,1,2,8]" class="m-1 clock-pcs"/>-->
-        <clock class="m-1 clock-pcs"/>
+       -->
       </fieldset>
     </div>
   </div>
@@ -99,6 +109,7 @@
         groupOperations: [new MusaicPcsOperation(this.n, 1, 0)],
         actionOfGroup: null,
         orbits: [],
+        preReactOrbits: [],
         waitingCompute: false
       }
     },
@@ -111,22 +122,18 @@
           requestAnimationFrame(callback)
         })
       },
+      checkComplementedOp() {
+        if (this.opComplement && !this.opTransChoices.find( t => t === 1)) {
+          this.opTransChoices.push(1)
+
+        }
+      },
       onChangeN() {
-        // console.log(event.target.value) == this.n (v-model)
-        this.waitingCompute = true
-        this.doubleRaf(() => {
           this.primesWithN = Group.phiEulerElements(this.n);
           this.opMultChoices = [1];
           this.opTransChoices = [0, 1];
           this.actionOfGroup = null;
-          //this.buildAllOperationsOfGroup();
-
           this.buildAllOperationsOfGroup();
-          this.$nextTick(() => {
-            this.waitingCompute = false
-          })
-
-        });
       },
       /**
        * Get all operations group from user choices
@@ -134,17 +141,27 @@
        */
       buildAllOperationsOfGroup() {
         this.waitingCompute = true
+        // see https://github.com/vuejs/vue/issues/9200
         this.doubleRaf(() => {
           this.groupOperations = [];
           this.groupOperations = Group.buildOperationsGroupByCaylayTable(this.getGeneratedSetOperationsFromUI());
           // this.waitingCompute = true
           this.actionOfGroup = new MusaicActionGroup({n: this.n, someMusaicOperations: this.groupOperations});
-          this.orbits = this.actionOfGroup.orbits
+          this.preReactOrbits=  this.actionOfGroup.orbits
+          this.orbits = []
           this.$nextTick(() => {
             this.waitingCompute = false
           })
         });
         //
+      },
+      showOrbits() {
+        this.waitingCompute = true
+        // see https://github.com/vuejs/vue/issues/9200
+        this.doubleRaf(() => {
+          this.orbits = this.preReactOrbits
+          this.$nextTick(() => this.waitingCompute = false)
+        });
       },
       /**
        * Get generated set operations of group, as selected by user
@@ -156,6 +173,7 @@
         // add complemented operation to neutral op if complement operation is selected
         if (this.opComplement === true) {
           someOperations.push(new MusaicPcsOperation(this.n, 1, 0, true))
+          this.opTransChoices = [0, 1]
         }
         // include neutral operation
         for (let i = 0; i < this.opMultChoices.length; i++)
@@ -181,7 +199,7 @@
   .operation {
     display: inline-flex;
     background-color: #6d7fcc;
-    min-width: 5rem;
+    min-width: 6rem;
     margin-bottom: 2px;
     margin-left: 1px;
     padding-left: 2px;
@@ -219,8 +237,15 @@
     font-style: italic;
     text-align: left !important;
     width: auto;
+    height: 1.5rem;
     padding: 0 10px;
     border-bottom: none;
     color: red;
+  }
+  .titi {
+    border-style: dotted;
+  }
+  .label-ipcs {
+    font-size: 0.7em !important;
   }
 </style>

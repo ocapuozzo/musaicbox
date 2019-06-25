@@ -51,3 +51,33 @@ test("MusaicPcsOp test sort", () => {
   
   expect(ops).toEqual(opsSortedWaiting)
 })
+
+test("no Commutative but Associative operation ", () => {
+  let opM1_T2 = new MusaicPcsOperation(12, 1, 2, false);
+  let opM1_T3 = new MusaicPcsOperation(12, 1, 3, false);
+  let opM1_T11 = new MusaicPcsOperation(12, 1, 11, false);
+
+  // no multiplication => commutative
+  // action T3 first and T11 second
+  expect(opM1_T2.equals(opM1_T11.compose(opM1_T3))).toBeTruthy();
+  // action T11 first and T3 second
+  expect(opM1_T2.equals(opM1_T3.compose(opM1_T11))).toBeTruthy();
+
+  let opM8_T2 = new MusaicPcsOperation(12, 8, 2, false);
+  let opM4_T3 = new MusaicPcsOperation(12, 4, 3, false);
+  let opM5_T11 = new MusaicPcsOperation(12, 5, 11, false);
+  let opM8_T11 = new MusaicPcsOperation(12, 8, 11, false);
+
+  // No commutative
+  // action M4-T3 first and M5-T11 second => opM8-T2
+  expect(opM8_T2.equals(opM5_T11.compose(opM4_T3))).toBeTruthy();
+  // action M5-T11 first and M4-T3 second => opM8-T11
+  expect(opM8_T11.equals(opM4_T3.compose(opM5_T11))).toBeTruthy();
+
+  // associative ?  f . (g . h) = (f . g) . h
+  let right = opM8_T2.compose(opM5_T11.compose(opM4_T3))
+  let left =  opM8_T2.compose(opM5_T11).compose(opM4_T3)
+  expect(right).toEqual(left)
+  // ok TODO others test
+})
+

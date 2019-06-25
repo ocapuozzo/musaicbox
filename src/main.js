@@ -8,6 +8,8 @@ import "./registerServiceWorker";
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/css/styleSideBar.css";
+import Utils from './utils/Utils';
+
 import store from './store'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -15,9 +17,8 @@ import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import { faSpinner, faAlignLeft, faYinYang } from '@fortawesome/free-solid-svg-icons'
- 
-library.add(faSpinner, faAlignLeft, faYinYang)
 
+library.add(faSpinner, faAlignLeft, faYinYang)
 library.add(faCoffee)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)

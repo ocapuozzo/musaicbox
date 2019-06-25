@@ -16,15 +16,29 @@ export default class Group {
    */
   static buildOperationsGroupByCaylayTable(arrayOfSomeMusaicPcsOperation) {
     let allOps = [...arrayOfSomeMusaicPcsOperation]
-    for (let i = 0; i < allOps.length; i++) {
-      for (let j = 0; j < allOps.length; j++) {
-        let newop = allOps[i].compose(allOps[j]);
-        if (!allOps.find(op => op.getHashCode() === newop.getHashCode())) {
-          allOps.push(newop)
-        }
-      }
-    }
-    return allOps.sort(MusaicPcsOperation.compareTo)
+    let loop = true
+    while (loop) {
+      let cardinalOp = allOps.length
+      loop = false;
+      forloop:
+      for (let i = 0; i < cardinalOp; i++) {
+         for (let j = 0; j < cardinalOp; j++) {
+           let newop = allOps[i].compose(allOps[j]);
+           if (!allOps.find(op => op.getHashCode() === newop.getHashCode())) {
+             allOps.push(newop)
+             // loop = true;
+             // break forloop
+             cardinalOp++
+           } else {
+             // console.log("-------------------------------------")
+             // console.log("newop = " + newop)
+             // console.log("newop.getHashCode() : " + newop.getHashCode())
+           }
+         }
+       }
+     }
+    allOps.sort(MusaicPcsOperation.compareTo)
+    return allOps
   }
 
   /**

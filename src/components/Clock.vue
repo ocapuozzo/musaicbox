@@ -205,8 +205,9 @@
     }
   }
 </script>
-<style>
+<style scoped>
   .clockpcs {
-    display: inline-flex
+    display: inline-flex;
+    text-align: center;
   }
 </style>
