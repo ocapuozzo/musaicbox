@@ -8,6 +8,8 @@ import Orbit from "./Orbit";
 import Group from "./Group";
 import Stabilizer from "./Stabilizer";
 import MusaicPcsOperation from "./MusaicPcsOperation";
+import MotifStabilizer from "./MotifStabilizer";
+import Utils from "../utils/Utils";
 
 export default class MusaicActionGroup {
 
@@ -16,29 +18,11 @@ export default class MusaicActionGroup {
     this.operations = Group.buildOperationsGroupByCaylayTable(someMusaicOperations);
     // min operation = neutral operation = operations.get(0)
     this.powerset = MusaicActionGroup.buildPowerSetOfIPcs(this.n);
-    this.orbits = this.makeOrbitsByActionOnPowerset();
-    // this.orbitRepresentativesPcs = this.computeOrbitRepresentatives();
-   // this.stabilizers = this.computeMaxStabilizersAndFixs();
-    // computeStabilizersIntoOrbit();
-  }
+    this.orbits = this.buildOrbitsByActionOnPowerset();
+    this.buildOrbitMotifStabilizers()
 
-  get stabilizers()  {
-    if (!this._stabilizers) {
-      this._stabilizers = this.computeMaxStabilizersAndFixs();
-    }
-    return this._stabilizers
-  }
-
-  /**
-   *
-   * @return {Array} of IPcs in PF
-   */
-  computeOrbitRepresentatives() {
-    let orbitRepr = [];
-    this.orbits.forEach(orbit =>  {
-      orbitRepr.push(orbit.getPcsMin());
-    });
-    return orbitRepr;
+    this._orbitsSortedByStabilizers = null
+    this._orbitsSortedByMotifStabilizers = null
   }
 
   /**
@@ -57,9 +41,7 @@ export default class MusaicActionGroup {
       ipcs = new IPcs({pidVal: i, n: n});
       powerset.set(ipcs.id(), ipcs)
     }
-    // get ordered
-   // powerset = new Map([...powerset.entries()].sort());
-    return powerset; //.sort(IPcs.compare);
+    return powerset;
   }
 
   /**
@@ -69,7 +51,7 @@ export default class MusaicActionGroup {
    *         (partition)
    *
    */
-  makeOrbitsByActionOnPowerset() {
+  buildOrbitsByActionOnPowerset() {
     let orbits = [];
     let tmpPowerset = new Map(this.powerset)
     // for info : convert array to Map
@@ -95,68 +77,113 @@ export default class MusaicActionGroup {
   }
 
   /**
-   * Get stabilizers by action group on powerset Ex : [M1-T0] is maximal
-   * stabilizer for pcs that have not more stabilizers (sub-group) post-assert
-   * : each pcs of powerset has his maximal stabilizer Ex : pcs=100110101100
-   * has [M1-T0, M5-T0, M7-T0, M11-T0] as maxstabilizer
-   *
-   * @return {Array} list of stabilizers
-   *
+   * build stabilizers orbit for all orbits
    */
-  _computeMaxStabilizersAndFixs() {
-    let stabilizers = new Map()
-    this.powerset.forEach(pcs => {
-      let newStab = new Stabilizer();
-      this.operations.forEach(op => {
-        if (pcs.equalsPcs(op.actionOn(pcs))) {
-          newStab.addFixedPcs(pcs);
-          newStab.addOperation(op);
-         // pcs.addOperationAsStabilizer(op);
-          op.addFixedPcs(pcs);
+  buildOrbitMotifStabilizers() {
+    this.orbits.forEach(orbit => {
+      orbit.ipcsset.forEach(pcs => {
+        let newStab = new Stabilizer();
+        this.operations.forEach(op => {
+          if (pcs.equalsPcs(op.actionOn(pcs))) {
+            newStab.addFixedPcs(pcs);
+            newStab.addOperation(op);
+            // pcs.addOperationAsStabilizer(op);
+            op.addFixedPcs(pcs);
+          }
+        }) // for each op
+        // note : stab identity is based on their operations (no change when add fixedPcs)
+        let findStab = orbit.stabilizers.find(stab => stab.hashCode() === newStab.hashCode())
+        if (!findStab) {
+          orbit.stabilizers.push(newStab)
+        } else {
+          findStab.addFixedPcs(pcs)
         }
       })
-      // note : stab identity is based on their operations
-      let findStab = stabilizers.get(newStab.hashCode())
-      if (!findStab) {
-        stabilizers.set(newStab.hashCode(), newStab)
-      } else {
-        // add fixed pcs
-        findStab.addFixedPcs(pcs)
-      }
-    })
-    // now sort operations then stabilizers
-    stabilizers.forEach((stab, hashcode, map)=> stab.operations.sort(MusaicPcsOperation.compareTo))
-    let resStabs = Array.from(stabilizers.values())
-    return resStabs.sort(Stabilizer.compare)
-   }
+      // ordered operations and fixedPcs in orbit
+      orbit.stabilizers.forEach(stab => {
+        stab.operations.sort(MusaicPcsOperation.compare)
+        stab.fixedPcs.sort(IPcs.compare)
+      })
+      // order stabilizes of orbit
+      orbit.stabilizers.sort(Stabilizer.compareShortName)
 
- computeMaxStabilizersAndFixs() {
-    let stabilizers = []
-    this.powerset.forEach(pcs => {
-      let newStab = new Stabilizer();
-      this.operations.forEach(op => {
-        if (pcs.equalsPcs(op.actionOn(pcs))) {
-          newStab.addFixedPcs(pcs);
-          newStab.addOperation(op);
-          // pcs.addOperationAsStabilizer(op);
-          op.addFixedPcs(pcs);
-        }
+      // build motif stabilizer of orbit  (orbit.motifStabilizer)
+      orbit.checkAndBuildMotifStabilizerOfOrbit()
+    }) // end loop orbits
+  }
+
+  get orbitsSortedByMotifStabilizers() {
+    if (!this._orbitsSortedByMotifStabilizers)
+      this._orbitsSortedByMotifStabilizers = this.computeOrbitSortedByMotifStabilizers()
+
+    return this._orbitsSortedByMotifStabilizers
+  }
+
+  get orbitsSortedByStabilizers() {
+    if (!this._orbitsSortedByStabilizers)
+      this._orbitsSortedByStabilizers = this.computeOrbitSortedByStabilizers()
+
+    return this._orbitsSortedByStabilizers
+  }
+
+  /**
+   * @return {Array} of objects {stabilizerName : {String}, orbits : {Array} of orbits
+   *
+   * Example :
+   */
+  computeOrbitSortedByStabilizers() {
+    let orbitsSortedByStabilizers = new Map() // k=name orbit based on his stabs, v=array of orbits
+    this.orbits.forEach(orbit => {
+      orbit.stabilizers.forEach(stab => {
+        let nameStab = stab.getShortName()
+        if (!orbitsSortedByStabilizers.has(nameStab))
+          orbitsSortedByStabilizers.set(nameStab, [])
+        // make an subOrbit based on stabilizer : subOrbits partitioning orbit
+        let subOrbit = new Orbit({stabs:[stab], ipcsSet:stab.fixedPcs})
+        orbitsSortedByStabilizers.get(nameStab).push(subOrbit)
       })
-      // note : stab identity is based on their operations
-      let findStab = stabilizers.find(stab => stab.hashCode() === newStab.hashCode())
-      if (!findStab) {
-        stabilizers.push(newStab)
-      } else {
-        // add fixed pcs
-        findStab.addFixedPcs(pcs)
-      }
     })
-    // now sort operations then stabilizers
-    //stabilizers.forEach(stab => stab.operations.sort(MusaicPcsOperation.compareTo))
-    stabilizers.sort(Stabilizer.compare)
-    return stabilizers
+
+    // sort map on keys (lexical order)
+    let resultOrbitsSortedByStabilizers = []
+    Array.from(orbitsSortedByStabilizers.keys()).sort().forEach((name) => {
+      resultOrbitsSortedByStabilizers.push(
+        {
+          stabilizerName : name,
+          hashcode : Utils.stringHashCode(name) + Date.now(),
+          orbits : orbitsSortedByStabilizers.get(name).sort(Orbit.compare)
+        })
+    })
+
+    return resultOrbitsSortedByStabilizers
   }
 
 
+  /**
+   * @return {Array} of objects {stabilizerName : {String}, orbits : {Array} of orbits
+   *
+   */
+  computeOrbitSortedByMotifStabilizers() {
+    let orbitsSortedByMotifStabilizer = new Map() // k=name orbit based on his stabs, v=array of orbits
+    this.orbits.forEach(orbit => {
+      let kmotifstab = Array.from(orbitsSortedByMotifStabilizer.keys()).find(ms => ms.hashCode() === orbit.motifStabilizer.hashCode())
+      // orbit name based on his stabilizers and shortName
+      if (!kmotifstab)
+        orbitsSortedByMotifStabilizer.set(orbit.motifStabilizer, [orbit])
+      else
+        orbitsSortedByMotifStabilizer.get(kmotifstab).push(orbit)
+    })
+    // sort operations
+    let resultOrbitsSortedByMotifStabilizer = []
+    Array.from(orbitsSortedByMotifStabilizer.keys()).sort(MotifStabilizer.compare).forEach(motifStab => {
+      resultOrbitsSortedByMotifStabilizer.push(
+        {
+          stabilizerName: motifStab.name,
+          hashcode : motifStab.name.length + Date.now(),
+          orbits : orbitsSortedByMotifStabilizer.get(motifStab).sort(Orbit.compare)
+        })
+    })
+    return resultOrbitsSortedByMotifStabilizer
+  }
 }
 

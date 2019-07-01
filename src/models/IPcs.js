@@ -10,7 +10,7 @@ const negativeToPositiveModulo = (i, n) => {
 
 export default class IPcs {
 
-  constructor({pidVal: pidVal = -1, strPcs = null, binPcs = null, n = 12, iPivot = undefined, prev_ipcs_cplt = null}) {
+  constructor({pidVal: pidVal = -1, strPcs = null, binPcs = null, n = 12, iPivot = undefined}) {
     if (pidVal >= 0) {
       this.pcs = IPcs.intToBinArray(pidVal, n)
     } else if (typeof (strPcs) === 'string') {
@@ -39,7 +39,6 @@ export default class IPcs {
         throw new Error("Can't create IPcs instance (bad iPivot = " + iPivot + " for pcs " + this.pcs + ")")
       }
     }
-    this.prev_ipcs_cplt = prev_ipcs_cplt ? prev_ipcs_cplt : null
     this.n = this.pcs.length
     this.orbit = new Orbit()
   }
@@ -422,7 +421,7 @@ export default class IPcs {
       if (pcs[i % n] === 0) continue
       cardinal++
       let ipcs2 = this.transpose(-i + this.iPivot)
-      // compare pcs without iPivot
+      // compareTo pcs without iPivot
       if (ipcs2.equalsPcs(this)) {
         break
       } else {
@@ -445,44 +444,35 @@ export default class IPcs {
   /**
    * get complement of this.
    * Important : complement loses iPivot pivot
-   * if prev_ipcs_cplt is defined, return prev_ipcs_cplt
-   *   (default prev_ipcs_cplt is null)
-   * else
-   *   build complement of this and put this as prev_ipcs_cplt
-   * why ? It is to allow to switch from one to another
-   */
+     */
   complement() {
-    if (this.prev_ipcs_cplt) {
-      return this.prev_ipcs_cplt
-    }
     let pcs_cpt = this.pcs.map(pc => (pc === 1 ? 0 : 1)) //;slice() and inverse 0/1
     let new_iPivot = undefined
-    let localiPivot = this.iPivot === undefined ? 0 : this.iPivot
+    let actualiPivot = this.iPivot
     let n = pcs_cpt.length
     // iPivot is lost by complement... set a new iPivot of complement
     // opposite is a good candidate when n is even
-    if ((n % 2) === 0 && pcs_cpt[(localiPivot + n / 2) % n] === 1) {
-      new_iPivot = (localiPivot + n / 2) % n
+    if (actualiPivot === undefined && pcs_cpt[0]===1) {
+      new_iPivot = 0
+    } else if ((n % 2) === 0 && pcs_cpt[(actualiPivot + n / 2) % n] === 1) {
+      new_iPivot = (actualiPivot + n / 2) % n
     } else {
       // TODO best strategy to fin new iPivot
       // here the first in right circular research
-      for (let i = localiPivot + 1; i < localiPivot + n; i++) {
+      for (let i = actualiPivot + 1; i < actualiPivot + n; i++) {
         if (pcs_cpt[i % n] === 1) {
           new_iPivot = i % n
           break
         }
       }
     }
-    if (new_iPivot === undefined && this.prev_ipcs_cplt) {
-      throw new Error("Complement : Cannot initialize iPivot !!!??")
-    }
-    return new IPcs({binPcs: pcs_cpt, iPivot: new_iPivot, prev_ipcs_cplt: this})
+
+    return new IPcs({binPcs: pcs_cpt, iPivot: new_iPivot})
   }
 
   toString() {
     return JSON.stringify(this.pcs) + ", iPivot : "
       + JSON.stringify(this.iPivot)
-      + (this.prev_ipcs_cplt ? ', (cplt)' : '')
     //	return JSON.stringify(this);
   }
 
@@ -513,7 +503,7 @@ export default class IPcs {
 
   /**
    *
-   * @param {IPcs} other to compare
+   * @param {IPcs} other to compareTo
    * @return {number} as waiting by Array sort
    */
   compareTo(ipcs2) {

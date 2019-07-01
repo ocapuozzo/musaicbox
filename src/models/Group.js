@@ -25,6 +25,8 @@ export default class Group {
          for (let j = 0; j < cardinalOp; j++) {
            let newop = allOps[i].compose(allOps[j]);
            if (!allOps.find(op => op.getHashCode() === newop.getHashCode())) {
+             // ho ! add a line and column to the calay table
+             // no more restart from begin index  because symmetry (TODO is to be demonstrated)
              allOps.push(newop)
              // loop = true;
              // break forloop
@@ -37,7 +39,7 @@ export default class Group {
          }
        }
      }
-    allOps.sort(MusaicPcsOperation.compareTo)
+    allOps.sort(MusaicPcsOperation.compare)
     return allOps
   }
 

@@ -35,7 +35,7 @@ export default {
       
       let n = this.ipcs.pcs.length;
 
-      for (let i = this.ipcs.iroot; i < n + this.ipcs.iroot; i++) {
+      for (let i = this.ipcs.iPivot; i < n + this.ipcs.iPivot; i++) {
         if (this.ipcs.pcs[i % n] === 1) {
           let note = lettersNotation[i % n];
           if ((i % n === 3) && (this.ipcs.pcs[(i + 1) % n] !== 1)) {
@@ -46,7 +46,7 @@ export default {
           }
           // make notes always up 
           // http://abcnotation.com/blog/2010/01/31/how-to-understand-abc-the-basics/
-          if ( (i%n) < this.ipcs.iroot) {
+          if ( (i%n) < this.ipcs.iPivot) {
              note += "'"
           }
 
@@ -60,9 +60,11 @@ export default {
   },
   methods: {
     refresh() {
-      // console.log(this.tune)
+       // console.log("this.tune :" + this.tune)
       // https://configurator.abcjs.net/visual/
-      abcjs.renderAbc("paper", this.tune,
+      abcjs.renderAbc(
+        "paper",
+        this.tune,
         {
           scale:.9, 
           staffwidth:210, 

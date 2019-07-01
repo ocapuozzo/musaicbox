@@ -47,7 +47,7 @@ test("MusaicPcsOp test sort", () => {
 
   expect(ops).not.toEqual(opsSortedWaiting)
 
-  ops.sort(MusaicPcsOperation.compareTo)
+  ops.sort(MusaicPcsOperation.compare)
   
   expect(ops).toEqual(opsSortedWaiting)
 })

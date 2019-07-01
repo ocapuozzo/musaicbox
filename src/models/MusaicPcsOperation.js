@@ -99,6 +99,11 @@ equals(obj) {
  * <li>t is integer into [0..n[ </li>
  * <li>c is boolean (complement or not) </li>
  * </ul>
+ * Important remark : Neutral operation is M1-TO (complement == false)
+ *    whatever op :
+ *    M1-T0.compose(M1-T0) == M1-T0   (false !== false) => false
+ *    CM1-T0.compose(M1-T0) == CM1-T0 (true !== false) => true
+ *
  * @param {...*} other (a',t',c')
  * @return {MusaicPcsOperation} (this.a,this.t,this.c) (a',t',c') = (aa', at' + t, c xor c'), a new instance
  */
@@ -145,7 +150,7 @@ toStringWithoutTransp() {
  * So:    M1-T3, M1-T0, CM1-T5, M5-T1, CM7-T8, CM7-T3
  * give : M1-T0, M1-T3, M5-T1, CM1-T5, CM7-T3, CM7-T8
  */
-static compareTo( op1, op2) {
+static compare(op1, op2) {
   let w1 = 0;
   let w2 = 0;
   if (op1.complement)
@@ -161,8 +166,8 @@ static compareTo( op1, op2) {
   return comp;
 }
 
-compare(other) {
-  return MusaicPcsOperation.compareTo(this, other)
+compareTo(other) {
+  return MusaicPcsOperation.compare(this, other)
 }
 
 addFixedPcs(ipcs) {

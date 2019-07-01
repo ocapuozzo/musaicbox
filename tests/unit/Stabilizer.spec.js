@@ -6,6 +6,8 @@ import MusaicPcsOperation from "@/models/MusaicPcsOperation";
 import IPcs from "@/models/IPcs";
 import Group from "@/models/Group";
 import Stabilizer from "../../src/models/Stabilizer";
+import MusaicActionGroup from "../../src/models/MusaicActionGroup";
+import MotifStabilizer from "../../src/models/MotifStabilizer";
 
 test("Stabilizer addOperation", () => {
   let opM5T0 = new MusaicPcsOperation(12, 5, 0, false);
@@ -87,4 +89,60 @@ test("Stabilizer reduceNameByIgnoreTransp", () => {
   stab.addOperation(opM11T2)
 
   expect(stab.reduceNameByIgnoreTransp()).toEqual("M5,M7,M11,CM5");
+})
+
+test("Cyclic Group Explore", () => {
+  let opId = new MusaicPcsOperation(12, 1, 0);
+  let opM1T1 = new MusaicPcsOperation(12, 1, 1);
+
+  let cyclicGroup = new MusaicActionGroup({n: 12, someMusaicOperations: [opId, opM1T1]});
+
+  // number of orbits
+  expect(cyclicGroup.orbits.length).toEqual(352);
+
+  let sumPcs = 0;
+  cyclicGroup.orbits.forEach(orbit => sumPcs += orbit.ipcsset.length)
+  expect(sumPcs).toEqual(4096)
+
+  let setStabilizers = new Set()
+  // each orbit has stabilisers
+  cyclicGroup.orbits.forEach(orbit => {
+    orbit.stabilizers.forEach(stab => {
+      setStabilizers.add(stab.hashCode())
+    })
+  })
+  // 5 classes of limited transposition plus identity stab (M1-T0]), so 6 waiting
+  // expected 6 stabilizers (2/1 , 54/6 , 12/4 , 6/3 , 2/2 and 4020/12)
+  expect(setStabilizers.size).toEqual(6) // = 6
+})
+
+test("Musaic Group Explore", () => {
+  let opM1 = new MusaicPcsOperation(12, 1, 0, false);
+  let opCM1 = new MusaicPcsOperation(12, 1, 0, true);
+  let opM1T1 = new MusaicPcsOperation(12, 1, 1, false);
+  let opM5T1 = new MusaicPcsOperation(12, 5, 1, false);
+  let opM7T1 = new MusaicPcsOperation(12, 7, 1, false);
+
+  let musaicGroup = new MusaicActionGroup({n: 12, someMusaicOperations: [/*opId,*/ opM1, opCM1, opM1T1, opM5T1, opM7T1]});
+
+  expect(musaicGroup.operations.length).toEqual(96);
+  // number of orbits
+  expect(musaicGroup.orbits.length).toEqual(88);
+
+  let sumPcs = 0;
+  musaicGroup.orbits.forEach(orbit => sumPcs += orbit.ipcsset.length)
+  expect(sumPcs).toEqual(4096)
+
+  let setStabilizers = new Set()
+  // each orbit has stabilisers
+  musaicGroup.orbits.forEach(orbit => {
+    orbit.stabilizers.forEach(stab => setStabilizers.add(stab.hashCode()))
+  })
+  expect(setStabilizers.size).toEqual(111)
+
+  expect(musaicGroup.orbitsSortedByMotifStabilizers.length).toEqual(13)
+
+  expect(musaicGroup.orbitsSortedByStabilizers.length).toEqual(111)
+
+//  musaicGroup.orbitsSortedByMotifStabilizers.forEach(motifSatb => console.log(motifSatb.toString()))
 })

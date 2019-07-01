@@ -1,8 +1,8 @@
 <template>
   <div class="group-action">
-    <h2>Group & group action explorer <span v-show="waitingCompute"  class="btn status" >
+    <h2>Group & group action explorer <span v-show="waitingCompute" class="btn status">
       <span class="spinner-border spinner-border-sm status" role="status" aria-hidden="true"></span>
-      Working... </span>  </h2>
+      Working... </span></h2>
     <div class="d-flex flex-row">
       <div class="input-group group-dim ">
         <div class="input-group-prepend ">
@@ -62,7 +62,7 @@
       <fieldset class="representation-border p-2">
         <legend class="representation-border">Group operations ({{ groupOperations.length }})</legend>
         <div v-for="(operation, index) in groupOperations" :key="index" class="form-check form-check-inline">
-<!--          <div class="operation">{{operation}}</div>-->
+          <!--          <div class="operation">{{operation}}</div>-->
           <div class="form-check operation">
             <input class="form-check-input" type="checkbox" @change="checkComplementedOp" :value="false">
             <label class="form-check-label">{{operation}}</label>
@@ -71,21 +71,49 @@
       </fieldset>
     </div>
     <div class="p-2">
-      <button type="button" class="btn btn-primary" @click="showOrbits">Show orbits ({{this.preReactOrbits.length}})</button>
+      <button type="button" class="btn btn-primary m-2" @click="showOrbits('MotifStabilizer')">Show orbits by ISMotif stabilizers({{this.preReactOrbits.length}})
+      </button>
+      <button type="button" class="btn btn-primary" @click="showOrbits('Stabilizer')">Show orbits by stabilizers({{this.preReactOrbits.length}})
+      </button>
     </div>
+
     <div class="p-2">
       <fieldset class="representation-border p-2 ">
         <legend class="representation-border">Orbits results {{orbits.length}}</legend>
-        <fieldset v-for="(orbit, index) in orbits" :key="orbit.hashCode()" class="representation-border p-2 text-center">
-          <legend class="representation-border">Orbit n° {{index+1}} ({{orbit.ipcsset.length}})</legend>
-          <clock :_ipcs="{strPcs:orbit.getPcsMin().pcsStr, n:orbit.getPcsMin().n}" class="clock-pcs"/>
-          <p class="text-center label-ipcs">{{orbit.getPcsMin().pcsStr}}</p>
+        <fieldset v-for="(orbitstab, index) in orbits" :key="orbitstab.hashcode"
+                  class="representation-border p-2 text-center">
+          <legend class="representation-border">
+             {{orbitstab.stabilizerName}} ({{orbitstab.orbits.length}})
+          </legend>
+          <div class="d-inline-block" v-for="(orbit) in orbitstab.orbits" :key="orbit.ipcsset[0].id()" >
+            <clock
+                :_ipcs="{strPcs:orbit.ipcsset[0].pcsStr, n:orbit.ipcsset[0].n}" class="clock-pcs" >
+            </clock>
+            <!--            <p class="text-center label-ipcs">{{pcsPF.pcsStr}}</p>-->
+          </div>
+
         </fieldset>
-        <!--
+
         <div><span>ops Multiplication selected : {{ opMultChoices }}</span></div>
         <div><span>ops Transposition selected : {{ opTransChoices }}</span></div>
         <div><span>ops Complement : {{ opComplement }}</span></div>
-       -->
+        <div><span>nb Orbits : {{ preReactOrbits.length}} </span></div>
+        <div><span>nb Stabilizers classes : {{ stabilizers.length }}</span></div>
+
+      </fieldset>
+    </div>
+    <div class="p-2">
+      <fieldset class="representation-border p-2 ">
+        <legend class="representation-border">Invariant classes {{stabilizers.length}}</legend>
+        <fieldset v-for="(stabilizer) in stabilizers" :key="stabilizer.hashCode()"
+                  class="representation-border p-2 text-center">
+          <legend class="representation-border">{{stabilizer.getShortName()}} ({{stabilizer.fixedPcs.length}})</legend>
+          <div class="d-inline-block" v-for="(arrayPcs) in stabilizer.fixedPcsInPrimeForm()" :key="arrayPcs[0].id()" >
+            <clock :_ipcs="{strPcs:arrayPcs[0].pcsStr, n:arrayPcs[0].n}" class="clock-pcs" />
+<!--            <p class="text-center label-ipcs">{{pcsPF.pcsStr}}</p>-->
+          </div>
+        </fieldset>
+
       </fieldset>
     </div>
   </div>
@@ -110,7 +138,9 @@
         actionOfGroup: null,
         orbits: [],
         preReactOrbits: [],
-        waitingCompute: false
+        waitingCompute: false,
+        stabilizers: [],
+       // fixedPcsInPrimeForms : []
       }
     },
     mounted() {
@@ -123,17 +153,19 @@
         })
       },
       checkComplementedOp() {
-        if (this.opComplement && !this.opTransChoices.find( t => t === 1)) {
+        if (this.opComplement && !this.opTransChoices.find(t => t === 1)) {
           this.opTransChoices.push(1)
-
         }
       },
       onChangeN() {
-          this.primesWithN = Group.phiEulerElements(this.n);
-          this.opMultChoices = [1];
-          this.opTransChoices = [0, 1];
-          this.actionOfGroup = null;
-          this.buildAllOperationsOfGroup();
+        this.primesWithN = Group.phiEulerElements(this.n);
+        this.opMultChoices = [1];
+        this.opTransChoices = [0, 1];
+        this.actionOfGroup = null;
+        this.orbits = []
+        this.preReactOrbits = []
+        this.stabilizers = []
+        this.buildAllOperationsOfGroup();
       },
       /**
        * Get all operations group from user choices
@@ -143,26 +175,42 @@
         this.waitingCompute = true
         // see https://github.com/vuejs/vue/issues/9200
         this.doubleRaf(() => {
-          this.groupOperations = [];
-          this.groupOperations = Group.buildOperationsGroupByCaylayTable(this.getGeneratedSetOperationsFromUI());
-          // this.waitingCompute = true
-          this.actionOfGroup = new MusaicActionGroup({n: this.n, someMusaicOperations: this.groupOperations});
-          this.preReactOrbits=  this.actionOfGroup.orbits
+          let local_groupOperations = Group.buildOperationsGroupByCaylayTable(this.getGeneratedSetOperationsFromUI());
+          let start = new Date().getTime();
+          let local_group = new MusaicActionGroup({n: this.n, someMusaicOperations: local_groupOperations});
+          let end = new Date().getTime()
+          let diff = end -  start;
+          console.log("duration : " + String(diff/ 1000) + " secondes")
+          this.groupOperations = local_groupOperations;
+          this.actionOfGroup = local_group
+          this.preReactOrbits = this.actionOfGroup.orbits
           this.orbits = []
+          this.stabilizers = []
           this.$nextTick(() => {
             this.waitingCompute = false
           })
         });
         //
       },
-      showOrbits() {
+      showOrbits(byWhatStabilizer = "MotifStabilizer") {
         this.waitingCompute = true
         // see https://github.com/vuejs/vue/issues/9200
         this.doubleRaf(() => {
-          this.orbits = this.preReactOrbits
+          //this.stabilizers = this.actionOfGroup.stabilizers
+          //this.fixedPcsInPrimeForms = this.actionOfGroup.stabilizers.fixedPcsInPrimeForm()
+          if (byWhatStabilizer === "MotifStabilizer") {
+            this.orbits = this.actionOfGroup.orbitsSortedByMotifStabilizers
+          } else { //if (byWhichStabilizer === "Stabilizer")
+            this.orbits = this.actionOfGroup.orbitsSortedByStabilizers
+          }
+          // this.orbits = this.preReactOrbits
           this.$nextTick(() => this.waitingCompute = false)
-        });
+        })
       },
+
+      // showOrbitsByInvariants() {
+      //   this.invariants = this.actionOfGroup.stabilizers
+      // }
       /**
        * Get generated set operations of group, as selected by user
        * @return {Array} array of MusaicPcsOperation
@@ -175,7 +223,7 @@
           someOperations.push(new MusaicPcsOperation(this.n, 1, 0, true))
           this.opTransChoices = [0, 1]
         }
-        // include neutral operation
+        // include neutral operation (constant pre-selected in UI)
         for (let i = 0; i < this.opMultChoices.length; i++)
           for (let j = 0; j < this.opTransChoices.length; j++) {
             someOperations.push(new MusaicPcsOperation(this.n, this.opMultChoices[i], this.opTransChoices[j]))
@@ -242,10 +290,9 @@
     border-bottom: none;
     color: red;
   }
-  .titi {
-    border-style: dotted;
-  }
+
   .label-ipcs {
     font-size: 0.7em !important;
   }
+
 </style>

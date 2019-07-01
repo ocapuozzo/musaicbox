@@ -61,7 +61,7 @@
     },
     data() {
       return {
-        ipcs: null
+        ipcs: new IPcs({strPcs:"[0,4,7]", n:12})
       }
     },
     computed: {
@@ -210,4 +210,5 @@
     display: inline-flex;
     text-align: center;
   }
+
 </style>

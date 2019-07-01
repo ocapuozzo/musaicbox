@@ -25,8 +25,8 @@ test("Generator group from M1T1", () => {
   for (let i = 0; i<12; i++) {
     opsWaiting.push(new MusaicPcsOperation(12, i, 0, false))
   }
-  let allops = Group.buildOperationsGroupByCaylayTable(someOps)
-  expect(allops).not.toEqual(opsWaiting)
+  let allOperations = Group.buildOperationsGroupByCaylayTable(someOps)
+  expect(allOperations).not.toEqual(opsWaiting)
 })
 
 test("testCayleyGenerateOperationsAffine", () => {

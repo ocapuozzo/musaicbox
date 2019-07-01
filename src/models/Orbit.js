@@ -4,13 +4,15 @@
 
 import IPcs from "./IPcs";
 import Utils from "../utils/Utils";
+import MotifStabilizer from "./MotifStabilizer";
 
 export default class Orbit {
 
-  constructor({stabs = [], ipcsSet = []}={}) {
+  constructor({stabs = [], ipcsSet = []} = {}) {
     this.stabilizers = stabs
     this.ipcsset = ipcsSet
     this._hashcode = null
+    this.motifStabilizer = MotifStabilizer.manyMotifsStabilizer
 
     if (stabs === null) {
       this.stabilizers = []
@@ -54,17 +56,8 @@ export default class Orbit {
     return cmp;
   }
 
-  /*
-     public boolean contains(Stabilizer stabilizer) {
-        return stabilizers.contains(stabilizer);
-     }
-
-     public void add(Stabilizer stabilizer) {
-        stabilizers.add(stabilizer);
-     }
-  */
   /**
-   *
+   * rem : this.ipcsset is sorted
    * @return {IPcs} the min IPcs of elements of orbit (min elt in ipcsset)
    */
   getPcsMin() {
@@ -78,15 +71,14 @@ export default class Orbit {
       + " ipcsset : " + this.ipcsset + "  min = " + this.getPcsMin().toString();
   }
 
-  hashCode(){
+  hashCode() {
     if (!this._hashcode) {
-      let res= ""
+      let res = 0
       this.stabilizers.forEach(stab => res += stab.hashCode())
       this.ipcsset.forEach(pcs => res += pcs.id())
       this._hashcode = res //Utils.stringHashCode(this.toString())
     }
-
-    return  this._hashcode
+    return this._hashcode
   }
 
   /**
@@ -114,45 +106,34 @@ export default class Orbit {
   }
 
   /**
-   * Get stabilizers by action group on powerset Ex : [M1-T0] is maximal
-   * stabilizer for pcs that have not more stabilizers (sub-group)
-   * post-assert :
-   *  each pcs of powerset has his maximal stabilizer Ex : pcs=100110101100
-   * has [M1-T0, M5-T0, M7-T0, M11-T0] as maxstabilizer
+   * Based on stabilizers and their shortName
    *
-   * @return {Array} list of stabilizers
-   *
+   * @return {string}
    */
-  /**
-  computeMaxStabilizersAndFixs() {
-    stabilizers = []
-    this.ipcsset.forEach((pcs) => {
-      Stabilizer newStab = new Stabilizer();
-      for (MusaicPcsOperation op : operations) {
-        if (pcs.equals(op.actionOn(pcs))) {
-          newStab.addFixedPcs(pcs);
-          newStab.addOperation(op);
-
-          pcs.addOperationAsStabilizer(op);
-          op.addFixedPcs(pcs);
-        }
-      }
-      // note : stab identity is based on their operations
-      if (!stabilizers.contains(newStab)) {
-        stabilizers.add(newStab);
-      } else {
-        Stabilizer stab = stabilizers.get(stabilizers.indexOf(newStab));
-        // add fixed pcs
-        stab.addFixedPcs(pcs);
-        Collections.sort(stab.getFix().pcsset, new PcsSymmetryComparator());
-      }
-
-    })
-
-    }
-    stabilizers.sort(new ComparatorStab());
-    return stabilizers;
+  get name() {
+    let res = ""
+    this.stabilizers.forEach(stab => res += " " + stab.getShortName())
+    return res
   }
-*/
 
+  /**
+   * compute ISMotif stabilizer from orbit's stabilizers
+   * example :
+   *   stabilizers 1 :  M1-T0,M5-T8,M7-T9,M11-T5
+   *   stabilizers 2 :  M1-T0,M5-T4,M7-T3,M11-T7
+   *   motif stab => M1, M5, M7, M11  (invariant ISMotif by M1, M5, M7, M11)
+   *   without worrying about transposition Tx
+   *
+   *   @return {MotifStabilizer} the motifStabilizer of this orbit
+   */
+  checkAndBuildMotifStabilizerOfOrbit() {
+    let motifStabilizersOfOrbit = new Map() // key hashCode, value MotifStabilizer object
+    this.stabilizers.forEach(stab => motifStabilizersOfOrbit.set(stab.motifStabilizer.hashCode(), stab.motifStabilizer))
+
+    this.motifStabilizer = (motifStabilizersOfOrbit.size === 1)
+      ? this.stabilizers[0].motifStabilizer  // take any, we choice first
+      : MotifStabilizer.manyMotifsStabilizer // *
+
+    return this.motifStabilizer
+  }
 }

@@ -4,18 +4,19 @@
 
 import Utils from "../utils/Utils";
 import MusaicPcsOperation from "./MusaicPcsOperation";
-import IsMotifStabilizer from "./IsMotifStabilizer";
+import MotifStabilizer from "./MotifStabilizer";
+import IPcs from "./IPcs";
 
 export default class Stabilizer {
 
   constructor({fixedPcs = [], operations = []} = {}) {
     this.fixedPcs = fixedPcs
     this.operations = operations;
-    this.sumT = 0
     this.metaStabilizer = "";
     this.shortName = ""
     this._hashCode = null
     this.sumT = this.computeSumTNear0();
+    this._fixedPcsInPrimeForm = []
   }
 
   /**
@@ -43,17 +44,19 @@ export default class Stabilizer {
     if (!this.operations.find(o => o.getHashCode() === op.getHashCode())) {
       this.operations.push(op);
       this.sumT = this.computeSumTNear0();
-      this.operations.sort(MusaicPcsOperation.compareTo);
+      this.operations.sort(MusaicPcsOperation.compare);
       this.metaStabilizer = null;
       this._shortName = null;
       this._hashCode = null
       this._isMotifStabilizer = ""
+      this._fixedPcsInPrimeForm = []
     }
   }
 
   addFixedPcs(ipcs) {
     if (!this.fixedPcs.find(p => p.id() === ipcs.id())) {
       this.fixedPcs.push(ipcs)
+      this._fixedPcsInPrimeForm=[]
       // this._hashCode = null
     }
   }
@@ -106,8 +109,8 @@ export default class Stabilizer {
   }
 
   get motifStabilizer() {
-    if (! this._isMotifStabilizer) {
-      this._isMotifStabilizer = new IsMotifStabilizer(this.reduceNameByIgnoreTransp())
+    if (!this._isMotifStabilizer) {
+      this._isMotifStabilizer = new MotifStabilizer(this.reduceNameByIgnoreTransp().trim())
     }
     return this._isMotifStabilizer
   }
@@ -133,7 +136,7 @@ export default class Stabilizer {
       let motif = op.toStringWithoutTransp();
       if (motif !== prec) {
         prec = motif;
-        if (res.length >0)
+        if (res.length > 0)
           res += ",";
         res = res + op.toStringWithoutTransp();
       }
@@ -141,17 +144,17 @@ export default class Stabilizer {
     return res;
   }
 
-/*
-  public Fix getFix() {
-    return fixedPcs;
-  }
+  /*
+    public Fix getFix() {
+      return fixedPcs;
+    }
 
-  public void setOperations(List<MusaicPcsOperation> operations) {
-    this.operations = operations;
-    metaStabilizer = null;
-    _shortName = null;
-  }
-  */
+    public void setOperations(List<MusaicPcsOperation> operations) {
+      this.operations = operations;
+      metaStabilizer = null;
+      _shortName = null;
+    }
+    */
   cardinal() {
     return this.operations.length;
   }
@@ -166,19 +169,24 @@ export default class Stabilizer {
   }
 
   compareTo(otherStab) {
-    // return this.getName().compareTo(o.getName());
+    // return this.getName().compare(o.getName());
     return Stabilizer.compare(this, otherStab)
+  }
+
+  // TODO cache in const COMP_SHORT_NAME map with key is this.hashCode() ?
+  static compareShortName(stab1, stab2) {
+    return Utils.stringHashCode(stab1.getShortName()) - Utils.stringHashCode(stab2.getShortName())
   }
 
   static compare(stab1, stab2) {
     let cmp = 0 // stab1.operations.length - stab2.operations.length
-    if (cmp ===0) {
+    if (cmp === 0) {
       for (let i = 0; i < stab1.operations.length; i++) {
         let op = stab1.operations[i]
         if (i < stab2.operations.length) {
-          cmp = op.compare(stab2.operations[i]);
+          cmp = op.compareTo(stab2.operations[i]);
           if (cmp !== 0)
-            // and x.operations.length compare ?
+          // and x.operations.length compareTo ?
             return cmp;
         }
       }
@@ -226,14 +234,11 @@ export default class Stabilizer {
       if (!mt.has(nameOp)) {
         mt.set(nameOp, []);
       }
-      /*
-      if (!(op instanceof MusaicMotifOperation) && !isMotifOp) {
-        mt.get(nameOp).push(op.t);
-      } else {
-        isMotifOp = true;
-      }
-      */
+      mt.get(nameOp).push(op.t);
     })
+
+    // let testnameOps = Array.from(mt.keys())
+    // testnameOps.forEach(k => console.log("mt[" + k + "] = " + mt.get(k)))
 
     let res = "";
     let nameOps = Array.from(mt.keys())
@@ -257,7 +262,7 @@ export default class Stabilizer {
 
     // System.out.println("ops :" + Arrays.toString(nameOps));
     nameOps.forEach(nameOp => {
-      let shortName = this.tryReduceListByShortName(mt.get(nameOp)) + "";
+      let shortName = this.tryReduceListByShortName(mt, nameOp) + "";
 
       if (shortName.length > 0) {
         if (res.length > 0) {
@@ -276,65 +281,43 @@ export default class Stabilizer {
     return res;
   }
 
-  tryReduceListByShortName(lista) {
-    //TODO
-    return lista[0]
-  }
-
   /**
    * If recurrence transposition step, reduce this by "Ta~step" Example : n=12
    * [0, 2, 4, 6, 8, 10] return "-T0~2" and empty list Example : n=12 [0, 3]
    * return "" and no action on list
    *
-   * @param list
-   *           of a (all a value of T) in-out
-   * @return String reduce name and reduce list or null and same list
+   * @param {Map} mt key = multiplication arg, value = translation values
+   *         in-out
+   * @param {Sting} key value (example : M2) in
+   * @return String reduce name and reduce list or empty string and same list
    */
-
-  /*
-  private String tryReduceListByShortName(List<Integer> lista) {
-    String shortName = "";
-
-    if (lista.size() > 1) {
-
-      boolean multiple = true;
-
+  tryReduceListByShortName(mt, nameOp) {
+    let listOfa = mt.get(nameOp)
+    let shortName = "";
+    if (listOfa.length > 1) {
       // get n for modulo below
-      int n = operations.get(0).n;
+      let n = this.operations[0].n;
 
-      int step = lista.get(1) - lista.get(0);
-      int cpt = 1;
-      for (int i = 1; i < lista.size(); i++) {
-        if (!lista.contains((lista.get(i) + step) % n)) {
-          // multiple = false;
-          // break;
-        } else {
-          cpt++;
+      let step = listOfa[1] - listOfa[0];
+      let cpt = 1;
+      for (let i = 1; i < listOfa.length; i++) {
+        if ((listOfa[i] % step) === 0) {
+          cpt++
         }
       }
-      if (multiple && cpt * step == n) {
-        shortName = "-T" + lista.get(0) + "~" + step + "*";
+      if (cpt * step === n) {
+        shortName = "-T" + listOfa[0] + "~" + step + "*";
         // delete multipe of step element of the list
-        // System.out.println("Before remove : step=" + step + " size=" +
-        // list.size() + " " + list);
-
-        Integer racineValue = lista.get(0);
-        lista.remove(0);
-        for (int i = 0; i < lista.size(); i++) {
-          Integer value = lista.get(i) - racineValue;
-          if (value % step == 0)
-            if (lista.remove(lista.get(i))) {
-              i -= 1;
-            }
-        }
-        // System.out.println("After remove : step=" + step + " size=" +
-        // list.size() + " " + list);
+        let racineValue = listOfa[0];
+        listOfa.shift()
+        listOfa = listOfa.filter(a => ((a - racineValue) % step) !== 0)
       }
-
     }
+    // replace new value associate to nameOp key
+    mt.set(nameOp, listOfa)
     return shortName;
   }
-  */
+
 
   /**
    * get if set operations is subset of this
@@ -349,6 +332,29 @@ export default class Stabilizer {
       }
     });
     return includ;
+  }
+
+  /**
+   * get image of fixedPcs by reduce to their PrimeForm (min pcs)
+   * Example {0, 5, 7}, { 1, 6, 8}, { 2, 7, 9} etc. => {0, 2, 7} (min in set)
+   * @return {Array}
+   */
+  fixedPcsInPrimeForm() {
+  //  console.log("in fixedPcsInPrimeForm() fixedPcs : " + this.fixedPcs.length + " #PF: " +  this._fixedPcsInPrimeForm.length)
+    if (this._fixedPcsInPrimeForm.length === 0) {
+      let pcsPF = new Map() // key=idMinPcsInOrbitofPcs value = array of pcs fixed (subset of orbit)
+      //    console.log("fixedPcs : " + this.fixedPcs.length)
+      this.fixedPcs.forEach(pcs => {
+        let idMinPcs = pcs.orbit.getPcsMin().id()
+        if (!pcsPF.has(idMinPcs)) {
+          pcsPF.set(idMinPcs, [])
+        }
+        pcsPF.get(idMinPcs).push(pcs)
+      })
+      this._fixedPcsInPrimeForm = Array.from(pcsPF.values())
+      this._fixedPcsInPrimeForm.forEach(arrayPcs => arrayPcs.sort(IPcs.compare))
+    }
+    return this._fixedPcsInPrimeForm
   }
 
 }
