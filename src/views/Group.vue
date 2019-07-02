@@ -64,56 +64,50 @@
         <div v-for="(operation, index) in groupOperations" :key="index" class="form-check form-check-inline">
           <!--          <div class="operation">{{operation}}</div>-->
           <div class="form-check operation">
-            <input class="form-check-input" type="checkbox" @change="checkComplementedOp" :value="false">
+<!--            <input class="form-check-input" type="checkbox" @change="checkComplementedOp" :value="false">-->
             <label class="form-check-label">{{operation}}</label>
           </div>
         </div>
       </fieldset>
     </div>
     <div class="p-2">
-      <button type="button" class="btn btn-primary m-2" @click="showOrbits('MotifStabilizer')">Show orbits by ISMotif stabilizers({{this.preReactOrbits.length}})
+      <button type="button" class="btn btn-primary m-2"
+              @click="showOrbits('MotifStabilizer')">
+        Show orbits ({{this.preReactOrbits.length}}) by IS-Motif stabilizers <span v-if="actionOfGroup"> ({{actionOfGroup.orbitsSortedByMotifStabilizers.length}})</span>
       </button>
-      <button type="button" class="btn btn-primary" @click="showOrbits('Stabilizer')">Show orbits by stabilizers({{this.preReactOrbits.length}})
+      <button type="button" class="btn btn-primary" @click="showOrbits('Stabilizer')">
+        Show orbits ({{this.preReactOrbits.length}}) by stabilizers <span v-if="actionOfGroup"> ({{actionOfGroup.orbitsSortedByStabilizers.length}})</span>
       </button>
     </div>
 
     <div class="p-2">
       <fieldset class="representation-border p-2 ">
-        <legend class="representation-border">Orbits results {{orbits.length}}</legend>
+        <legend class="representation-border">Orbits results  <span v-if="actionOfGroup">{{this.preReactOrbits.length}}</span> <span v-else>(no computed)</span></legend>
         <fieldset v-for="(orbitstab, index) in orbits" :key="orbitstab.hashcode"
                   class="representation-border p-2 text-center">
           <legend class="representation-border">
              {{orbitstab.stabilizerName}} ({{orbitstab.orbits.length}})
           </legend>
-          <div class="d-inline-block" v-for="(orbit) in orbitstab.orbits" :key="orbit.ipcsset[0].id()" >
+          <div class="d-inline-block" v-for="(orbit) in orbitstab.orbits" :key="orbit.getPcsMin().id()" >
             <clock
-                :_ipcs="{strPcs:orbit.ipcsset[0].pcsStr, n:orbit.ipcsset[0].n}" class="clock-pcs" >
+                :_ipcs="{strPcs:orbit.getPcsMin().pcsStr, n:orbit.getPcsMin().n}" class="clock-pcs" >
             </clock>
-            <!--            <p class="text-center label-ipcs">{{pcsPF.pcsStr}}</p>-->
+            <p class="text-center label-ipcs">#{{orbit.ipcsset.length}}</p>
           </div>
 
         </fieldset>
-
-        <div><span>ops Multiplication selected : {{ opMultChoices }}</span></div>
-        <div><span>ops Transposition selected : {{ opTransChoices }}</span></div>
-        <div><span>ops Complement : {{ opComplement }}</span></div>
-        <div><span>nb Orbits : {{ preReactOrbits.length}} </span></div>
-        <div><span>nb Stabilizers classes : {{ stabilizers.length }}</span></div>
-
       </fieldset>
     </div>
     <div class="p-2">
       <fieldset class="representation-border p-2 ">
-        <legend class="representation-border">Invariant classes {{stabilizers.length}}</legend>
-        <fieldset v-for="(stabilizer) in stabilizers" :key="stabilizer.hashCode()"
-                  class="representation-border p-2 text-center">
-          <legend class="representation-border">{{stabilizer.getShortName()}} ({{stabilizer.fixedPcs.length}})</legend>
-          <div class="d-inline-block" v-for="(arrayPcs) in stabilizer.fixedPcsInPrimeForm()" :key="arrayPcs[0].id()" >
-            <clock :_ipcs="{strPcs:arrayPcs[0].pcsStr, n:arrayPcs[0].n}" class="clock-pcs" />
-<!--            <p class="text-center label-ipcs">{{pcsPF.pcsStr}}</p>-->
-          </div>
-        </fieldset>
-
+        <legend class="representation-border">Debug </legend>
+        <div><span>ops Multiplication selected : {{ opMultChoices }}</span></div>
+        <div><span>ops Transposition selected : {{ opTransChoices }}</span></div>
+        <div><span>ops Complement : {{ opComplement }}</span></div>
+        <div><span>cardinal powerset : <span v-if="actionOfGroup"> {{actionOfGroup.powerset.size}}</span></span></div>
+        <div><span>nb Orbits : {{ preReactOrbits.length}} </span></div>
+        <div><span>nb Stabilizers is-motif classes : <span v-if="actionOfGroup"> ({{actionOfGroup.orbitsSortedByMotifStabilizers.length}})</span></span></div>
+        <div><span>nb Stabilizers classes : <span v-if="actionOfGroup"> ({{actionOfGroup.orbitsSortedByStabilizers.length}})</span></span></div>
       </fieldset>
     </div>
   </div>
@@ -140,7 +134,7 @@
         preReactOrbits: [],
         waitingCompute: false,
         stabilizers: [],
-       // fixedPcsInPrimeForms : []
+        debug : false
       }
     },
     mounted() {
@@ -172,15 +166,22 @@
        *
        */
       buildAllOperationsOfGroup() {
+        if (this.waitingCompute) return
+
         this.waitingCompute = true
         // see https://github.com/vuejs/vue/issues/9200
         this.doubleRaf(() => {
           let local_groupOperations = Group.buildOperationsGroupByCaylayTable(this.getGeneratedSetOperationsFromUI());
-          let start = new Date().getTime();
+          let start = 0
+          if (this.debug) {
+            start = new Date().getTime();
+          }
           let local_group = new MusaicActionGroup({n: this.n, someMusaicOperations: local_groupOperations});
-          let end = new Date().getTime()
-          let diff = end -  start;
-          console.log("duration : " + String(diff/ 1000) + " secondes")
+          if (this.debug) {
+            let end = new Date().getTime()
+            let diff = end - start;
+            console.log("duration : " + String(diff / 1000) + " secondes")
+          }
           this.groupOperations = local_groupOperations;
           this.actionOfGroup = local_group
           this.preReactOrbits = this.actionOfGroup.orbits
@@ -193,19 +194,23 @@
         //
       },
       showOrbits(byWhatStabilizer = "MotifStabilizer") {
-        this.waitingCompute = true
-        // see https://github.com/vuejs/vue/issues/9200
-        this.doubleRaf(() => {
-          //this.stabilizers = this.actionOfGroup.stabilizers
-          //this.fixedPcsInPrimeForms = this.actionOfGroup.stabilizers.fixedPcsInPrimeForm()
-          if (byWhatStabilizer === "MotifStabilizer") {
-            this.orbits = this.actionOfGroup.orbitsSortedByMotifStabilizers
-          } else { //if (byWhichStabilizer === "Stabilizer")
-            this.orbits = this.actionOfGroup.orbitsSortedByStabilizers
-          }
-          // this.orbits = this.preReactOrbits
-          this.$nextTick(() => this.waitingCompute = false)
-        })
+        if (! this.actionOfGroup) {
+          this.buildAllOperationsOfGroup()
+        } else {
+          this.waitingCompute = true
+          // see https://github.com/vuejs/vue/issues/9200
+          this.doubleRaf(() => {
+            //this.stabilizers = this.actionOfGroup.stabilizers
+            //this.fixedPcsInPrimeForms = this.actionOfGroup.stabilizers.fixedPcsInPrimeForm()
+            if (byWhatStabilizer === "MotifStabilizer") {
+              this.orbits = this.actionOfGroup.orbitsSortedByMotifStabilizers
+            } else { //if (byWhichStabilizer === "Stabilizer")
+              this.orbits = this.actionOfGroup.orbitsSortedByStabilizers
+            }
+            // this.orbits = this.preReactOrbits
+            this.$nextTick(() => this.waitingCompute = false)
+          })
+        }
       },
 
       // showOrbitsByInvariants() {
@@ -247,7 +252,7 @@
   .operation {
     display: inline-flex;
     background-color: #6d7fcc;
-    min-width: 6rem;
+    min-width: 5rem;
     margin-bottom: 2px;
     margin-left: 1px;
     padding-left: 2px;

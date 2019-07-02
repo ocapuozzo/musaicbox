@@ -151,7 +151,7 @@ export default class MusaicActionGroup {
         {
           stabilizerName : name,
           hashcode : Utils.stringHashCode(name) + Date.now(),
-          orbits : orbitsSortedByStabilizers.get(name).sort(Orbit.compare)
+          orbits : orbitsSortedByStabilizers.get(name)
         })
     })
 
@@ -179,8 +179,8 @@ export default class MusaicActionGroup {
       resultOrbitsSortedByMotifStabilizer.push(
         {
           stabilizerName: motifStab.name,
-          hashcode : motifStab.name.length + Date.now(),
-          orbits : orbitsSortedByMotifStabilizer.get(motifStab).sort(Orbit.compare)
+          hashcode : Utils.stringHashCode(motifStab.name) + Date.now(),
+          orbits : orbitsSortedByMotifStabilizer.get(motifStab).sort(Orbit.comparePcsMin)
         })
     })
     return resultOrbitsSortedByMotifStabilizer

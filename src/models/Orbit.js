@@ -56,6 +56,18 @@ export default class Orbit {
     return cmp;
   }
 
+
+  /**
+   *
+   * @param orbit1
+   * @param orbit2
+   * @return {number} as waiting by Array sort
+   */
+  static comparePcsMin(orbit1, orbit2) {
+      return orbit1.getPcsMin().compareTo(orbit2.getPcsMin());
+  }
+
+
   /**
    * rem : this.ipcsset is sorted
    * @return {IPcs} the min IPcs of elements of orbit (min elt in ipcsset)
