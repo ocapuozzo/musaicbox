@@ -83,7 +83,7 @@
     <div class="p-2">
       <fieldset class="representation-border p-2 ">
         <legend class="representation-border">Orbits results  <span v-if="actionOfGroup">{{this.preReactOrbits.length}}</span> <span v-else>(no computed)</span></legend>
-        <fieldset v-for="(orbitstab, index) in orbits" :key="orbitstab.hashcode"
+        <fieldset v-for="(orbitstab) in orbits" :key="orbitstab.hashcode"
                   class="representation-border p-2 text-center">
           <legend class="representation-border">
              {{orbitstab.stabilizerName}} ({{orbitstab.orbits.length}})
