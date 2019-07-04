@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/musaicbox/precache-manifest.336af1744c716e0c48d70fb4be39b14b.js"
+  "/musaicbox/precache-manifest.3de39e97de85cd697133181eb8169602.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "testvuecli3"});

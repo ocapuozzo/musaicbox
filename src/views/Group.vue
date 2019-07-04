@@ -72,17 +72,20 @@
     </div>
     <div class="p-2">
       <button type="button" class="btn btn-primary m-2"
-              @click="showOrbits('MotifStabilizer')">
+              @click="showOrbits('MotifStabilizer')" :disabled="transpositionIsPrimeWithN() ? false : true" >
         Show orbits ({{this.preReactOrbits.length}}) by IS-Motif stabilizers <span v-if="actionOfGroup"> ({{actionOfGroup.orbitsSortedByMotifStabilizers.length}})</span>
       </button>
       <button type="button" class="btn btn-primary" @click="showOrbits('Stabilizer')">
-        Show orbits ({{this.preReactOrbits.length}}) by stabilizers <span v-if="actionOfGroup"> ({{actionOfGroup.orbitsSortedByStabilizers.length}})</span>
+        Show orbits ({{this.preReactOrbits.length}}) by stabilizers 
+        <span v-if="actionOfGroup"> (#sub-fixed-orbits / {{actionOfGroup.orbitsSortedByStabilizers.length}})</span>
       </button>
     </div>
 
     <div class="p-2">
       <fieldset class="representation-border p-2 ">
-        <legend class="representation-border">Orbits results  <span v-if="actionOfGroup">{{this.preReactOrbits.length}}</span> <span v-else>(no computed)</span></legend>
+        <legend class="representation-border">Orbits results 
+           <span v-if="actionOfGroup">{{this.preReactOrbits.length}} {{showOrbitBy}}> </span> 
+           <span v-else>(no computed)</span></legend>
         <fieldset v-for="(orbitstab) in orbits" :key="orbitstab.hashcode"
                   class="representation-border p-2 text-center">
           <legend class="representation-border">
@@ -134,6 +137,7 @@
         preReactOrbits: [],
         waitingCompute: false,
         stabilizers: [],
+        showOrbitBy : "", // for UI
         debug : false
       }
     },
@@ -204,18 +208,23 @@
             //this.fixedPcsInPrimeForms = this.actionOfGroup.stabilizers.fixedPcsInPrimeForm()
             if (byWhatStabilizer === "MotifStabilizer") {
               this.orbits = this.actionOfGroup.orbitsSortedByMotifStabilizers
+              this.showOrbitBy = "by motif stabilizer"
             } else { //if (byWhichStabilizer === "Stabilizer")
               this.orbits = this.actionOfGroup.orbitsSortedByStabilizers
+              this.showOrbitBy = "by stabilizer"
             }
-            // this.orbits = this.preReactOrbits
             this.$nextTick(() => this.waitingCompute = false)
           })
         }
       },
+      /**
+       * @return {boolean} true if one value of opTransChoices is prime with n
+       */
+      transpositionIsPrimeWithN(){        
+         return this.opTransChoices.some(t => (t===1) ||  (t > 0) && (this.n % t) !== 0) 
+      },
 
-      // showOrbitsByInvariants() {
-      //   this.invariants = this.actionOfGroup.stabilizers
-      // }
+    
       /**
        * Get generated set operations of group, as selected by user
        * @return {Array} array of MusaicPcsOperation

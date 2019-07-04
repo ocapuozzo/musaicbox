@@ -127,9 +127,7 @@ export default class MusaicActionGroup {
   }
 
   /**
-   * @return {Array} of objects {stabilizerName : {String}, orbits : {Array} of orbits
-   *
-   * Example :
+   * @return {Map} of objects {stabilizerName : {String}, hashcode : {Integer}, orbits : {Array} of orbits
    */
   computeOrbitSortedByStabilizers() {
     let orbitsSortedByStabilizers = new Map() // k=name orbit based on his stabs, v=array of orbits
@@ -145,11 +143,13 @@ export default class MusaicActionGroup {
     })
 
     // sort map on keys (lexical order)
+    // make an "view adapter" for v-for 
     let resultOrbitsSortedByStabilizers = []
     Array.from(orbitsSortedByStabilizers.keys()).sort().forEach((name) => {
       resultOrbitsSortedByStabilizers.push(
         {
           stabilizerName : name,
+          // to avoid duplicate keys in vue
           hashcode : Utils.stringHashCode(name) + Date.now(),
           orbits : orbitsSortedByStabilizers.get(name)
         })
@@ -160,8 +160,7 @@ export default class MusaicActionGroup {
 
 
   /**
-   * @return {Array} of objects {stabilizerName : {String}, orbits : {Array} of orbits
-   *
+   * @return {Map} of objects {stabilizerName : {String}, hashcode : {Integer}, orbits : {Array} of orbits
    */
   computeOrbitSortedByMotifStabilizers() {
     let orbitsSortedByMotifStabilizer = new Map() // k=name orbit based on his stabs, v=array of orbits
@@ -174,11 +173,13 @@ export default class MusaicActionGroup {
         orbitsSortedByMotifStabilizer.get(kmotifstab).push(orbit)
     })
     // sort operations
+    // make an "view adapter" for v-for 
     let resultOrbitsSortedByMotifStabilizer = []
     Array.from(orbitsSortedByMotifStabilizer.keys()).sort(MotifStabilizer.compare).forEach(motifStab => {
       resultOrbitsSortedByMotifStabilizer.push(
         {
           stabilizerName: motifStab.name,
+          // to avoid duplicate keys in vue
           hashcode : Utils.stringHashCode(motifStab.name) + Date.now(),
           orbits : orbitsSortedByMotifStabilizer.get(motifStab).sort(Orbit.comparePcsMin)
         })
