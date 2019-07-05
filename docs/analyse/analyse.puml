@@ -1,4 +1,4 @@
-@startuml
+@startuml musaicbox
 
 class MusaicActionGroup {
   n

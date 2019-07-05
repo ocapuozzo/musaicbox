@@ -72,7 +72,7 @@
     </div>
     <div class="p-2">
       <button type="button" class="btn btn-primary m-2"
-              @click="showOrbits('MotifStabilizer')" :disabled="transpositionIsPrimeWithN() ? false : true" >
+              @click="showOrbits('MotifStabilizer')" :disabled="opTranspositionChoicesHasAtLeastOneValuePrimeWithN() ? false : true" >
         Show orbits ({{this.preReactOrbits.length}}) by IS-Motif stabilizers <span v-if="actionOfGroup"> ({{actionOfGroup.orbitsSortedByMotifStabilizers.length}})</span>
       </button>
       <button type="button" class="btn btn-primary" @click="showOrbits('Stabilizer')">
@@ -84,21 +84,9 @@
     <div class="p-2">
       <fieldset class="representation-border p-2 ">
         <legend class="representation-border">Orbits results 
-           <span v-if="actionOfGroup">{{this.preReactOrbits.length}} {{showOrbitBy}}> </span> 
+           <span v-if="actionOfGroup">{{this.preReactOrbits.length}} {{showOrbitBy}} </span> 
            <span v-else>(no computed)</span></legend>
-        <fieldset v-for="(orbitstab) in orbits" :key="orbitstab.hashcode"
-                  class="representation-border p-2 text-center">
-          <legend class="representation-border">
-             {{orbitstab.stabilizerName}} ({{orbitstab.orbits.length}})
-          </legend>
-          <div class="d-inline-block" v-for="(orbit) in orbitstab.orbits" :key="orbit.getPcsMin().id()" >
-            <clock
-                :_ipcs="{strPcs:orbit.getPcsMin().pcsStr, n:orbit.getPcsMin().n}" class="clock-pcs" >
-            </clock>
-            <p class="text-center label-ipcs">#{{orbit.ipcsset.length}}</p>
-          </div>
-
-        </fieldset>
+           <Orbit v-for="(orbitsGroup) in orbitsPartitions" :key="orbitsGroup.hashcode" :orbitsGroup="orbitsGroup"> </Orbit>
       </fieldset>
     </div>
     <div class="p-2">
@@ -118,6 +106,7 @@
 
 <script>
   import Clock from "../components/Clock";
+  import Orbit from "../components/Orbit";
   import Group from "../models/Group";
   import MusaicPcsOperation from "../models/MusaicPcsOperation";
   import MusaicActionGroup from "../models/MusaicActionGroup";
@@ -133,7 +122,7 @@
         // array with neutral operation
         groupOperations: [new MusaicPcsOperation(this.n, 1, 0)],
         actionOfGroup: null,
-        orbits: [],
+        orbitsPartitions: [],
         preReactOrbits: [],
         waitingCompute: false,
         stabilizers: [],
@@ -160,7 +149,7 @@
         this.opMultChoices = [1];
         this.opTransChoices = [0, 1];
         this.actionOfGroup = null;
-        this.orbits = []
+        this.ororbitsPartitions = []
         this.preReactOrbits = []
         this.stabilizers = []
         this.buildAllOperationsOfGroup();
@@ -189,7 +178,7 @@
           this.groupOperations = local_groupOperations;
           this.actionOfGroup = local_group
           this.preReactOrbits = this.actionOfGroup.orbits
-          this.orbits = []
+          this.orbitsPartitions = []
           this.stabilizers = []
           this.$nextTick(() => {
             this.waitingCompute = false
@@ -207,10 +196,10 @@
             //this.stabilizers = this.actionOfGroup.stabilizers
             //this.fixedPcsInPrimeForms = this.actionOfGroup.stabilizers.fixedPcsInPrimeForm()
             if (byWhatStabilizer === "MotifStabilizer") {
-              this.orbits = this.actionOfGroup.orbitsSortedByMotifStabilizers
+              this.orbitsPartitions = this.actionOfGroup.orbitsSortedByMotifStabilizers
               this.showOrbitBy = "by motif stabilizer"
             } else { //if (byWhichStabilizer === "Stabilizer")
-              this.orbits = this.actionOfGroup.orbitsSortedByStabilizers
+              this.orbitsPartitions = this.actionOfGroup.orbitsSortedByStabilizers
               this.showOrbitBy = "by stabilizer"
             }
             this.$nextTick(() => this.waitingCompute = false)
@@ -218,13 +207,11 @@
         }
       },
       /**
-       * @return {boolean} true if one value of opTransChoices is prime with n
+       * @return {boolean} true iif one value of opTransChoices is prime with n
        */
-      transpositionIsPrimeWithN(){        
-         return this.opTransChoices.some(t => (t===1) ||  (t > 0) && (this.n % t) !== 0) 
+      opTranspositionChoicesHasAtLeastOneValuePrimeWithN(){        
+        return this.opTransChoices.some(t => (t===1) ||  (t > 0) && (this.n % t) !== 0) 
       },
-
-    
       /**
        * Get generated set operations of group, as selected by user
        * @return {Array} array of MusaicPcsOperation
@@ -246,7 +233,7 @@
       }
     },
     components: {
-      Clock
+      /*Clock,*/ Orbit
     }
   }
 </script>

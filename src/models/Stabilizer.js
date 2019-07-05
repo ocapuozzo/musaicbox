@@ -282,8 +282,8 @@ export default class Stabilizer {
   }
 
   /**
-   * If recurrence transposition step, reduce this by "Ta~step" Example : n=12
-   * [0, 2, 4, 6, 8, 10] return "-T0~2" and empty list Example : n=12 [0, 3]
+   * If recurrence transposition step, reduce this by "Ta~step*" Example : n=12
+   * [0, 2, 4, 6, 8, 10] return "-T0~2*" and empty list Example : n=12 [0, 3]
    * return "" and no action on list
    *
    * @param {Map} mt key = multiplication arg, value = translation values
