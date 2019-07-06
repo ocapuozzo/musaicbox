@@ -2,11 +2,21 @@
  <fieldset class="representation-border p-2 text-center">
           <legend class="representation-border">
              {{orbitsGroup.stabilizerName}} ({{orbitsGroup.orbits.length}})
+
+            &nbsp; <button type="button" @click="changeViewIPcs" class="toggle"  aria-pressed="false" >
+              M/C
+            </button>
           </legend>
           <div class="d-inline-block" v-for="(orbit) in orbitsGroup.orbits" :key="orbit.getPcsMin().id()" >
-            <clock
+
+            <Musaic  v-if="!viewClock"
                 :_ipcs="{strPcs:orbit.getPcsMin().pcsStr, n:orbit.getPcsMin().n}" class="clock-pcs m-1" >
-            </clock>
+            </Musaic>
+
+            <Clock v-if="viewClock"
+              :_ipcs="{strPcs:orbit.getPcsMin().pcsStr, n:orbit.getPcsMin().n}" class="clock-pcs m-1" >
+            </Clock>
+
             <p class="text-center label-ipcs">#{{orbit.ipcsset.length}}</p>
           </div>
         </fieldset>
@@ -14,20 +24,35 @@
 
 <script>
 import Clock from "../components/Clock";
+import Musaic from "../components/Musaic";
 
 export default {
   name: "Orbit",
   props : {
-    orbitsGroup : null
+    orbitsGroup : null,
+  },
+  data()  {
+    return {
+      viewClock : {
+        type: Boolean,
+        default: function () {
+          return false
+        }
+      }
+    }
   },
   mounted() {
   },
   computed: {
   },
-  methods: {    
+  methods: {
+    changeViewIPcs() {
+      this.viewClock = !this.viewClock ;
+    }
   },
   components: {
-    Clock 
+    Clock,
+    Musaic
   }
 }
 </script>
@@ -63,5 +88,10 @@ export default {
     padding: 0 10px;
     border-bottom: none;
   }
+.toggle {
+  font-size: 0.5rem !important;
+  border: 1px groove #ddd !important;
+ border-radius: 50%;
+}
 
 </style>

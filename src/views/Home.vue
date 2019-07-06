@@ -4,7 +4,7 @@
       <div class="p-2 shadow mb-5 bg-white rounded col" style="max-width:300px;">
         <h5 class="text-center title-detail pb-2">Musaic</h5>
         <div class="container ml-4">
-          <Musaic style="width: 200px; height: 350px;" _pcs="[1,0,0,1,0,0,0,1,0,0,0,0]"></Musaic>
+          <ISMusaic style="width: 200px; height: 350px;" _pcs="[1,0,0,1,0,0,0,1,0,0,0,0]"></ISMusaic>
         </div>
       </div>
       <div
@@ -111,7 +111,7 @@
 
 <script>
   // @ is an alias to /src
-  import Musaic from "@/components/Musaic.vue";
+  import ISMusaic from "@/components/ISMusaic.vue";
   import ISClock from "@/components/ISClock.vue";
   import WrapCanvas from "@/components/WrapCanvas.vue";
   import MusicNotation from "@/components/MusicNotation.vue";
@@ -165,7 +165,7 @@
 
     },
     components: {
-      Musaic,
+      ISMusaic,
       WrapCanvas,
       ISClock,
       MusicNotation,

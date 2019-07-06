@@ -89,6 +89,7 @@
            <Orbit v-for="(orbitsGroup) in orbitsPartitions" :key="orbitsGroup.hashcode" :orbitsGroup="orbitsGroup"> </Orbit>
       </fieldset>
     </div>
+
     <div class="p-2">
       <fieldset class="representation-border p-2 ">
         <legend class="representation-border">Debug </legend>
