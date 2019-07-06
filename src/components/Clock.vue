@@ -9,6 +9,17 @@
 </template>
 
 <script>
+  /**
+   * Clock component for display without user interaction (as ISClock)
+   * TODO from duplicate code ISClock ... :(   to refactor
+   */
+  class Point {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+    }
+  }
+
   class Rect {
     constructor(x, y, w, h) {
       this.x = x;
@@ -43,7 +54,8 @@
   export default {
     name: "Clock",
     points: [],
-    n : 0,
+    pointsAxesSym: [],
+    n: 0,
     props: {
       _ipcs: Object,
       pc_color: {
@@ -61,21 +73,11 @@
     },
     data() {
       return {
-        ipcs: new IPcs({strPcs:"[0,4,7]", n:12})
+        ipcs: new IPcs({strPcs: "[0,4,7]", n: 12})
       }
     },
-    computed: {
-      // ipcs: {
-      //   get() {
-      //     return this.$store.state.ipcs.ipcs
-      //   },
-      //   set(value) {
-      //     this.$store.commit('ipcs/update', value);
-      //   }
-      // }
-    },
+    computed: {},
     methods: {
-
       isSelected(i) {
         return this.ipcs.pcs[i] === 1;
       },
@@ -85,7 +87,7 @@
         ctx.arc(0, 0, radius, 0, 2 * Math.PI);
         ctx.stroke()
         // console.log("index : " + index + " selected : " + this.isSelected(index));
-        let color = (this.isSelected(index)) ? (index ===  this.ipcs.iPivot) ? this.pc_pivot_color : this.pc_color : 'white'
+        let color = (this.isSelected(index)) ? (index === this.ipcs.iPivot) ? this.pc_pivot_color : this.pc_color : 'white'
         ctx.fillStyle = color;
         ctx.fill();
         if (radius > 6) {
@@ -114,7 +116,7 @@
         ctx.textAlign = "center";
         let radiusPitch = Math.round(radius / 9);
         for (let index = 0; index < this.n; index++) {
-          ang = index * Math.PI / (this.n/2);
+          ang = index * Math.PI / (this.n / 2);
           // console.log(this.$options.points[index].toString());
           ctx.rotate(ang);
           ctx.translate(0, -radius);
@@ -125,19 +127,19 @@
           ctx.rotate(-ang);
         }
       },
-
       draw() {
-       // console.log("ipcs :" + this.ipcs)
+        // console.log("ipcs :" + this.ipcs)
         let ox = this.$refs['canvas'].clientWidth / 2;
         let oy = this.$refs['canvas'].clientHeight / 2;
         let radius = Math.round(ox * .8);
-        this.computePitchesRegionSelected(ox, oy, radius);
+        this.computePitchesRegion(ox, oy, radius);
         this.ctx.clearRect(0, 0, this.$refs['canvas'].clientWidth, this.$refs['canvas'].clientHeight);
         this.drawPolygon(this.ctx);
         this.ctx.save();
         this.ctx.translate(ox, oy);
         this.drawPitches(this.ctx, radius);
         this.ctx.translate(-ox, -oy);
+        this.drawAxesSymmetry(this.ctx)
         this.ctx.restore();
       },
       drawPolygon(ctx) {
@@ -158,10 +160,72 @@
         ctx.stroke();
         ctx.restore();
       },
-      computePitchesRegionSelected(ox, oy, radius) {
+      drawAxeMedian(i, revOX, revOY, ctx) {
+        let points = this.$options.pointsAxesSym;
+        let x1 = points[i*2].x
+        let y1 = points[i*2].y
+        let i2 = (Math.round(this.n / 2) + i) % this.n;
+        let nEven = this.n % 2 === 0;
+        let delta = nEven ? 0 : -1;
+        let x2 = points[(i2*2 + delta + this.n*2) % (this.n*2)].x;
+        let y2 = points[(i2*2 + delta + this.n*2) % (this.n*2)].y;
+        ctx.save();
+        ctx.beginPath()
+        ctx.setLineDash([2, 2]);
+        ctx.moveTo(revOX, revOY)
+        ctx.lineTo(x2, y2)
+        ctx.moveTo(revOX, revOY)
+        ctx.lineTo(x1, y1)
+        ctx.stroke()
+        ctx.restore()
+      },
+      drawAxeInter(i, revOX, revOY, ctx) {
+        let points = this.$options.pointsAxesSym;
+        let x1 = points[((i*2 + 1) + this.n*2) % (this.n*2)].x
+        let y1 = points[((i*2 + 1) + this.n*2) % (this.n*2)].y
+
+        let i2 = (this.n / 2 + i) % this.n;
+        let nEven = this.n % 2 === 0;
+        if (!nEven)
+          i2 -= 1;
+
+        let x2 = points[((i2*2 + 1) + this.n*2) % (this.n*2)].x
+        let y2 = points[((i2*2 + 1) + this.n*2) % (this.n*2)].y
+
+        ctx.save();
+        ctx.setLineDash([2, 2]);
+        ctx.beginPath()
+        ctx.moveTo(revOX, revOY)
+        ctx.lineTo(x2, y2)
+        ctx.moveTo(revOX, revOY)
+        ctx.lineTo(x1, y1)
+        ctx.stroke()
+        ctx.restore();
+      },
+
+      drawAxesSymmetry(ctx) {
+        let ox = this.$refs['canvas'].clientWidth / 2;
+        let oy = this.$refs['canvas'].clientHeight / 2;
+        let axesSym = this.ipcs.getAxialSymmetries()
+
+        for (let i = 0; i < axesSym.symMedian.length; i++) {
+          if (axesSym.symMedian[i] === 1) {
+            this.drawAxeMedian(i, ox, oy, ctx);
+          }
+          if (axesSym.symInter[i] === 1){
+            this.drawAxeInter(i, ox, oy, ctx);
+          }
+        }
+      },
+      computePitchesRegion(ox, oy, radius) {
+        if (this.$options.points.length < this.n) {
+          this.$options.points = Array(this.n)
+          this.$options.pointsAxesSym = Array(this.n * 2)
+        }
         // console.log("this.n : " + this.n)
         // console.log("ox :" + ox + "  oy : "+oy + " radius : " + radius)
-        let radiusPitch = Math.round(radius / (this.n-1));
+        let radiusPitch = Math.round(radius / (this.n - 1));
+        let radiusAxesSym = radius+ 10
         let x;
         let y;
         let ang = 3 * Math.PI / 2;
@@ -176,7 +240,15 @@
             radiusPitch * 3); // square...
           //this.$options.points[index].draw(ctx);
           // console.log(this.$options.points[index].toString());
-          ang = ang + 2*Math.PI / this.n;
+          ang = ang + 2 * Math.PI / this.n;
+        }
+        // compute points for axes symmetry (*2 because inter pitches)
+        ang = 3 * Math.PI / 2;
+        for (let index = 0; index < this.n*2; index++) {
+          let x = Math.round(ox + Math.cos(ang) * radiusAxesSym);
+          let y = Math.round(oy + Math.sin(ang) * radiusAxesSym);
+          this.$options.pointsAxesSym[index] = new Point(x, y)
+          ang = ang + 2 * Math.PI / (this.n*2);
         }
       },
     },
@@ -190,12 +262,10 @@
       this.$refs['canvas'].height = len
 
       if (this._ipcs) {
-        this.ipcs = new IPcs({strPcs:this._ipcs.strPcs, n:this._ipcs.n})
+        this.ipcs = new IPcs({strPcs: this._ipcs.strPcs, n: this._ipcs.n})
       } else {
-        this.ipcs = new IPcs({strPcs:"[1, 5, 6]", n:7})
+        this.ipcs = new IPcs({strPcs: "[1, 5, 6]", n: 7})
       }
-
-
       this.n = this.ipcs.pcs.length
     },
     watch: {
@@ -205,6 +275,7 @@
     }
   }
 </script>
+
 <style scoped>
   .clockpcs {
     display: inline-flex;

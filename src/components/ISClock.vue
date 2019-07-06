@@ -264,7 +264,7 @@ export default {
       ctx.restore();
     },
 
-    computePitchesRegionSelected(canvas, ctx, ox, oy, radius) {
+    computePitchesRegion(canvas, ctx, ox, oy, radius) {
       let radiusPitch = Math.round(radius / 11);
       let x;
       let y;
@@ -289,7 +289,7 @@ export default {
       let ox = ctx.canvas.width / 2;
       let oy = ctx.canvas.height / 2;
       let radius = Math.round((ctx.canvas.clientWidth / 2) * .8);
-      this.computePitchesRegionSelected(ctx.canvas, ctx, ox, oy, radius);
+      this.computePitchesRegion(ctx.canvas, ctx, ox, oy, radius);
       this.drawPolygon(ctx);
       ctx.save();
       ctx.translate(ox, oy);

@@ -444,7 +444,7 @@ export default class IPcs {
   /**
    * get complement of this.
    * Important : complement loses iPivot pivot
-     */
+   */
   complement() {
     let pcs_cpt = this.pcs.map(pc => (pc === 1 ? 0 : 1)) //;slice() and inverse 0/1
     let new_iPivot = undefined
@@ -452,7 +452,7 @@ export default class IPcs {
     let n = pcs_cpt.length
     // iPivot is lost by complement... set a new iPivot of complement
     // opposite is a good candidate when n is even
-    if (actualiPivot === undefined && pcs_cpt[0]===1) {
+    if (actualiPivot === undefined && pcs_cpt[0] === 1) {
       new_iPivot = 0
     } else if ((n % 2) === 0 && pcs_cpt[(actualiPivot + n / 2) % n] === 1) {
       new_iPivot = (actualiPivot + n / 2) % n
@@ -512,5 +512,82 @@ export default class IPcs {
 
   addInOrbit(newIPcs) {
     this.orbit.addIPcsIfNotPresent(newIPcs)
+  }
+
+  /**
+   *
+   * @param {number} ipitch
+   * @param {array} arrResearchA (to optimise - avoid create local array)
+   * @param {array} arrResearchB (to optimise - avoid create local array)
+   */
+  axeSymmetry(ipitch, arrResearchA, arrResearchB) {
+    let iAxe
+    let symmetryIntercalare;
+    let symmetryMedian = 1;
+    let nEven = this.n % 2 === 0;
+    symmetryIntercalare = nEven ? 10 : 0
+    arrResearchA.fill(0)
+    arrResearchB.fill(0)
+    let right = ipitch; // start research
+    let left = ipitch; //
+    for (iAxe = 0; iAxe < this.n / 2 + 1; iAxe++) {
+      if (this.pcs[right] === 1)
+        arrResearchA[iAxe] = 1; // { in one way }
+      if (this.pcs[left] === 1)
+        arrResearchB[iAxe] = 1; // { other way }
+      right = (right + 1) % this.n;
+      if (left === 0) left = this.n;
+      left--;
+    }
+    // compare
+    for (iAxe = 0; iAxe < this.n / 2 + 1; iAxe++) {
+      if (arrResearchA[iAxe] !== arrResearchB[iAxe])
+        symmetryMedian = 0;
+      if (nEven)
+        if (arrResearchB[iAxe] !== arrResearchA[(iAxe + 1) % this.n])
+          symmetryIntercalare = 0;
+    }
+    return symmetryMedian + symmetryIntercalare // 0, 1, 10 or 11
+  }
+
+  /**
+   * Get axial symmetries
+   *
+   * @return {object}
+   */
+  getAxialSymmetries() {
+    let symMedian = Array(this.n)
+    let symInter = Array(this.n)
+    symMedian.fill(0)
+    symInter.fill(0);
+
+    const MEDIAN = 1;
+    const INTERCAL = 10;
+    const MEDIAN_INTERCAL = 11;
+
+    let nEven = this.n % 2 === 0;
+    let imax = nEven ? this.n / 2 : this.n;
+
+    let tempA = Array(this.n);
+    let tempB = Array(this.n);
+    for (let i = 0; i < imax; i++) {
+      let typeAxe = this.axeSymmetry(i, tempA, tempB);
+      switch (typeAxe) {
+        case MEDIAN:
+          symMedian[i] = 1;
+          break;
+        case INTERCAL:
+          symInter[i] = 1;
+          break;
+        case MEDIAN_INTERCAL: // pcs empty n even
+          symMedian[i] = 1;
+          symInter[i] = 1;
+          break;
+      }
+    }
+    return  {
+      symMedian : symMedian,
+      symInter : symInter
+    }
   }
 }

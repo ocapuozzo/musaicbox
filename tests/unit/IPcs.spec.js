@@ -234,3 +234,55 @@ test("IPcs modal prime form", () => {
   expect(minBass3.modalPrimeForm()).toEqual(maj6)
 })
 
+test("IPcs symmetry ", () => {
+  // aug chord one median symmetry
+  let ipcs = new IPcs({strPcs: "0, 4, 8"})
+  let symmetries = ipcs.getAxialSymmetries()
+  let symMedian =  [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0]
+  let symInter  =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  expect(symmetries.symMedian).toEqual(symMedian)
+  expect(symmetries.symInter).toEqual(symInter)
+
+  // dim chord two symmetries
+  ipcs = new IPcs({strPcs: "0, 3, 6, 9"})
+  symmetries = ipcs.getAxialSymmetries()
+  symMedian =  [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+  symInter  =  [0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
+  expect(symmetries.symMedian).toEqual(symMedian)
+  expect(symmetries.symInter).toEqual(symInter)
+
+  // empty set => full symmetries
+  ipcs = new IPcs({strPcs: ""})
+  symmetries = ipcs.getAxialSymmetries()
+  symMedian =  [1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0]
+  symInter  =  [1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0]
+  expect(symmetries.symMedian).toEqual(symMedian)
+  expect(symmetries.symInter).toEqual(symInter)
+
+  // major chord => no symmetry
+  ipcs = new IPcs({strPcs: "0, 4, 7"})
+  symmetries = ipcs.getAxialSymmetries()
+  symMedian =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  symInter  =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  expect(symmetries.symMedian).toEqual(symMedian)
+  expect(symmetries.symInter).toEqual(symInter)
+})
+
+test("IPcs symmetry n=7", () => {
+  // n = 7
+  let ipcs = new IPcs({binPcs: [1,0,1,0,1,0,1]})
+  let symmetries = ipcs.getAxialSymmetries()
+  let symMedian =  [0, 0, 0, 1, 0, 0, 0]
+  let symInter  =  [0, 0, 0, 0, 0, 0, 0]
+  expect(symmetries.symMedian).toEqual(symMedian)
+  expect(symmetries.symInter).toEqual(symInter)
+
+  // empty set => full symmetries
+  ipcs = new IPcs({strPcs: "", n:7})
+  symmetries = ipcs.getAxialSymmetries()
+  symMedian =  [1, 1, 1, 1, 1, 1, 1]
+  // n is odd
+  symInter  =  [0, 0, 0, 0, 0, 0, 0]
+  expect(symmetries.symMedian).toEqual(symMedian)
+  expect(symmetries.symInter).toEqual(symInter)
+})

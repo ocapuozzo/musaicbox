@@ -5,7 +5,7 @@
           </legend>
           <div class="d-inline-block" v-for="(orbit) in orbitsGroup.orbits" :key="orbit.getPcsMin().id()" >
             <clock
-                :_ipcs="{strPcs:orbit.getPcsMin().pcsStr, n:orbit.getPcsMin().n}" class="clock-pcs" >
+                :_ipcs="{strPcs:orbit.getPcsMin().pcsStr, n:orbit.getPcsMin().n}" class="clock-pcs m-1" >
             </clock>
             <p class="text-center label-ipcs">#{{orbit.ipcsset.length}}</p>
           </div>
