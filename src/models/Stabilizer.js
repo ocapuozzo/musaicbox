@@ -357,4 +357,8 @@ export default class Stabilizer {
     return this._fixedPcsInPrimeForm
   }
 
+  get isMotifEquivalence()  {
+    return this.getName().includes("M1-T1")
+  }
+
 }

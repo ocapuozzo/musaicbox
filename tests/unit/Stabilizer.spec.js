@@ -146,3 +146,15 @@ test("Musaic Group Explore", () => {
 
 //  musaicGroup.orbitsSortedByMotifStabilizers.forEach(motifSatb => console.log(motifSatb.toString()))
 })
+
+test("Stabilizer isMotifEquivalence", () => {
+  let opM1T0 = new MusaicPcsOperation(12, 1, 0, false);
+  let stab = new Stabilizer({operations:[opM1T0]}) 
+  
+  expect(stab.isMotifEquivalence).not.toBeTruthy()
+
+  let opM1T1 = new MusaicPcsOperation(12, 1, 1, true);
+  stab.addOperation(opM1T1)
+
+  expect(stab.isMotifEquivalence).toBeTruthy()
+})

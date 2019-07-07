@@ -148,4 +148,13 @@ export default class Orbit {
 
     return this.motifStabilizer
   }
+
+  /**
+   * return true if stabilizers include relationship equivalence to nearest transposition 
+   * @return {Boolean}
+   */
+  get isMotifEquivalence()  {
+    return this.stabilizers.some(stab => stab.isMotifEquivalence)
+  }
+
 }

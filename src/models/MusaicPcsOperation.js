@@ -29,18 +29,6 @@
 import Utils from "../utils/Utils";
 
 export default class MusaicPcsOperation {
-  /*
-  public final int n;
-  public final int a;
-  public final int t;
-  public final boolean complement;
-  private final int _hashcode;
-  protected String _strRepr;
-  protected String _strReprWithoutTransp;
-  private List<Pcs> fixedPcs;
-
-  private List<Stabilizer> stabilizers;
-*/
 
   /**
    *  ((ax + t) modulo n) . c
