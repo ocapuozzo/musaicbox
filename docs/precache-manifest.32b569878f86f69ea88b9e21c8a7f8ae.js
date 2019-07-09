@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "82f56d41a85937ba5457",
-    "url": "/musaicbox/css/app.3b3a35d5.css"
+    "revision": "79e5bed2418e430e69a9",
+    "url": "/musaicbox/css/app.6a0ddfaf.css"
   },
   {
-    "revision": "82f56d41a85937ba5457",
-    "url": "/musaicbox/js/app.3c934e1a.js"
+    "revision": "79e5bed2418e430e69a9",
+    "url": "/musaicbox/js/app.b5726ce3.js"
   },
   {
     "revision": "e79a65253642b8efbb2f",
@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/musaicbox/js/chunk-vendors.8450664d.js"
   },
   {
-    "revision": "54a8529aad8049bb062a6371c7e4a664",
+    "revision": "54a3054c3d5301436e4b2bed17c99670",
     "url": "/musaicbox/index.html"
   },
   {
