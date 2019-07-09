@@ -15,9 +15,9 @@
         <div class="container">
           <div class="row">
             <div class="col-sm text-left">
-              <WrapCanvas id="ccanvas" class="clockpcs ml-3" style="width: 200px; height: 200px;">
-                <ISClock color="white"></ISClock>
-              </WrapCanvas>
+<!--              <div id="ccanvas" class="clockpcs ml-3" style="width: 200px; height: 200px;">-->
+                <ISClock color="white" class="is-clock ml-3" ></ISClock>
+<!--              </div>-->
               <MusicNotation :_ipcs="ipcs" class="ml-2"/>
               <RotateIPcs/>
             </div>
@@ -166,7 +166,7 @@
     },
     components: {
       ISMusaic,
-      WrapCanvas,
+     // WrapCanvas,
       ISClock,
       MusicNotation,
       RotateIPcs
@@ -224,4 +224,8 @@
     border-bottom: none;
   }
 
+  .is-clock {
+  width: 200px;
+  height: 200px;
+}
 </style>

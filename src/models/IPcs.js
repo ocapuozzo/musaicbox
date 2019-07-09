@@ -522,15 +522,17 @@ export default class IPcs {
    */
   axeSymmetry(ipitch, arrResearchA, arrResearchB) {
     let iAxe
-    let symmetryIntercalare;
     let symmetryMedian = 1;
     let nEven = this.n % 2 === 0;
-    symmetryIntercalare = nEven ? 10 : 0
+    let symmetryIntercalare = nEven ? 10 : 0
+    // param arrResearchA & B passed for performance
+    // instanced by caller
     arrResearchA.fill(0)
     arrResearchB.fill(0)
     let right = ipitch; // start research
     let left = ipitch; //
-    for (iAxe = 0; iAxe < this.n / 2 + 1; iAxe++) {
+    let middle = Math.round(this.n / 2) + 1
+    for (iAxe = 0; iAxe < this.n; iAxe++) {
       if (this.pcs[right] === 1)
         arrResearchA[iAxe] = 1; // { in one way }
       if (this.pcs[left] === 1)
@@ -540,12 +542,12 @@ export default class IPcs {
       left--;
     }
     // compare
-    for (iAxe = 0; iAxe < this.n / 2 + 1; iAxe++) {
+    for (iAxe = 0; iAxe < middle; iAxe++) {
       if (arrResearchA[iAxe] !== arrResearchB[iAxe])
         symmetryMedian = 0;
-      if (nEven)
-        if (arrResearchB[iAxe] !== arrResearchA[(iAxe + 1) % this.n])
-          symmetryIntercalare = 0;
+      if (nEven && arrResearchB[iAxe] !== arrResearchA[(iAxe + 1) % this.n]) {
+        symmetryIntercalare = 0;
+      }
     }
     return symmetryMedian + symmetryIntercalare // 0, 1, 10 or 11
   }
@@ -566,7 +568,7 @@ export default class IPcs {
     const MEDIAN_INTERCAL = 11;
 
     let nEven = this.n % 2 === 0;
-    let imax = nEven ? this.n / 2 : this.n;
+    let imax = nEven ? Math.round(this.n / 2) : this.n;
 
     let tempA = Array(this.n);
     let tempB = Array(this.n);

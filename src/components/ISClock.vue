@@ -1,324 +1,232 @@
+<template>
+  <div class="is-clock" ref="containercanvas">
+    <canvas ref="canvas"></canvas>
+  </div>
+</template>
+
 <script>
-//  https://www.w3schools.com/code/tryit.asp?filename=G162PFNP2G5Q
 
-/* eslint-disable no-console */
+  /* eslint-disable no-console */
 
-class Rect {
-  constructor(x, y, w, h) {
-    this.x = x;
-    this.y = y;
-    this.w = w;
-    this.h = h;
-  }
+  import ClockDrawing from "../models/ClockDrawing"
 
-  contains(x, y) {
-    return x >= (this.x - this.w / 2) && x <= this.x + this.w / 2 &&
-      y >= this.y - this.h / 2 && y <= this.y + this.h / 2;
-  }
-
-  draw(ctx) {
-    ctx.beginPath();
-    //ctx.arc(this.x, this.y, this.w, 0, 2 * Math.PI);
-    ctx.fillRect(this.x - this.w / 2, this.y - this.h / 2, this.w, this.h)
-    ctx.stroke();
-  }
-
-  toString() {
-    return "{" + this.x + "," + this.y + "," + this.w + "," + this.h + "}";
-  }
-}
-
-const PITCH_LINE_WIDTH = 4;
-
-export default {
-  // Gets us the provider property from the parent <my-canvas> component.
-  name: "ISClock",
-  inject: ['provider'],
-  dateMouseDone: null,
-  points: [],
-  touchendOk: false,
-
-  computed: {
-    ipcs: {
-      get() {
-        return this.$store.state.ipcs.ipcs
-      },
-      set(value) {
-        this.$store.commit('ipcs/update', value);
+  export default {
+    name: "ISClock",
+    dateMouseDone: null,
+    touchendOk: false,
+    data() {
+      return {
+        clockDrawing: null
       }
     },
-    pcs: {
-      get() {
-        return this.$store.state.ipcs.pcs
-      },
-      set(value) {
-        this.$store.commit('ipcs/changepcs', value);
-      }
-    },
-    iPivot: {
-      get() {
-        return this.$store.state.ipcs.ipcs.iPivot
-      },
-      set(value) {
-        this.$store.commit('ipcs/setiPivot', value);
-      }
-    },
-
-    cardinal() {
-      return this.$store.getters.pcsCard
-    }
-    // https://vuex.vuejs.org/fr/guide/state.html
-
-  },
-
-  methods: {
-    getSelected(e) {
-      const ctx = this.provider.context;
-      let canvas = ctx.canvas;
-      let rect = canvas.getBoundingClientRect();
-      let x1;
-      let y1;
-      // https://developer.mozilla.org/en-US/docs/Web/API/Touch/clientX
-      if (e.changedTouches) {
-        x1 = e.changedTouches[0].clientX - rect.left;
-        y1 = Math.round(e.changedTouches[0].clientY - rect.top);
-      } else {
-        x1 = e.clientX - rect.left;
-        y1 = Math.round(e.clientY - rect.top);
-      }
-
-      let index = -1;
-      for (let i = 0; i < this.$options.points.length; i++) {
-        if (this.$options.points[i].contains(x1, y1)) {
-          index = i;
-          break;
+    computed: {
+      ipcs: {
+        get() {
+          return this.$store.state.ipcs.ipcs
+        },
+        set(value) {
+          this.$store.commit('ipcs/update', value);
         }
-      }
-      return index;
-    },
+      },
+      pcs: {
+        get() {
+          return this.$store.state.ipcs.pcs
+        },
+        set(value) {
+          this.$store.commit('ipcs/changepcs', value);
+        }
+      },
+      iPivot: {
+        get() {
+          return this.$store.state.ipcs.ipcs.iPivot
+        },
+        set(value) {
+          this.$store.commit('ipcs/setiPivot', value);
+        }
+      },
 
-    isSelected(i) {
-      return this.ipcs.pcs[i] === 1;
-    },
-
-    setiPivot(index) {
-      this.iPivot = index;
-      this.$root.$emit('onsetpcs');
-      // console.log("set iPivot : " + index);
-    },
-    touchstart(e) {
-      if (e) {
-        e.preventDefault();
-      }
-      this.$options.dateMouseDone = new Date()
-    },
-    touchend(e) {
-      if (!e) {
-        return
-      }
-      e.preventDefault();
-
-      let index = this.getSelected(e);
-
-      if (index < 0) {
-        this.$options.dateMouseDone = null
-        return false;
+      cardinal() {
+        return this.$store.getters.pcsCard
       }
 
-      let longClick = (new Date() - this.$options.dateMouseDone) >= 500
-      
-      this.$options.dateMouseDone = null
-      
-      if (index !== this.iPivot) {
-        this.touchendOk = true
-        if (longClick) {
-          this._setIndexToOneOriPivot(index)
+    },
+
+    methods: {
+      // check if object must be build, and update
+      checkClockDrawing() {
+        if (!this.clockDrawing) {
+          this.clockDrawing = new ClockDrawing(
+            {
+              ipcs: this.ipcs,
+              ctx: this.ctx,
+              width: this.ctx.canvas.clientWidth,
+              height: this.ctx.canvas.clientWidth,
+
+            })
+        }
+      },
+      getSelected(e) {
+        // const ctx = this.provider.context;
+        let canvas = this.ctx.canvas;
+        let rect = canvas.getBoundingClientRect();
+        let x1;
+        let y1;
+        // https://developer.mozilla.org/en-US/docs/Web/API/Touch/clientX
+        if (e.changedTouches) {
+          x1 = e.changedTouches[0].clientX - rect.left;
+          y1 = Math.round(e.changedTouches[0].clientY - rect.top);
         } else {
+          x1 = e.clientX - rect.left;
+          y1 = Math.round(e.clientY - rect.top);
+        }
+        this.checkClockDrawing()
+        return this.clockDrawing.getIndexPitchFromXY(x1, y1)
+      },
+
+      isSelected(i) {
+        return this.ipcs.pcs[i] === 1;
+      },
+
+      setiPivot(index) {
+        this.iPivot = index;
+        this.drawClock(this.ctx)
+        this.$root.$emit('onsetpcs');
+        // console.log("set iPivot : " + index);
+      },
+      touchstart(e) {
+        if (e) {
+          e.preventDefault();
+        }
+        this.$options.dateMouseDone = new Date()
+      },
+      touchend(e) {
+        if (!e) {
+          return
+        }
+        e.preventDefault();
+
+        let index = this.getSelected(e);
+
+        if (index < 0) {
+          this.$options.dateMouseDone = null
+          return false;
+        }
+
+        let longClick = (new Date() - this.$options.dateMouseDone) >= 500
+
+        this.$options.dateMouseDone = null
+
+        if (index !== this.iPivot) {
+          this.touchendOk = true
+          if (longClick) {
+            this._setIndexToOneOriPivot(index)
+          } else {
+            this.$store.commit("ipcs/toggleindexpcs", index);
+            this.$root.$emit('onsetpcs');
+          }
+        }
+      },
+      mousemove(e) {
+        // https://developer.mozilla.org/fr/docs/Web/API/MouseEvent
+        let index = this.getSelected(e);
+        if (index >= 0) {
+          this.$el.style.cursor = 'pointer'
+          // console.log('mouse move : index/pitch selected = ' + index)
+        } else {
+          this.$el.style.cursor = 'default'
+        }
+      },
+      mousedown(e) {
+        this.$options.dateMouseDone = new Date()
+      },
+      mouseup(e) {
+        let index = this.getSelected(e);
+        if (index < 0 || this.touchendOk) {
+          this.touchendOk = false
+          return false;
+        }
+
+        e.preventDefault();
+
+        // https://stackoverflow.com/questions/2405771/is-right-click-a-javascript-event
+        let isRightMB;
+        e = e || window.event;
+
+        if ("which" in e)  // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
+          isRightMB = e.which === 3;
+        else if ("button" in e)  // IE, Opera
+          isRightMB = e.button === 2;
+
+        // long click ? (if down is 1 second or more)
+        let longClick = (new Date() - this.$options.dateMouseDone) >= 1000
+
+        // right click and long click => change iPivot
+        if (isRightMB || longClick) {
+          // console.log("index :" + index + " this.iPivot :" +this.iPivot)
+          if (index !== this.iPivot) {
+            this._setIndexToOneOriPivot(index)
+          }
+          this.$options.dateMouseDone = null
+          return false;
+        }
+        // accept unset iPivot when cardinal == 1 only
+        if (index >= 0 && (index !== this.iPivot || this.ipcs.cardinal() === 1)) {
           this.$store.commit("ipcs/toggleindexpcs", index);
           this.$root.$emit('onsetpcs');
         }
-      }
-    },
-    mousemove(e) {
-      // https://developer.mozilla.org/fr/docs/Web/API/MouseEvent
-      let index = this.getSelected(e);
-      if (index >= 0) {
-        this.provider.elt.style.cursor = 'pointer'
-        // console.log('mouse move : index/pitch selected = ' + index)
-      } else {
-        this.provider.elt.style.cursor = 'default'
-      }
-    },
-    mousedown(e) {
-      this.$options.dateMouseDone = new Date()
-    },
-    mouseup(e) {
-      let index = this.getSelected(e);
-      if (index < 0 || this.touchendOk) {
-        this.touchendOk = false
-        return false;
-      }
+      },
 
-      e.preventDefault();
-
-      // https://stackoverflow.com/questions/2405771/is-right-click-a-javascript-event
-      let isRightMB;
-      e = e || window.event;
-
-      if ("which" in e)  // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
-        isRightMB = e.which == 3;
-      else if ("button" in e)  // IE, Opera 
-        isRightMB = e.button == 2;
-
-      // long click ? (if down is 1 second or more)  
-      let longClick = (new Date() - this.$options.dateMouseDone) >= 1000
-
-      // right click and long click => change iPivot
-      if (isRightMB || longClick) {
-        if (index != this.iPivot) {
-          this._setIndexToOneOriPivot(index)
-        }
-        this.$options.dateMouseDone = null
-        return false;
-      }
-      // accept unset iPivot when cardinal == 1 only
-      if (index >= 0 && (index !== this.iPivot || this.ipcs.cardinal()===1)) {
-        this.$store.commit("ipcs/toggleindexpcs", index);
-        this.$root.$emit('onsetpcs');
-      }
-    },
-
-    _setIndexToOneOriPivot(index) {
-      if (this.ipcs.pcs[index] === 0) {
-        // set this.ipcs.pcs[index] to 1 (new array)
-        this.$store.commit("ipcs/toggleindexpcs", index);
-      } else {
-        this.setiPivot(index);
-      }
-      this.$root.$emit('onsetpcs');
-    },
-
-    drawCirclePitch(ctx, index, radius, lineWidth) {
-      let grad;
-      ctx.beginPath();
-      ctx.arc(0, 0, radius, 0, 2 * Math.PI);
-      ctx.stroke()
-      // console.log("index : " + index + " selected : " + this.isSelected(index));
-      let color = (this.isSelected(index)) ? (index == this.iPivot) ? 'red' : 'yellow' : 'white'
-      ctx.fillStyle = color;
-      ctx.fill();
-      if (radius > 6) {
-        grad = ctx.createRadialGradient(0, 0, radius * 0.8, 0, 0, radius * 1.2);
-        grad.addColorStop(0, '#333');
-        grad.addColorStop(0.5, 'white');
-        grad.addColorStop(1, '#333');
-        ctx.strokeStyle = grad;
-        ctx.lineWidth = lineWidth; //radius*0.1;
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.fillStyle = '#333';
-        ctx.fill();
-        if (index < 10) {
-          ctx.fillText(index.toString(), -.1, 1);
+      _setIndexToOneOriPivot(index) {
+        if (this.ipcs.pcs[index] === 0) {
+          // set this.ipcs.pcs[index] to 1 (new array)
+          this.$store.commit("ipcs/toggleindexpcs", index);
         } else {
-          ctx.fillText(index.toString(), -.4, 1)
+          this.setiPivot(index);
         }
+        this.$root.$emit('onsetpcs');
+      },
+
+      drawClock() {
+        this.checkClockDrawing()
+        this.clockDrawing.draw(this.ipcs)
       }
     },
 
-    drawPitches(ctx, radius) {
-      let ang;
-      ctx.font = radius * 0.1 + "px arial";
-      ctx.textBaseline = "middle";
-      ctx.textAlign = "center";
-      let radiusPitch = Math.round(radius / 9);
-      for (let index = 0; index < 12; index++) {
-        ang = index * Math.PI / 6;
-        // console.log(this.$options.points[index].toString());
-        ctx.rotate(ang);
-        ctx.translate(0, -radius);
-        ctx.rotate(-ang);
-        this.drawCirclePitch(ctx, index, radiusPitch, PITCH_LINE_WIDTH);
-        ctx.rotate(ang);
-        ctx.translate(0, radius);
-        ctx.rotate(-ang);
+    watch: {
+      ipcs: function (val, oldVal) {
+        //  console.log("this.drawClock();")
+        this.drawClock();
       }
     },
+    created() {
 
-    drawPolygon(ctx) {
-      let points = this.$options.points;
-      let firstPoint = true;
-      ctx.save();
-      ctx.fillStyle = 'black';
-      ctx.beginPath();
-      for (let i = 0; i < this.ipcs.pcs.length; i++) {
-        if (this.ipcs.pcs[i] === 1 && firstPoint) {
-          firstPoint = false;
-          ctx.moveTo(points[i].x, points[i].y);
-        } else if (this.ipcs.pcs[i] === 1) {
-          ctx.lineTo(points[i].x, points[i].y);
-        }
-      }
-      ctx.closePath();
-      ctx.stroke();
-      ctx.restore();
     },
+    mounted() {
+      this.ctx = this.$refs['canvas'].getContext('2d')
+      let containercanvas = this.$refs.containercanvas
+      //containercanvas.addEventListener("animationend", this.listenerEndAnim);
+      // autres events
+      this.$el.addEventListener('mouseup', this.mouseup);
+      this.$el.addEventListener('mousedown', this.mousedown);
+      this.$el.addEventListener('mousemove', this.mousemove);
+      this.$el.addEventListener('touchstart', this.touchstart, false);
+      this.$el.addEventListener('touchend', this.touchend, false);
+      // right click => selected index
+      this.$el.addEventListener('contextmenu', this.mouseup);
 
-    computePitchesRegion(canvas, ctx, ox, oy, radius) {
-      let radiusPitch = Math.round(radius / 11);
-      let x;
-      let y;
-      let ang = 3 * Math.PI / 2;
-      for (let index = 0; index < 12; index++) {
-        x = radiusPitch * 2 + Math.round(ox + Math.cos(ang) * radius);
-        y = radiusPitch * 2 + Math.round(oy + Math.sin(ang) * radius);
-        // console.log("ox : " + ox +"  x:" + x + " y:" + y);
-        this.$options.points[index] = new Rect(
-          x - radiusPitch * 2,
-          y - radiusPitch * 2,
-          radiusPitch * 3, // width rectangle
-          radiusPitch * 3); // square...
-        //this.$options.points[index].draw(ctx);
-        // console.log(this.$options.points[index].toString());
-        ang = ang + Math.PI / 6;
-      }
-    },
-
-    drawClock(ctx) {
-      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-      let ox = ctx.canvas.width / 2;
-      let oy = ctx.canvas.height / 2;
-      let radius = Math.round((ctx.canvas.clientWidth / 2) * .8);
-      this.computePitchesRegion(ctx.canvas, ctx, ox, oy, radius);
-      this.drawPolygon(ctx);
-      ctx.save();
-      ctx.translate(ox, oy);
-      this.drawPitches(ctx, radius);
-      ctx.translate(-ox, -oy);
-      ctx.restore();
+      // Resize the canvas to fit its parent's width.
+      // Normally you'd use a more flexible resize system.
+      let len = Math.min(containercanvas.clientWidth, containercanvas.clientHeight)
+      this.$refs['canvas'].width = len
+      this.$refs['canvas'].height = len
+      this.n = this.ipcs.pcs.length
+      this.drawClock()
     }
-  },
-  // eslint-disable-next-line 
-  render() {
-    if (!this.provider.context) return;
-    if (!this.$options.setMouseEventDone) {
-      this.provider.elt.addEventListener('mouseup', this.mouseup);
-      this.provider.elt.addEventListener('mousedown', this.mousedown);
-      this.provider.elt.addEventListener('mousemove', this.mousemove);
-      this.provider.elt.addEventListener('touchstart', this.touchstart, false);
-      this.provider.elt.addEventListener('touchend', this.touchend, false);
-      // right click => selected index 
-      this.provider.elt.addEventListener('contextmenu', this.mouseup);
-      this.$options.setMouseEventDone = true;
-    }
-    const ctx = this.provider.context;
-    this.drawClock(ctx);
   }
-};
 </script>
 
 <style>
-#ccanvas {
-  background-color: white;
-}
+ .is-clock  {
+    background-color: white;
+  }
 </style>

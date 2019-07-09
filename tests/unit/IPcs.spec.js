@@ -234,7 +234,7 @@ test("IPcs modal prime form", () => {
   expect(minBass3.modalPrimeForm()).toEqual(maj6)
 })
 
-test("IPcs symmetry ", () => {
+test("IPcs symmetry n=12", () => {
   // aug chord one median symmetry
   let ipcs = new IPcs({strPcs: "0, 4, 8"})
   let symmetries = ipcs.getAxialSymmetries()
@@ -266,6 +266,15 @@ test("IPcs symmetry ", () => {
   symInter  =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   expect(symmetries.symMedian).toEqual(symMedian)
   expect(symmetries.symInter).toEqual(symInter)
+
+  // symmetry
+  ipcs = new IPcs({strPcs: "0, 2, 3, 5, 8, 9"})
+  symmetries = ipcs.getAxialSymmetries()
+  symMedian =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  symInter  =  [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  expect(symmetries.symMedian).toEqual(symMedian)
+  expect(symmetries.symInter).toEqual(symInter)
+
 })
 
 test("IPcs symmetry n=7", () => {
