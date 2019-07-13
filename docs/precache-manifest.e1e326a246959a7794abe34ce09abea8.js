@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "79e5bed2418e430e69a9",
-    "url": "/musaicbox/css/app.6a0ddfaf.css"
+    "revision": "dff6877c52107b70ed75",
+    "url": "/musaicbox/css/app.8f66efae.css"
   },
   {
-    "revision": "79e5bed2418e430e69a9",
-    "url": "/musaicbox/js/app.b5726ce3.js"
+    "revision": "dff6877c52107b70ed75",
+    "url": "/musaicbox/js/app.2263824e.js"
   },
   {
     "revision": "e79a65253642b8efbb2f",
@@ -16,16 +16,20 @@ self.__precacheManifest = [
     "url": "/musaicbox/js/chunk-vendors.8450664d.js"
   },
   {
-    "revision": "54a3054c3d5301436e4b2bed17c99670",
+    "revision": "5543537c26de595e92274ebba9c2eb53",
     "url": "/musaicbox/index.html"
   },
   {
-    "revision": "10adf09be7a8b05b67e3d112994d491d",
+    "revision": "59eb417a302ee2c78fcd2f2af73b91cc",
     "url": "/musaicbox/analyse/analyse.puml"
   },
   {
-    "revision": "46710d8bf7e0e2d7bff0c6379493c32c",
+    "revision": "9c6061bba07bea641fcecf1cbda90d65",
     "url": "/musaicbox/analyse/setAnalyse.dia"
+  },
+  {
+    "revision": "f535f714657817bffdf23bd8acb6cf86",
+    "url": "/musaicbox/analyse/setAnalysePartionned.dia"
   },
   {
     "revision": "7e826a81c500d1c8114838168d080de5",
@@ -70,5 +74,17 @@ self.__precacheManifest = [
   {
     "revision": "b6216d61c03e6ce0c9aea6ca7808f7ca",
     "url": "/musaicbox/robots.txt"
+  },
+  {
+    "revision": "d41335f9dc4e123d9e7b373acb708d39",
+    "url": "/musaicbox/analyse/orbitsByISMotif.png"
+  },
+  {
+    "revision": "55d47c764d2234988b50a4da84d5778d",
+    "url": "/musaicbox/analyse/setAnalyse.png"
+  },
+  {
+    "revision": "710bfae8f84ad843651332d3367c5f41",
+    "url": "/musaicbox/analyse/setAnalysePartionned.png"
   }
 ];
