@@ -54,25 +54,23 @@ export default class MusaicActionGroup {
   buildOrbitsByActionOnPowerset() {
     let orbits = [];
     let tmpPowerset = new Map(this.powerset)
-    // for info : convert array to Map
-    //  myarray.map(pcs => [pcs.id(), pcs]));
-    let self = this
-    this.powerset.forEach((pcs) => {
-      if (tmpPowerset.has(pcs.id())) {
-        pcs.addInOrbit(pcs); // add himself in orbit, if not into
-        tmpPowerset.delete(pcs.id());
-        self.operations.forEach((op) => {
-          // an image of pcs (by action on) is always into powerset
-          let pcs_other = this.powerset.get(op.actionOn(pcs).id());
-          pcs.addInOrbit(pcs_other);
-          //pcs_other.addInOrbit(pcs);
-          tmpPowerset.delete(pcs_other.id());// orbit of other is now known
-          pcs_other.orbit = pcs.orbit; // orbit is shared by all pcs in same orbit
-        }) // end foreach operation
-        pcs.orbit.ipcsset.sort(IPcs.compare)
-        orbits.push(pcs.orbit);
+    while (tmpPowerset.size > 0) {
+      let pcs = tmpPowerset.values().next().value
+      pcs.addInOrbit(pcs); // add himself in orbit, if not into
+      tmpPowerset.delete(pcs.id());
+      for (let i = 0; i < this.operations.length; i++){
+        let op = this.operations[i]
+        let pcs_other = this.powerset.get(op.actionOn(pcs).id());
+        if (tmpPowerset.has(pcs_other.id())) {
+          // new image pcs by op
+          pcs.addInOrbit(pcs_other)
+          pcs_other.orbit = pcs.orbit // share same orbit
+          tmpPowerset.delete(pcs_other.id())
+        }
       }
-    }) // end foreach ipcs in powerset
+      pcs.orbit.ipcsset.sort(IPcs.compare)
+      orbits.push(pcs.orbit);
+    }
     return orbits.sort(Orbit.compare);
   }
 
@@ -127,7 +125,7 @@ export default class MusaicActionGroup {
   }
 
   /**
-   * @return {Map} of objects {stabilizerName : {String}, hashcode : {Integer}, orbits : {Array} of orbits
+   * @return {Array} of objects {stabilizerName : {String}, hashcode : {Integer}, orbits : {Array} of orbits
    */
   computeOrbitSortedByStabilizers() {
     let orbitsSortedByStabilizers = new Map() // k=name orbit based on his stabs, v=array of orbits
@@ -137,7 +135,7 @@ export default class MusaicActionGroup {
         if (!orbitsSortedByStabilizers.has(nameStab))
           orbitsSortedByStabilizers.set(nameStab, [])
         // make an subOrbit based on stabilizer : subOrbits partitioning orbit
-        let subOrbit = new Orbit({stabs:[stab], ipcsSet:stab.fixedPcs})
+        let subOrbit = new Orbit({stabs: [stab], ipcsSet: stab.fixedPcs})
         orbitsSortedByStabilizers.get(nameStab).push(subOrbit)
       })
     })
@@ -148,10 +146,10 @@ export default class MusaicActionGroup {
     Array.from(orbitsSortedByStabilizers.keys()).sort().forEach((name) => {
       resultOrbitsSortedByStabilizers.push(
         {
-          stabilizerName : name,
+          stabilizerName: name,
           // to avoid duplicate keys in vue
-          hashcode : Utils.stringHashCode(name) + Date.now(),
-          orbits : orbitsSortedByStabilizers.get(name)
+          hashcode: Utils.stringHashCode(name) + Date.now(),
+          orbits: orbitsSortedByStabilizers.get(name)
         })
     })
 
@@ -160,7 +158,7 @@ export default class MusaicActionGroup {
 
 
   /**
-   * @return {Map} of objects {stabilizerName : {String}, hashcode : {Integer}, orbits : {Array} of orbits
+   * @return {Array} of objects {stabilizerName : {String}, hashcode : {Integer}, orbits : {Array} of orbits
    */
   computeOrbitSortedByMotifStabilizers() {
     let orbitsSortedByMotifStabilizer = new Map() // k=name orbit based on his stabs, v=array of orbits
@@ -180,8 +178,8 @@ export default class MusaicActionGroup {
         {
           stabilizerName: motifStab.name,
           // to avoid duplicate keys in vue
-          hashcode : Utils.stringHashCode(motifStab.name) + Date.now(),
-          orbits : orbitsSortedByMotifStabilizer.get(motifStab).sort(Orbit.comparePcsMin)
+          hashcode: Utils.stringHashCode(motifStab.name) + Date.now(),
+          orbits: orbitsSortedByMotifStabilizer.get(motifStab).sort(Orbit.comparePcsMin)
         })
     })
     return resultOrbitsSortedByMotifStabilizer

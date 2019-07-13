@@ -29,7 +29,7 @@
             </div>
           </fieldset>
           <fieldset class="representation-border ">
-            <legend class="representation-border">Translation</legend>
+            <legend class="representation-border">Transposition</legend>
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="checkbox" v-model="opTransChoices" :value="0" disabled>
               <label class="form-check-label">T0</label>

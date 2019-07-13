@@ -114,16 +114,21 @@ test("Cyclic Group Explore", () => {
   // 5 classes of limited transposition plus identity stab (M1-T0]), so 6 waiting
   // expected 6 stabilizers (2/1 , 54/6 , 12/4 , 6/3 , 2/2 and 4020/12)
   expect(setStabilizers.size).toEqual(6) // = 6
+  expect(cyclicGroup.orbitsSortedByStabilizers.length).toEqual(6)
+  // cyclicGroup.orbitsSortedByStabilizers.forEach(stab=> console.log("stab name : "+ stab.stabilizerName))
 })
 
-test("Musaic Group Explore", () => {
+test("Musaic Group Explore n=12", () => {
   let opM1 = new MusaicPcsOperation(12, 1, 0, false);
   let opCM1 = new MusaicPcsOperation(12, 1, 0, true);
   let opM1T1 = new MusaicPcsOperation(12, 1, 1, false);
   let opM5T1 = new MusaicPcsOperation(12, 5, 1, false);
   let opM7T1 = new MusaicPcsOperation(12, 7, 1, false);
 
-  let musaicGroup = new MusaicActionGroup({n: 12, someMusaicOperations: [/*opId,*/ opM1, opCM1, opM1T1, opM5T1, opM7T1]});
+  let musaicGroup = new MusaicActionGroup({
+    n: 12,
+    someMusaicOperations: [/*opId,*/ opM1, opCM1, opM1T1, opM5T1, opM7T1]
+  });
 
   expect(musaicGroup.operations.length).toEqual(96);
   // number of orbits
@@ -149,12 +154,68 @@ test("Musaic Group Explore", () => {
 
 test("Stabilizer isMotifEquivalence", () => {
   let opM1T0 = new MusaicPcsOperation(12, 1, 0, false);
-  let stab = new Stabilizer({operations:[opM1T0]}) 
-  
+  let stab = new Stabilizer({operations: [opM1T0]})
+
   expect(stab.isMotifEquivalence).not.toBeTruthy()
 
+  // equivalence relationship to near transposition
   let opM1T1 = new MusaicPcsOperation(12, 1, 1, true);
   stab.addOperation(opM1T1)
 
   expect(stab.isMotifEquivalence).toBeTruthy()
 })
+
+test("Group Explore n=7", () => {
+  let opId = new MusaicPcsOperation(7, 1, 0)
+  let opM3 = new MusaicPcsOperation(7, 3, 0);
+
+  let group = new MusaicActionGroup({n: 7, someMusaicOperations: [opId]});
+  expect(group.powerset.size).toEqual(128)
+  expect(group.operations.length).toEqual(1);
+
+  group = new MusaicActionGroup({n: 7, someMusaicOperations: [opId, opM3]});
+  expect(group.powerset.size).toEqual(128)
+  expect(group.operations.length).toEqual(6);
+  expect(group.orbits.length).toEqual(49);
+
+  let sumPcs = 0;
+  group.orbits.forEach(orbit => sumPcs += orbit.ipcsset.length)
+
+  let mapPcs = new Map() // k : id, v : [] of ipcs
+  group.orbits.forEach((orbit) =>
+  {
+    orbit.ipcsset.forEach((p) =>
+    {
+      if (!mapPcs.has(p.id())) {
+        mapPcs.set(p.id(), [])
+      }
+      mapPcs.get(p.id()).push(p)
+    })
+  })
+  //  console.log("mapPcs size : " + mapPcs.size)
+  expect(sumPcs).toEqual(group.powerset.size)
+  let names = ""
+  group.orbitsSortedByStabilizers.forEach(stab=> names += stab.stabilizerName) //console.log("stab name : "+ stab.stabilizerName))
+})
+
+test("Group Explore n=7 cyclic shortname", () => {
+  let opId = new MusaicPcsOperation(7, 1, 0)
+  let opM1T1 = new MusaicPcsOperation(7, 1, 1);
+
+  let group = new MusaicActionGroup({n: 7, someMusaicOperations: [opId,opM1T1]});
+  expect(group.powerset.size).toEqual(128)
+  expect(group.operations.length).toEqual(7);
+  expect(group.orbits.length).toEqual(20);
+
+  let sumPcs = 0;
+  group.orbits.forEach(orbit => sumPcs += orbit.ipcsset.length)
+  expect(sumPcs).toEqual(group.powerset.size)
+  let shortNames = []
+  group.orbitsSortedByMotifStabilizers.forEach(stab=> shortNames.push(stab.stabilizerName))
+  expect(shortNames).toEqual(["M1"])
+  shortNames = []
+  group.orbitsSortedByStabilizers.forEach(stab=> shortNames.push(stab.stabilizerName))
+  expect(shortNames).toEqual(["M1-T0", "M1-T0~1*"])
+
+})
+

@@ -2,7 +2,6 @@
   <fieldset class="representation-border p-2 text-center">
     <legend class="representation-border">
       {{orbitsGroup.stabilizerName}} ({{orbitsGroup.orbits.length}})
-
       &nbsp;
       <button v-if="orbitsGroup.orbits[0].getPcsMin().n === 12" type="button" @click="changeViewIPcs" class="toggle"
               aria-pressed="false">

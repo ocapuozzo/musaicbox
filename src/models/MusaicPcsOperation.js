@@ -33,15 +33,15 @@ export default class MusaicPcsOperation {
   /**
    *  ((ax + t) modulo n) . c
    *
-   * @param n dimension vector
-   * @param a coef mult
-   * @param t translation value
-   * @param complement boolean
+   * @param {Number} n dimension vector
+   * @param {Number} a coef mult
+   * @param {Number} t translation value
+   * @param {Boolean} complement boolean
    */
   constructor(n, a, t, complement=false) {
-  this.a = a;
-  this.t = t;
-  this.n = n;
+  this.a = Number(a);
+  this.t = Number(t);
+  this.n = Number(n);
   this.complement = complement;
   let prefix = this.complement ? "C" : "";
   this._strRepr = prefix + "M" + this.a + "-T" + this.t; // n ?

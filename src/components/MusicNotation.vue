@@ -34,15 +34,15 @@ export default {
       let chord = '[ ';
       
       let n = this.ipcs.pcs.length;
-
+      const someNotes = [1,3,6,8,10]
       for (let i = this.ipcs.iPivot; i < n + this.ipcs.iPivot; i++) {
         if (this.ipcs.pcs[i % n] === 1) {
           let note = lettersNotation[i % n];
-          if ((i % n === 3) && (this.ipcs.pcs[(i + 1) % n] !== 1)) {
-            note = '_E';
-          }
-          if ((i % n === 10) && (this.ipcs.pcs[(i + 1) % n] !== 1)) {
-            note = '_B';
+          if ( someNotes.indexOf(i % n) !== -1) {
+               // change # in bemol  
+               if (this.ipcs.pcs[(i + 1) % n] !== 1) {
+                  note = "_" + lettersNotation[i+1 % n]
+               }
           }
           // make notes always up 
           // http://abcnotation.com/blog/2010/01/31/how-to-understand-abc-the-basics/

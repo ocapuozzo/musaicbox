@@ -227,20 +227,20 @@ export default class Stabilizer {
     // key="CM5"=, values=[2,4,6] for value of transposition/translation for CM5-T2, CM5-T4, etc.
     // Map<String, List<Integer>> mt = new HashMap<String, List<Integer>>();
     let mt = new Map()
-    let isMotifOp = false;
     // assert in : operations is sorted
-    this.operations.forEach(op => {
+    for (let i = 0; i < this.operations.length; i++) {
+      let op = this.operations[i]
+      //  this.operations.forEach(op => {
       let nameOp = (op.complement ? "CM" : "M") + op.a;
       if (!mt.has(nameOp)) {
         mt.set(nameOp, []);
       }
       mt.get(nameOp).push(op.t);
-    })
+    } //)
 
-    // let testnameOps = Array.from(mt.keys())
-    // testnameOps.forEach(k => console.log("mt[" + k + "] = " + mt.get(k)))
+     // let testnameOps = Array.from(mt.keys())
+     // testnameOps.forEach(k => console.log("mt[" + k + "] = " + mt.get(k)))
 
-    let res = "";
     let nameOps = Array.from(mt.keys())
     nameOps.sort((o1, o2) => {
       let cplt1 = o1.charAt(0) === 'C';
@@ -261,7 +261,10 @@ export default class Stabilizer {
     })
 
     // System.out.println("ops :" + Arrays.toString(nameOps));
-    nameOps.forEach(nameOp => {
+    //nameOps.forEach(nameOp => {
+    let res = "";
+    for (let i = 0 ; i< nameOps.length; i++) {
+      let nameOp = nameOps[i]
       let shortName = this.tryReduceListByShortName(mt, nameOp) + "";
 
       if (shortName.length > 0) {
@@ -271,13 +274,17 @@ export default class Stabilizer {
         res += nameOp + shortName;
       }
       // put -Tx only if a
-      mt.get(nameOp).forEach(a => {
+
+      let the_as =  mt.get(nameOp)
+      for (let j = 0; j < the_as.length; j++) {
+        let a = the_as[j]
+      // mt.get(nameOp).forEach(a => {
         if (res.length > 0) {
           res += " ";
         }
         res += nameOp + "-T" + a;
-      })
-    })
+      } //)
+    }
     return res;
   }
 
