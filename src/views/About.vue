@@ -15,62 +15,52 @@
             src="analyse/setAnalyse.png"
             title="analyse set"
             alt="modulate"
-            class="img-fluid"
+            class="img-fluid m-1"
             width="790"
             height="424"
         >
       <div class="card-body">
-        <p
-          class="card-text"
-        >Powerset himself can be partioned by 
+        <p class="card-text">Powerset himself can be partitioned by</p>
          <ul>
            <li>Relationship on orbits (same IF-Motif)</li>
            <li>Relationship on fixed pcs (same stabilizers)</li>
          </ul>
-        </p>
       </div>
     </div>
-    <h3>Two cases</h3>
-    
-    <div class="d-flex">
+    <h3>Two cases : IS-Motif and Stabilizers classifiers</h3>
+
+    <div class="card" style="width: 100%">
     <img
             src="analyse/orbitsByISMotif.png"
             title="analyse set"
             alt="modulate"
-            class="img-fluid"
-            width="506"
-            height="418"
+            class="img-fluid m-1"
+            width="514"
+            height="423"
         >
     <div class="d-flex">
-        <p
-          class="_card-text"
-        >Powerset himself can be partioned by 
-         <ul>
-           <li>Relationship on orbits (same IF-Motif)</li>
-           <li>Relationship on fixed pcs (same stabilizers)</li>
-         </ul>
+        <p class="card-text">
+          A IS-Motif may stabilizer one or many orbits. Example of IS-MOTIF : [M1 M5 CM7 CM11]
         </p>
+
       </div>
     </div>
-     
-     <div class="d-flex">
+
+    <div class="card m-2" style="width: 100%">
     <img
-            src="analyse/orbitsByISMotif.png"
-            title="analyse set"
+            src="analyse/orbitsByStabilizers.png"
+            title="analyse by stabilizers"
             alt="modulate"
-            class="img-fluid"
-            width="506"
-            height="418"
+            class="img-fluid m-1"
+            width="547"
+            height="421"
         >
     <div class="d-flex">
-        <p
-          class="_card-text"
-        >Powerset himself can be partioned by 
-         <ul>
-           <li>Relationship on orbits (same IF-Motif)</li>
-           <li>Relationship on fixed pcs (same stabilizers)</li>
-         </ul>
-        </p>
+      <ul>
+        <li><p class="card-text">Orbit of Powerset is partitioned by one or many Stabilizers</p></li>
+        <li><p class="card-text">A same Stabilizer may partition sub-set of many orbits</p></li>
+      </ul>
+
       </div>
     </div>
   </div>

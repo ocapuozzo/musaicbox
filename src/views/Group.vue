@@ -77,7 +77,7 @@
       </button>
       <button type="button" class="btn btn-primary" @click="showOrbits('Stabilizer')">
         Show orbits ({{this.preReactOrbits.length}}) decomposed by stabilizers
-        <span v-if="actionOfGroup"> ({{actionOfGroup.cardinalOfOrbitStabilized()}} / {{actionOfGroup.orbitsSortedByStabilizers.length}})</span>
+        <span v-if="actionOfGroup"> ({{actionOfGroup.orbitsSortedByStabilizers.length}}) for {{actionOfGroup.cardinalOfOrbitStabilized()}} fixed sets</span>
       </button>
     </div>
 

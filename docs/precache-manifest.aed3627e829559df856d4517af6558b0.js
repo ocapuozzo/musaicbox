@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "a1beb51d245873b305fa",
-    "url": "/musaicbox/css/app.846d04b6.css"
+    "revision": "ea2780e0ee52ea87386d",
+    "url": "/musaicbox/css/app.3ab42e1e.css"
   },
   {
-    "revision": "a1beb51d245873b305fa",
-    "url": "/musaicbox/js/app.aae49d48.js"
+    "revision": "ea2780e0ee52ea87386d",
+    "url": "/musaicbox/js/app.3c21dc12.js"
   },
   {
     "revision": "e79a65253642b8efbb2f",
@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/musaicbox/js/chunk-vendors.8450664d.js"
   },
   {
-    "revision": "ac3d321cb07b30ca98b68624e37b677a",
+    "revision": "f1e03623a2114a2046d2bfd6bda8cb9f",
     "url": "/musaicbox/index.html"
   },
   {
@@ -28,7 +28,7 @@ self.__precacheManifest = [
     "url": "/musaicbox/analyse/setAnalyse.dia"
   },
   {
-    "revision": "f535f714657817bffdf23bd8acb6cf86",
+    "revision": "23dcb0893907e4061ef9b9fe35f8f34a",
     "url": "/musaicbox/analyse/setAnalysePartionned.dia"
   },
   {
@@ -48,12 +48,12 @@ self.__precacheManifest = [
     "url": "/musaicbox/img/m7.png"
   },
   {
-    "revision": "da64f03504b1e2d3e108e62a7e9f7794",
-    "url": "/musaicbox/img/t+.png"
-  },
-  {
     "revision": "4d9b812677c7120f635b89a88f158e4e",
     "url": "/musaicbox/img/t-.png"
+  },
+  {
+    "revision": "da64f03504b1e2d3e108e62a7e9f7794",
+    "url": "/musaicbox/img/t+.png"
   },
   {
     "revision": "d40a1aac7d940696332fbfe242951c63",
@@ -76,15 +76,19 @@ self.__precacheManifest = [
     "url": "/musaicbox/robots.txt"
   },
   {
-    "revision": "d41335f9dc4e123d9e7b373acb708d39",
+    "revision": "97892d8a21837400932d4db36f03c650",
     "url": "/musaicbox/analyse/orbitsByISMotif.png"
+  },
+  {
+    "revision": "3631f7c2147a45d728b7b05d70b0030f",
+    "url": "/musaicbox/analyse/orbitsByStabilizers.png"
   },
   {
     "revision": "55d47c764d2234988b50a4da84d5778d",
     "url": "/musaicbox/analyse/setAnalyse.png"
   },
   {
-    "revision": "710bfae8f84ad843651332d3367c5f41",
+    "revision": "f15c1cf65fc85c93ca84bbaf13f2fe9b",
     "url": "/musaicbox/analyse/setAnalysePartionned.png"
   }
 ];
