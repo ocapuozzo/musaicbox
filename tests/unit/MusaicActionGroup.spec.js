@@ -13,6 +13,7 @@ test("All subsets of n = 5 ", () => {
   let maxPcs = new IPcs({strPcs:"0,1,2,3,4", n:5})
   expect(minPcs.equalsPcs(powerset5[0])).toBeTruthy()
   expect(maxPcs.equalsPcs(powerset5[31])).toBeTruthy()
+
 });
 
 test("Powerset n = 12", () => {
@@ -70,9 +71,6 @@ test("Action group cyclic n = 12 ", () => {
   // now build by MusaicActionGroup instance (by call buildOrbitsSortedByStabilizers() via getter)
   expect(cyclicGroup12.orbitsSortedByStabilizers.length).toEqual(6)
 
-  // cyclicGroup12.orbitsSortedByStabilizers.forEach( (orbits, stabName) => {
-  //   console.log(stabName + " => #" + orbits.length)
-  // })
 });
 
 test("Action group dihedral n = 12 ", () => {
@@ -126,6 +124,12 @@ test("Action group musaic n = 12 ", () => {
   expect(musaicGroup12.orbits[musaicGroup12.orbits.length - 1].getPcsMin().equalsPcs(lastPF)).toBeTruthy()
   // whole tone scale : 2 in orbit
   expect(musaicGroup12.orbits[musaicGroup12.orbits.length - 1].ipcsset.length).toEqual(2)
+
+  expect(musaicGroup12.orbitsSortedByStabilizers.length).toEqual(111)
+
+  // TODO 326 must be verified
+  expect(musaicGroup12.cardinalOfOrbitStabilized()).toEqual(326)
+
 });
 
 

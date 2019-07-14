@@ -58,7 +58,7 @@ export default class MusaicActionGroup {
       let pcs = tmpPowerset.values().next().value
       pcs.addInOrbit(pcs); // add himself in orbit, if not into
       tmpPowerset.delete(pcs.id());
-      for (let i = 0; i < this.operations.length; i++){
+      for (let i = 0; i < this.operations.length; i++) {
         let op = this.operations[i]
         let pcs_other = this.powerset.get(op.actionOn(pcs).id());
         if (tmpPowerset.has(pcs_other.id())) {
@@ -141,7 +141,7 @@ export default class MusaicActionGroup {
     })
 
     // sort map on keys (lexical order)
-    // make an "view adapter" for v-for 
+    // make an "view adapter" for v-for
     let resultOrbitsSortedByStabilizers = []
     Array.from(orbitsSortedByStabilizers.keys()).sort().forEach((name) => {
       resultOrbitsSortedByStabilizers.push(
@@ -155,7 +155,6 @@ export default class MusaicActionGroup {
 
     return resultOrbitsSortedByStabilizers
   }
-
 
   /**
    * @return {Array} of objects {stabilizerName : {String}, hashcode : {Integer}, orbits : {Array} of orbits
@@ -184,5 +183,10 @@ export default class MusaicActionGroup {
     })
     return resultOrbitsSortedByMotifStabilizer
   }
+
+  cardinalOfOrbitStabilized() {
+    return this.orbitsSortedByStabilizers.reduce((sum, sortedOrbit) => sum + sortedOrbit.orbits.length, 0)
+  }
+
 }
 

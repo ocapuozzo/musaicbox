@@ -76,8 +76,8 @@
         Show orbits ({{this.preReactOrbits.length}}) by IS-Motif stabilizers <span v-if="actionOfGroup"> ({{actionOfGroup.orbitsSortedByMotifStabilizers.length}})</span>
       </button>
       <button type="button" class="btn btn-primary" @click="showOrbits('Stabilizer')">
-        Show orbits ({{this.preReactOrbits.length}}) by stabilizers 
-        <span v-if="actionOfGroup"> (#sub-fixed-orbits / {{actionOfGroup.orbitsSortedByStabilizers.length}})</span>
+        Show orbits ({{this.preReactOrbits.length}}) decomposed by stabilizers
+        <span v-if="actionOfGroup"> ({{actionOfGroup.cardinalOfOrbitStabilized()}} / {{actionOfGroup.orbitsSortedByStabilizers.length}})</span>
       </button>
     </div>
 
