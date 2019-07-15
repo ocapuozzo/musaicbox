@@ -41,7 +41,7 @@ export default {
           if ( someNotes.indexOf(i % n) !== -1) {
                // change # in bemol  
                if (this.ipcs.pcs[(i + 1) % n] !== 1) {
-                  note = "_" + lettersNotation[i+1 % n]
+                  note = "_" + lettersNotation[ (i+1) % n]
                }
           }
           // make notes always up 
@@ -49,18 +49,17 @@ export default {
           if ( (i%n) < this.ipcs.iPivot) {
              note += "'"
           }
-
           notes = notes + note + " ";
           chord = chord + note;
         }
       }
-      chord = ''; // (this.ipcs.cardinal() < 5) ? chord + ' ]  \n' : ''
+      chord = ""; // (this.ipcs.cardinal() < 5) ? chord + ' ]  \n' : ''
       return suffix + notes + chord; //'C4 ^E4 G4 [C4E4G4]\n';
     }
   },
   methods: {
     refresh() {
-       // console.log("this.tune :" + this.tune)
+      // console.log("this.tune :" + this.tune)
       // https://configurator.abcjs.net/visual/
       abcjs.renderAbc(
         "paper",

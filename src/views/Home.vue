@@ -15,9 +15,7 @@
         <div class="container">
           <div class="row">
             <div class="col-sm text-left">
-<!--              <div id="ccanvas" class="clockpcs ml-3" style="width: 200px; height: 200px;">-->
-                <ISClock color="white" class="is-clock ml-3" ></ISClock>
-<!--              </div>-->
+              <ISClock color="white" class="is-clock ml-3"></ISClock>
               <MusicNotation :_ipcs="ipcs" class="ml-2"/>
               <RotateIPcs/>
             </div>
@@ -151,7 +149,7 @@
       },
       ipcsStr: {
         get() {
-          return this.pcsstr+ "<sub>" + this.ipcs.iPivot + "</sub>"
+          return this.pcsstr + "<sub>" + this.ipcs.iPivot + "</sub>"
         }
       },
       ...mapGetters('ipcs', {
@@ -166,7 +164,7 @@
     },
     components: {
       ISMusaic,
-     // WrapCanvas,
+      // WrapCanvas,
       ISClock,
       MusicNotation,
       RotateIPcs
@@ -225,7 +223,7 @@
   }
 
   .is-clock {
-  width: 200px;
-  height: 200px;
-}
+    width: 200px;
+    height: 200px;
+  }
 </style>

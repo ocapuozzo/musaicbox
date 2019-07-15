@@ -1,11 +1,10 @@
 <template>
   <fieldset class="representation-border p-2 text-center">
     <legend class="representation-border">
-      {{orbitsGroup.stabilizerName}} ({{orbitsGroup.orbits.length}})
-      &nbsp;
+      {{orbitsGroup.stabilizerName}} ({{orbitsGroup.orbits.length}})&nbsp;
       <button v-if="orbitsGroup.orbits[0].getPcsMin().n === 12" type="button" @click="changeViewIPcs" class="toggle"
               aria-pressed="false">
-        M/C
+        {{textButtonViewMusaicClock}}
       </button>
     </legend>
     <div class="d-inline-block" v-for="(orbit) in orbitsGroup.orbits" :key="orbit.getPcsMin().id()">
@@ -34,15 +33,17 @@
     },
     data() {
       return {
-        viewClock: true
+        viewClock: true,
+        textButtonViewMusaicClock : "View Musaic"
       }
     },
     mounted() {
     },
     computed: {},
     methods: {
-      changeViewIPcs() {
+      changeViewIPcs(elt) {
         this.viewClock = !this.viewClock;
+        this.textButtonViewMusaicClock = this.viewClock  ? "View Musaic" : "View Clock"
       }
     },
     components: {
@@ -88,6 +89,10 @@
     font-size: 0.5rem !important;
     border: 1px groove #ddd !important;
     border-radius: 50%;
+  }
+
+  button:focus {
+    outline: none;
   }
 
 </style>

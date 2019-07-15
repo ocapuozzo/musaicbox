@@ -93,11 +93,15 @@ export default {
     containercanvas.addEventListener("animationend", this.listenerEndAnim);
 
     // We can't access the rendering context until the canvas is mounted to the DOM.
-    canvas.width = canvas.parentElement.clientWidth;
-    canvas.height = canvas.parentElement.clientWidth; //Height;
+    let size = Math.min(canvas.parentElement.clientWidth, canvas.parentElement.clientHeight)
+    canvas.width = size
+    canvas.height = size
+
     canvas.addEventListener('mousedown', this.mousedown);
     this.CEL_WIDTH = canvas.width / 13;
-    if (this._pcs) {
+    if (this.ipcs) {
+      this.pcs = this.ipcs.pcs
+    } else  if (this._pcs) {
       this.pcs = JSON.parse(this._pcs);
     } else {
       this.pcs = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]

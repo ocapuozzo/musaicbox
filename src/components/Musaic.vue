@@ -95,6 +95,9 @@
       }
       this.n = this.ipcs.pcs.length
     },
+    beforeDestroy() {
+
+    },
     watch: {
       ipcs: function (val, oldVal) {
         this.draw()
