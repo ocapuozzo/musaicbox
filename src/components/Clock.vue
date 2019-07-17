@@ -40,15 +40,19 @@ import IPcs from "../models/IPcs";
     computed: {},
     methods: {
       draw() {
+        let len = Math.min(this.$refs['canvas'].parentElement.parentElement.clientWidth, this.$refs['canvas'].parentElement.parentElement.clientHeight)
+        // console.log("len draw: " + len)
+        this.$refs['canvas'].width = len
+        this.$refs['canvas'].height = len
+        this.clockDrawing.width = this.ctx.canvas.clientWidth
+        this.clockDrawing.height = this.ctx.canvas.clientHeight
         this.clockDrawing.draw()
       }
     },
     mounted() {
       this.ctx = this.$refs['canvas'].getContext('2d')
-
-      // Resize the canvas to fit its parent's width.
-      // Normally you'd use a more flexible resize system.
       let len = Math.min(this.$refs['canvas'].clientWidth, this.$refs['canvas'].clientHeight)
+     // console.log("len : " + len)
       this.$refs['canvas'].width = len
       this.$refs['canvas'].height = len
 

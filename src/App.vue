@@ -5,7 +5,7 @@
     <nav id="sidebar">
       <div class="sidebar-header">
         <h3>
-          <router-link to="/">MusaicBox</router-link>
+          <router-link to="/">MusaicBox</router-link> <span><router-link to="/explorer-space">&nbsp;&nbsp;</router-link> </span>
         </h3>
       </div>
 

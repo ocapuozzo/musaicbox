@@ -1,6 +1,6 @@
 {
-  "name": "testvuecli3",
-  "version": "0.1.0",
+  "name": "musaicbox",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -19,6 +19,7 @@
     "popper.js": "^1.15.0",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.10",
+    "vue-draggable-resizable": "^2.0.0-rc2",
     "vue-router": "^3.0.3",
     "vuex": "^3.0.1"
   },

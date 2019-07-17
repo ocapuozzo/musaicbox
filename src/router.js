@@ -35,6 +35,12 @@ export default new Router({
          () => import(/* webpackChunkName: "about" */ "./views/Group.vue")
     },
     {
+      path: "/explorer-space",
+      name: "explorer-space",
+      component: // Group
+        () => import(/* webpackChunkName: "about" */ "./views/ExplorerSpace")
+    },
+    {
       path: '*',
       component: NotFound
     }
