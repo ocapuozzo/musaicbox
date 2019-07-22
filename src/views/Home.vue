@@ -58,15 +58,15 @@
                 </p>
                 <p>
                   #OrbitDihedral :
-                  <span class="analyse-pcs">TODO</span>
+                  <span class="analyse-pcs">{{ orbitCardinalDihedral }}</span>
                 </p>
                 <p>
                   #OrbitAffine :
-                  <span class="analyse-pcs">TODO</span>
+                  <span class="analyse-pcs">{{ orbitCardinalAffine }}</span>
                 </p>
                 <p>
                   #OrbitMusaic :
-                  <span class="analyse-pcs">TODO</span>
+                  <span class="analyse-pcs">{{ orbitCardinalMusaic }}</span>
                 </p>
               </fieldset>
               <fieldset class="representation-border">
@@ -109,6 +109,7 @@
 
 <script>
   // @ is an alias to /src
+  import Group from "@/models/Group.js";
   import ISMusaic from "@/components/ISMusaic.vue";
   import ISClock from "@/components/ISClock.vue";
   import WrapCanvas from "@/components/WrapCanvas.vue";
@@ -124,7 +125,21 @@
       let q = this.$route.query.load
       console.log(q)
     },
+    methods : {
+      cardinalOrbitOf(indexGroup, ipcs) {
+        return Group.predefinedGroups[indexGroup].buildOrbitOf(ipcs).orbit.cardinal
+      }
+    },
     computed: {
+      orbitCardinalDihedral() {
+        return this.cardinalOrbitOf(Group.DIHEDRAL, this.ipcs)
+      },
+      orbitCardinalAffine() {
+        return this.cardinalOrbitOf(Group.AFFINE, this.ipcs)
+      },
+      orbitCardinalMusaic() {
+        return this.cardinalOrbitOf(Group.MUSAIC, this.ipcs)
+      },
       pcs: {
         get() {
           return this.$store.state.ipcs.ipcs.pcs

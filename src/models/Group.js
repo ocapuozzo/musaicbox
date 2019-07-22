@@ -3,24 +3,49 @@
  */
 
 import MusaicPcsOperation from "./MusaicPcsOperation";
+import IPcs from "./IPcs";
+
 
 export default class Group {
+
+  /**
+   * initialize instance by generate all operations from operations passed in parameter
+   * @param someGeneratorMusaicPcsOperation
+   */
+  constructor(someGeneratorMusaicPcsOperation) {
+    this.operations = Group.buildOperationsGroupByCaylayTable(someGeneratorMusaicPcsOperation)
+  }
+
+  /**
+   *
+   * @param IPcs (in)
+   * @return IPcs copy with orbit
+   */
+  buildOrbitOf(ipcs){
+     if (ipcs.n !== this.operations[0].n) {
+       throw new Error("buildOrbitOf on ipcs which bad n:" + ipcs)
+     }
+     let pcsCopy = new IPcs({pidVal : ipcs.id()})
+     this.operations.forEach(op => pcsCopy.addInOrbit(op.actionOn(pcsCopy)))
+     return pcsCopy
+  }
+
 
   /**
    * Generate all operations from a set of operations, implement Cayley
    * table algorithm
    *
-   * @param {Array} arrayOfSomeMusaicPcsOperation
-   *           : a sub group generated operations (generators of group)
+   * @param {Array} someGeneratorMusaicPcsOperation
+   *           : a "sub group operations" (generators of group)
    * @return {Array} ordered list of operations including someOperations and 0..n more generated operations by table cayley composition.
    */
-  static buildOperationsGroupByCaylayTable(arrayOfSomeMusaicPcsOperation) {
-    let allOps = [...arrayOfSomeMusaicPcsOperation]
+  static buildOperationsGroupByCaylayTable(someGeneratorMusaicPcsOperation) {
+    let allOps = [...someGeneratorMusaicPcsOperation]
     let loop = true
     while (loop) {
       let cardinalOp = allOps.length
       loop = false;
-      forloop:
+      // forloop:
       for (let i = 0; i < cardinalOp; i++) {
          for (let j = 0; j < cardinalOp; j++) {
            let newop = allOps[i].compose(allOps[j]);
@@ -75,6 +100,7 @@ export default class Group {
   static phiEulerElements(n) {
     let eltsMinGenerator = []
     eltsMinGenerator.push(1);
+    // TODO stop to n/2, and define others by symmetry
     for (let i = 2; i < n; i++) {
       if (this.gcd(i, n) === 1) {
         eltsMinGenerator.push(i);
@@ -83,5 +109,24 @@ export default class Group {
     return eltsMinGenerator;
   }
 
+  static CYCLIC = 0
+  static DIHEDRAL = 1
+  static AFFINE = 2
+  static MUSAIC = 3
+
+  static get predefinedGroups() {
+      if (! this._predefinedGroups) {
+        this._predefinedGroups = []
+        let opM1_T1 = new MusaicPcsOperation(12, 1, 1, false);
+        this._predefinedGroups.push(new  Group([opM1_T1]))
+        let opM11_T1 = new MusaicPcsOperation(12, 11, 1, false);
+        this._predefinedGroups.push(new  Group([opM1_T1, opM11_T1]))
+        let opM5_T1 = new MusaicPcsOperation(12, 5, 1, false);
+        this._predefinedGroups.push(new  Group([opM1_T1, opM11_T1, opM5_T1]))
+        let opCM1_T0 = new MusaicPcsOperation(12, 1, 0, true);
+        this._predefinedGroups.push(new  Group([opM1_T1, opM11_T1, opM5_T1, opCM1_T0]))
+      }
+      return this._predefinedGroups
+  }
 
 }

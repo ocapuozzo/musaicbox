@@ -56,7 +56,7 @@ export default class MusaicActionGroup {
     let tmpPowerset = new Map(this.powerset)
     while (tmpPowerset.size > 0) {
       let pcs = tmpPowerset.values().next().value
-      pcs.addInOrbit(pcs); // add himself in orbit, if not into
+      pcs.addInOrbit(pcs); // add himself in orbit
       tmpPowerset.delete(pcs.id());
       for (let i = 0; i < this.operations.length; i++) {
         let op = this.operations[i]

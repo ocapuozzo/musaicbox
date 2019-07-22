@@ -73,3 +73,45 @@ test("testCayleyGenerateOperationsMusaic", () => {
   expect(allOps.length).toEqual(order*4*2)
 })
 
+
+test("Group buildOrbit", () => {
+  let someOperations = []
+  let order = 12;
+  let a = 1;
+  let t = 1;
+  let complement = false;
+  someOperations.push(new MusaicPcsOperation(order, a, t, complement));
+  a = 5;
+  someOperations.push(new MusaicPcsOperation(order, a, t, complement));
+  a = 7;
+  someOperations.push(new MusaicPcsOperation(order, a, t, complement));
+  complement = true;
+  someOperations.push(new MusaicPcsOperation(order, a, t, complement));
+
+  let group = new Group(someOperations)
+
+  // waiting 96 operations : 12 * each a = 48 and each complement (*2)
+  expect(group.operations.length).toEqual(order*4*2)
+
+  let ipcs = new IPcs({pidVal : 0, n : 12})
+  ipcs = group.buildOrbitOf(ipcs)
+  expect(ipcs.orbit.cardinal).toEqual(2)
+
+  let ipcs_dim = new IPcs({strPcs: "0, 3, 6, 9"})
+  ipcs_dim = group.buildOrbitOf(ipcs_dim)
+  expect(ipcs_dim.orbit.cardinal).toEqual(6)
+
+})
+
+test("Group buildOrbit by predefined groups ", () => {
+  let ipcs = new IPcs({pidVal : 0, n : 12})
+  ipcs = Group.predefinedGroups[Group.MUSAIC].buildOrbitOf(ipcs)
+  expect(ipcs.orbit.cardinal).toEqual(2)
+
+  let ipcs_dim = new IPcs({strPcs: "0, 3, 6, 9"})
+  ipcs_dim = Group.predefinedGroups[Group.MUSAIC].buildOrbitOf(ipcs_dim)
+  expect(ipcs_dim.orbit.cardinal).toEqual(6)
+
+  expect(Group.predefinedGroups[Group.MUSAIC].operations.length).toEqual(96)
+})
+

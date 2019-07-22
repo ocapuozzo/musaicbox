@@ -22,6 +22,11 @@ export default class Orbit {
     }
   }
 
+  get cardinal() {
+    return this.ipcsset.length
+  }
+
+
   /**
    *
    * @param {IPcs} newIPcs
