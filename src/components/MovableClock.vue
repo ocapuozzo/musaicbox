@@ -4,7 +4,10 @@
 
 <template>
   <vue-draggable-resizable :w="ww" :h="ww" @dragging="onDrag"
-                           @resizing="onResize" :parent="true" :handles="['tl','tr','br','bl']"
+                           @resizing="onResize" 
+                           :parent="false" 
+                           :on-drag-start="onDragStartCallback" 
+                           :handles="['tl','tr','br','bl']"
                            :lock-aspect-ratio="true"
                            :grid="[10,10]" class-name-active="my-active-class" class-name="my-class"
   >
@@ -56,6 +59,9 @@
       onDrag: function (x, y) {
         this.x = x
         this.y = y
+      },
+      onDragStartCallback(ev){
+        return true
       }
     },
     components: {
