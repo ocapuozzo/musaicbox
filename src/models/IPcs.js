@@ -11,17 +11,16 @@ const negativeToPositiveModulo = (i, n) => {
 export default class IPcs {
   n
   orbit
-  #_id = undefined
-
+  id
+  pidVal
+  pcs
+  iPivot
+  is
   constructor({pidVal: pidVal = -1, strPcs = null, binPcs = null, n = 12, iPivot = undefined}) {
     if (pidVal >= 0) {
       this.pcs = IPcs.intToBinArray(pidVal, n)
     } else if (typeof (strPcs) === 'string') {
       this.pcs = this._fromStringTobinArray(strPcs, n)
-      /*} else if (typeof (pcs) === 'object' && !Array.isArray(pcs)) {
-        // waiting object as { strpcs a string attribute and n an integer }
-        // example { "strpcs" : "[0,3,4]", "n" : 7 }
-        this.pcs = this._fromStringTobinArray(pcs.strpcs, pcs.n)*/
     } else if (Array.isArray(binPcs)) {
       // assume pcs bin vector [1,0,1, ... ]
       this.pcs = binPcs.slice()
@@ -44,7 +43,8 @@ export default class IPcs {
     }
     this.n = this.pcs.length
     this.orbit = new Orbit()
-    this.#_id = undefined
+    this.id = IPcs.id(this.pcs)
+    this.is = this._is()
   }
 
   /**
@@ -144,13 +144,13 @@ export default class IPcs {
     return res + card * (1 << n);
     //return res + ((int) Math.pow(2, dim)) * card;
   }
-
-  get id() {
-    if (! this.#_id) {
-      this.#_id = IPcs.id(this.pcs);
-    }
-    return this.#_id;
-  }
+  //
+  // get id() {
+  //   if (! this.#_id) {
+  //     this.#_id = IPcs.id(this.pcs);
+  //   }
+  //   return this.#_id;
+  // }
 
   pid() {
     return IPcs.pid(this.pcs);
@@ -368,7 +368,6 @@ export default class IPcs {
     this.iPivot = iPivot;
   }
 
-
   /**
    * intervallic structure
    * @see http://architexte.ircam.fr/textes/Andreatta03e/index.pdf
@@ -376,16 +375,19 @@ export default class IPcs {
    * @returns {int[]}
    *
    * Example : is("0,3,7") => [3,4,5]
+   * Example : is( "1,5,8", iPivot:5) > [3, 5, 4]
+   * Example : is( "1,5,8", iPivot:1) > [4, 3, 5]
    */
-  is() {
+  _is() {
     let n = this.n;
     let res = []
     for (let i = 0; i < n; i++) {
-      if (this.pcs[i]===1) {
+      if (this.pcs[ (i+this.iPivot) % n]===1) {
         let j;
         for (let k = 0 ; k < n ; k++) {
           j = (k + i + 1) % n
-          if (this.pcs[j] === 1) {
+          if (this.pcs[(j+this.iPivot) % n] === 1) {
+            // offset iPivot is not necessary
             res.push((n + j - i) % n)
             break
           }

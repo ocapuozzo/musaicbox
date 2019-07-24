@@ -14,7 +14,7 @@ const getters = {
   },
 
   id: state => {
-    return state.ipcs.id();
+    return state.ipcs.id;
   },
 
   pcsstr: state => {

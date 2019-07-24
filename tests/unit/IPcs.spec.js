@@ -302,15 +302,19 @@ test("IPcs symmetry n=7", () => {
 test("IPcs is function n=12", () => {
   // n = 7
   let ipcs = new IPcs({binPcs: [1,0,0,1,0,0,0,1,0,0,0,0]})
-  expect(ipcs.is()).toEqual([3,4,5])
+  expect(ipcs.is).toEqual([3,4,5])
   ipcs = new IPcs({strPcs: "0,2"})
-  expect(ipcs.is()).toEqual([2, 10])
-  ipcs = new IPcs({strPcs: "1,5, 8"})
-  expect(ipcs.is()).toEqual([4, 3, 5])
+  expect(ipcs.is).toEqual([2, 10])
   ipcs = new IPcs({strPcs: "4"})
-  expect(ipcs.is()).toEqual([0])
+  expect(ipcs.is).toEqual([0])
   ipcs = new IPcs({strPcs: ""})
-  expect(ipcs.is()).toEqual([])
+  expect(ipcs.is).toEqual([])
   ipcs = new IPcs({strPcs: "0,1,2,3,4,5,6,7,8,9,10,11"})
-  expect(ipcs.is()).toEqual([1,1,1,1,1,1,1,1,1,1,1,1])
+  expect(ipcs.is).toEqual([1,1,1,1,1,1,1,1,1,1,1,1])
+
+  ipcs = new IPcs({strPcs: "1,5,8", iPivot:1}) // 1 ==> iPivot default value here
+  expect(ipcs.is).toEqual([4, 3, 5])
+
+  ipcs = new IPcs({strPcs: "1,5,8", iPivot:5})
+  expect(ipcs.is).toEqual([3, 5, 4])
 })
