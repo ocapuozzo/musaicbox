@@ -39,7 +39,7 @@ export default class MusaicActionGroup {
     let ipcs;
     for (let i = 0; i < cardinal; i++) {
       ipcs = new IPcs({pidVal: i, n: n});
-      powerset.set(ipcs.id(), ipcs)
+      powerset.set(ipcs.id, ipcs)
     }
     return powerset;
   }
@@ -57,15 +57,15 @@ export default class MusaicActionGroup {
     while (tmpPowerset.size > 0) {
       let pcs = tmpPowerset.values().next().value
       pcs.addInOrbit(pcs); // add himself in orbit
-      tmpPowerset.delete(pcs.id());
+      tmpPowerset.delete(pcs.id);
       for (let i = 0; i < this.operations.length; i++) {
         let op = this.operations[i]
-        let pcs_other = this.powerset.get(op.actionOn(pcs).id());
-        if (tmpPowerset.has(pcs_other.id())) {
+        let pcs_other = this.powerset.get(op.actionOn(pcs).id);
+        if (tmpPowerset.has(pcs_other.id)) {
           // new image pcs by op
           pcs.addInOrbit(pcs_other)
           pcs_other.orbit = pcs.orbit // share same orbit
-          tmpPowerset.delete(pcs_other.id())
+          tmpPowerset.delete(pcs_other.id)
         }
       }
       pcs.orbit.ipcsset.sort(IPcs.compare)

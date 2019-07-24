@@ -186,10 +186,10 @@ test("Group Explore n=7", () => {
   {
     orbit.ipcsset.forEach((p) =>
     {
-      if (!mapPcs.has(p.id())) {
-        mapPcs.set(p.id(), [])
+      if (!mapPcs.has(p.id)) {
+        mapPcs.set(p.id, [])
       }
-      mapPcs.get(p.id()).push(p)
+      mapPcs.get(p.id).push(p)
     })
   })
   //  console.log("mapPcs size : " + mapPcs.size)

@@ -7,7 +7,7 @@
         {{textButtonViewMusaicClock}}
       </button>
     </legend>
-    <div class="d-inline-block text-center" v-for="(orbit) in orbitsGroup.orbits" :key="orbit.getPcsMin().id()">
+    <div class="d-inline-block text-center" v-for="(orbit) in orbitsGroup.orbits" :key="orbit.getPcsMin().id">
 
       <Musaic v-if="!viewClock"
               :_ipcs="{strPcs:orbit.getPcsMin().pcsStr, n:orbit.getPcsMin().n}" class="clock-pcs m-1">

@@ -32,7 +32,7 @@ export default class Orbit {
    * @param {IPcs} newIPcs
    */
   addIPcsIfNotPresent(newIPcs) {
-    if (!this.ipcsset.find(ipcs => ipcs.id() === newIPcs.id())) {
+    if (!this.ipcsset.find(ipcs => ipcs.id === newIPcs.id)) {
       this.ipcsset.push(newIPcs)
       this._hashcode = null
     }
@@ -92,7 +92,7 @@ export default class Orbit {
     if (!this._hashcode) {
       let res = 0
       this.stabilizers.forEach(stab => res += stab.hashCode())
-      this.ipcsset.forEach(pcs => res += pcs.id())
+      this.ipcsset.forEach(pcs => res += pcs.id)
       this._hashcode = res //Utils.stringHashCode(this.toString())
     }
     return this._hashcode

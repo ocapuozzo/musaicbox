@@ -50,7 +50,7 @@ test("Action group cyclic n = 12 ", () => {
         if (stab.operations.length > 1) {
           let primeFormes = new Map()
           stab.fixedPcs.forEach(pcs => {
-            primeFormes.set(pcs.cyclicPrimeForm().id(), pcs.cyclicPrimeForm())
+            primeFormes.set(pcs.cyclicPrimeForm().id, pcs.cyclicPrimeForm())
           })
           nbEATL += primeFormes.size
         }

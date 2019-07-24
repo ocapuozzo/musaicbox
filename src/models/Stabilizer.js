@@ -54,7 +54,7 @@ export default class Stabilizer {
   }
 
   addFixedPcs(ipcs) {
-    if (!this.fixedPcs.find(p => p.id() === ipcs.id())) {
+    if (!this.fixedPcs.find(p => p.id === ipcs.id)) {
       this.fixedPcs.push(ipcs)
       this._fixedPcsInPrimeForm=[]
       // this._hashCode = null
@@ -352,7 +352,7 @@ export default class Stabilizer {
       let pcsPF = new Map() // key=idMinPcsInOrbitofPcs value = array of pcs fixed (subset of orbit)
       //    console.log("fixedPcs : " + this.fixedPcs.length)
       this.fixedPcs.forEach(pcs => {
-        let idMinPcs = pcs.orbit.getPcsMin().id()
+        let idMinPcs = pcs.orbit.getPcsMin().id
         if (!pcsPF.has(idMinPcs)) {
           pcsPF.set(idMinPcs, [])
         }

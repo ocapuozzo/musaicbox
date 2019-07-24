@@ -9,6 +9,9 @@ const negativeToPositiveModulo = (i, n) => {
 }
 
 export default class IPcs {
+  n
+  orbit
+  #_id = undefined
 
   constructor({pidVal: pidVal = -1, strPcs = null, binPcs = null, n = 12, iPivot = undefined}) {
     if (pidVal >= 0) {
@@ -41,6 +44,7 @@ export default class IPcs {
     }
     this.n = this.pcs.length
     this.orbit = new Orbit()
+    this.#_id = undefined
   }
 
   /**
@@ -141,8 +145,11 @@ export default class IPcs {
     //return res + ((int) Math.pow(2, dim)) * card;
   }
 
-  id() {
-    return IPcs.id(this.pcs);
+  get id() {
+    if (! this.#_id) {
+      this.#_id = IPcs.id(this.pcs);
+    }
+    return this.#_id;
   }
 
   pid() {
@@ -194,7 +201,7 @@ export default class IPcs {
   dihedralPrimeForm() {
     let cpf = this.cyclicPrimeForm();
     let pcsM11 = cpf.affineOp(11, 0).cyclicPrimeForm();
-    return cpf.id() < pcsM11.id() ? cpf : pcsM11;
+    return cpf.id < pcsM11.id ? cpf : pcsM11;
   }
 
   affinePrimeForm() {
@@ -202,10 +209,10 @@ export default class IPcs {
     let pcsM5 = cpf.affineOp(5, 0).cyclicPrimeForm();
     let pcsM7 = cpf.affineOp(7, 0).cyclicPrimeForm();
 
-    if (cpf.id() < pcsM5.id() && cpf.id() < pcsM7.id())
+    if (cpf.id < pcsM5.id && cpf.id < pcsM7.id)
       return cpf
 
-    if (pcsM5.id() < pcsM7.id())
+    if (pcsM5.id < pcsM7.id)
       return pcsM5
 
     return pcsM7
@@ -214,7 +221,7 @@ export default class IPcs {
   musaicPrimeForm() {
     let cpf = this.affinePrimeForm();
     let cpfCplt = cpf.complement().affinePrimeForm();
-    return cpf.id() < cpfCplt.id() ? cpf : cpfCplt;
+    return cpf.id < cpfCplt.id ? cpf : cpfCplt;
   }
 
   /**
@@ -361,6 +368,34 @@ export default class IPcs {
     this.iPivot = iPivot;
   }
 
+
+  /**
+   * intervallic structure
+   * @see http://architexte.ircam.fr/textes/Andreatta03e/index.pdf
+   * @see https://sites.google.com/view/88musaics/88musaicsexplained
+   * @returns {int[]}
+   *
+   * Example : is("0,3,7") => [3,4,5]
+   */
+  is() {
+    let n = this.n;
+    let res = []
+    for (let i = 0; i < n; i++) {
+      if (this.pcs[i]===1) {
+        let j;
+        for (let k = 0 ; k < n ; k++) {
+          j = (k + i + 1) % n
+          if (this.pcs[j] === 1) {
+            res.push((n + j - i) % n)
+            break
+          }
+        }
+      }
+    }
+    return res;
+  }
+
+
   /**
    * interval vector (generalized on n, from musaicbox java)
    * @see https://en.wikipedia.org/wiki/Common_tone_(scale)#Deep_scale_property
@@ -498,7 +533,7 @@ export default class IPcs {
    * @return {number} as waiting by Array sort
    */
   static compare(ipcs1, ipcs2) {
-    return ipcs1.id() - ipcs2.id()
+    return ipcs1.id - ipcs2.id
   }
 
   /**

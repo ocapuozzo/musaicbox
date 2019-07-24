@@ -159,7 +159,7 @@ compareTo(other) {
 }
 
 addFixedPcs(ipcs) {
-  if (!this.fixedPcs.find(p => p.id() === ipcs.id())) {
+  if (!this.fixedPcs.find(p => p.id === ipcs.id)) {
     this.fixedPcs.push(ipcs);
   }
 }

@@ -163,17 +163,17 @@ test("IPcs Set by Map then sort and convert to Array", () => {
   let ipcs2 = new IPcs({strPcs:"0, 3, 5, 8", iPivot:0})
   let ipcs3 = new IPcs({strPcs:"0, 3, 5, 8"})
   let map = new Map()
-  map.set(ipcs1.id(),ipcs1)
-  map.set(ipcs2.id(),ipcs2)
-  map.set(ipcs3.id(), ipcs3)
+  map.set(ipcs1.id,ipcs1)
+  map.set(ipcs2.id,ipcs2)
+  map.set(ipcs3.id, ipcs3)
   expect(map.size).toEqual(2)
 
   // https://stackoverflow.com/questions/28718641/transforming-a-javascript-iterator-into-an-array
-  expect(Array.from(map.keys())[0]).toEqual(ipcs1.id())
+  expect(Array.from(map.keys())[0]).toEqual(ipcs1.id)
 
   // test sort (integer order on id)
   map = new Map([...map.entries()].sort())
-  expect(Array.from(map.keys())[0]).toEqual(ipcs2.id())
+  expect(Array.from(map.keys())[0]).toEqual(ipcs2.id)
 
   // get ordered array from map object
   let theIpcs = Array.from(map.values());
@@ -188,12 +188,12 @@ test("IPcs Set by Array", () => {
   let tab = []
   tab.push(ipcs1)
   tab.push(ipcs2)
-  if (!tab.find(ipcs => ipcs.id() === ipcs3.id()))
+  if (!tab.find(ipcs => ipcs.id === ipcs3.id))
       tab.push(ipcs3)
 
   expect(tab.length).toEqual(2)
 
-  // let tabsort = tab.sort( (pcsa, pcsb) => pcsa.id() - pcsb.id())
+  // let tabsort = tab.sort( (pcsa, pcsb) => pcsa.id - pcsb.id)
   let tabsort = tab.sort( IPcs.compare)
 
   // get min
@@ -204,9 +204,9 @@ test("IPcs id ", () => {
   let ipcs1 = new IPcs({strPcs:""})
   let ipcs2 = new IPcs({strPcs:"0"})
   let ipcs3 = new IPcs({strPcs:"0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11"})
-  expect(ipcs1.id()).toEqual(0)
-  expect(ipcs2.id()).toEqual(1 + Math.pow(2, 12))
-  expect(ipcs3.id()).toEqual(Math.pow(2, 12) - 1 + 12 * Math.pow(2, 12))
+  expect(ipcs1.id).toEqual(0)
+  expect(ipcs2.id).toEqual(1 + Math.pow(2, 12))
+  expect(ipcs3.id).toEqual(Math.pow(2, 12) - 1 + 12 * Math.pow(2, 12))
 })
 
 test("IPcs pid by simple polynomial function", () => {
@@ -294,4 +294,23 @@ test("IPcs symmetry n=7", () => {
   symInter  =  [0, 0, 0, 0, 0, 0, 0]
   expect(symmetries.symMedian).toEqual(symMedian)
   expect(symmetries.symInter).toEqual(symInter)
+})
+
+/**
+ * @see https://sites.google.com/view/88musaics/88musaicsexplained
+ */
+test("IPcs is function n=12", () => {
+  // n = 7
+  let ipcs = new IPcs({binPcs: [1,0,0,1,0,0,0,1,0,0,0,0]})
+  expect(ipcs.is()).toEqual([3,4,5])
+  ipcs = new IPcs({strPcs: "0,2"})
+  expect(ipcs.is()).toEqual([2, 10])
+  ipcs = new IPcs({strPcs: "1,5, 8"})
+  expect(ipcs.is()).toEqual([4, 3, 5])
+  ipcs = new IPcs({strPcs: "4"})
+  expect(ipcs.is()).toEqual([0])
+  ipcs = new IPcs({strPcs: ""})
+  expect(ipcs.is()).toEqual([])
+  ipcs = new IPcs({strPcs: "0,1,2,3,4,5,6,7,8,9,10,11"})
+  expect(ipcs.is()).toEqual([1,1,1,1,1,1,1,1,1,1,1,1])
 })
