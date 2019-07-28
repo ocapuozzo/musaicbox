@@ -15,7 +15,8 @@ export default class MusaicActionGroup {
 
   constructor({n = -1, someMusaicOperations = []}) {
     this.n = n;
-    this.operations = Group.buildOperationsGroupByCaylayTable(someMusaicOperations);
+    this.group = new Group(someMusaicOperations);
+    this.operations = this.group.operations;
     // min operation = neutral operation = operations.get(0)
     this.powerset = MusaicActionGroup.buildPowerSetOfIPcs(this.n);
     this.orbits = this.buildOrbitsByActionOnPowerset();
@@ -23,6 +24,7 @@ export default class MusaicActionGroup {
 
     this._orbitsSortedByStabilizers = null
     this._orbitsSortedByMotifStabilizers = null
+    this._orbitsSortedByCardinal = null
   }
 
   /**
@@ -124,6 +126,13 @@ export default class MusaicActionGroup {
     return this._orbitsSortedByStabilizers
   }
 
+ get  orbitsSortedByCardinal() {
+   if (!this._orbitsSortedByCardinal)
+     this._orbitsSortedByCardinal = this.computeOrbitSortedByCardinal()
+
+   return this._orbitsSortedByCardinal
+ }
+
   /**
    * @return {Array} of objects {stabilizerName : {String}, hashcode : {Integer}, orbits : {Array} of orbits
    */
@@ -146,7 +155,7 @@ export default class MusaicActionGroup {
     Array.from(orbitsSortedByStabilizers.keys()).sort().forEach((name) => {
       resultOrbitsSortedByStabilizers.push(
         {
-          stabilizerName: name,
+          groupingCriterion: name,
           // to avoid duplicate keys in vue
           hashcode: Utils.stringHashCode(name) + Date.now(),
           orbits: orbitsSortedByStabilizers.get(name)
@@ -175,7 +184,7 @@ export default class MusaicActionGroup {
     Array.from(orbitsSortedByMotifStabilizer.keys()).sort(MotifStabilizer.compare).forEach(motifStab => {
       resultOrbitsSortedByMotifStabilizer.push(
         {
-          stabilizerName: motifStab.name,
+          groupingCriterion: motifStab.name,
           // to avoid duplicate keys in vue
           hashcode: Utils.stringHashCode(motifStab.name) + Date.now(),
           orbits: orbitsSortedByMotifStabilizer.get(motifStab).sort(Orbit.comparePcsMin)
@@ -183,6 +192,37 @@ export default class MusaicActionGroup {
     })
     return resultOrbitsSortedByMotifStabilizer
   }
+
+
+  /**
+   * @return {Array} of objects {stabilizerName : {String}, hashcode : {Integer}, orbits : {Array} of orbits
+   */
+  computeOrbitSortedByCardinal() {
+    let orbitsSortedByCardinal = new Map() // k=name orbit based on his stabs, v=array of orbits
+    this.orbits.forEach(orbit => {
+      let card = Array.from(orbitsSortedByCardinal.keys()).find(card => card === orbit.getPcsMin().cardinal())
+      // orbit name based on his stabilizers and shortName
+      if (!card)
+        orbitsSortedByCardinal.set(orbit.getPcsMin().cardinal(), [orbit])
+      else
+        orbitsSortedByCardinal.get(card).push(orbit)
+    })
+    // sort operations
+    // make an "view adapter" for v-for
+    let resultOrbitsSortedByCardinal = []
+    // default, sort cast key to string...
+    Array.from(orbitsSortedByCardinal.keys()).sort((a,b)=> (Number(a)- Number(b))).forEach(card => {
+      resultOrbitsSortedByCardinal.push(
+        {
+          groupingCriterion: "card : " + this.group.isComplemented() ? card + "/" + (this.n-card) : card + "",
+          // to avoid duplicate keys in vue
+          hashcode: card + Date.now(),
+          orbits: orbitsSortedByCardinal.get(card).sort(Orbit.comparePcsMin)
+        })
+    })
+    return resultOrbitsSortedByCardinal
+  }
+
 
   cardinalOfOrbitStabilized() {
     return this.orbitsSortedByStabilizers.reduce((sum, sortedOrbit) => sum + sortedOrbit.orbits.length, 0)

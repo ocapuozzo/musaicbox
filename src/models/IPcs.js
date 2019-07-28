@@ -425,6 +425,7 @@ export default class IPcs {
 
   /**
    * get number of pitches of this
+   * @return Number
    */
   cardinal() {
     return this.pcs.filter(i => i === 1).length

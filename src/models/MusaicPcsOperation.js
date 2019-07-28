@@ -175,6 +175,9 @@ getHashCode() {
   return this._hashcode
 }
 
+isComplemented() {
+  return this.complement
+}
 
 // // test en vue de supprimer  la coll fixedPcs
 // // qui est gourmande en mémoire inutule

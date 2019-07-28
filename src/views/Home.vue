@@ -5,10 +5,6 @@
         <h5 class="text-center title-detail pb-2">Musaic</h5>
         <div class="container ml-4">
           <ISMusaic style="width: 200px; height: 330px;" _pcs="[1,0,0,1,0,0,0,1,0,0,0,0]"></ISMusaic>
-          <p>
-            Interv-Struct :
-            <span class="analyse-pcs">{{ intervalStructFormatWithParentheses }}</span>
-          </p>
         </div>
       </div>
       <div
@@ -144,16 +140,7 @@
       orbitCardinalMusaic() {
         return this.cardinalOrbitOf(Group.MUSAIC, this.ipcs)
       },
-      intervalStructFormatWithParentheses() {
-        return  "(" + this.ipcs.is.reduce(
-          function(intervalStructureFormat ,i) {
-            return intervalStructureFormat.length === 0
-              ? "" + i
-              : intervalStructureFormat + ","+i
-          }
-          , "")
-          + ")"
-      },
+
       pcs: {
         get() {
           return this.$store.state.ipcs.ipcs.pcs

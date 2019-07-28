@@ -39,6 +39,10 @@
         >
         <!-- <font-awesome-icon icon="yin-yang"  size="lg"/> -->
       </span>
+      <p class="text-center mt-1">
+        IS :
+        <span class="analyse-pcs">{{ intervalStructFormatWithParentheses }}</span>
+      </p>
     </div>
     <!-- p>{{pcs}}</p -->
   </div>
@@ -73,6 +77,16 @@ export default {
       set(value) {
         this.$store.commit('ipcs/update', value);
       }
+    },
+    intervalStructFormatWithParentheses() {
+      return  "(" + this.ipcs.is.reduce(
+        function(intervalStructureFormat ,i) {
+          return intervalStructureFormat.length === 0
+            ? "" + i
+            : intervalStructureFormat + ","+i
+        }
+        , "")
+        + ")"
     },
   },
   mounted() {
@@ -285,6 +299,11 @@ export default {
   cursor: pointer;
 }
 
+.analyse-pcs {
+  text-decoration-color: brown;
+  font-size: 1rem;
+  background-color: blanchedalmond;
+}
 .rotateM11 {
   animation-duration: 1.5s;
   animation-name: rotation;

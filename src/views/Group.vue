@@ -71,13 +71,21 @@
       </fieldset>
     </div>
     <div class="p-2">
-      <button type="button" class="btn btn-primary m-2"
+      <button type="button" class="btn btn-primary m-1"
               @click="showOrbits('MotifStabilizer')" :disabled="opTranspositionChoicesHasAtLeastOneValuePrimeWithN() ? false : true" >
-        Show orbits ({{this.preReactOrbits.length}}) by IS-Motif stabilizers <span v-if="actionOfGroup"> ({{actionOfGroup.orbitsSortedByMotifStabilizers.length}})</span>
+        Show orbits ({{this.preReactOrbits.length}}) by IS-Motif stabilizers
+        <span v-if="actionOfGroup">
+          ({{actionOfGroup.orbitsSortedByMotifStabilizers.length}})
+        </span>
       </button>
-      <button type="button" class="btn btn-primary" @click="showOrbits('Stabilizer')">
+      <button type="button" class="btn btn-primary m-1" @click="showOrbits('Stabilizer')">
         Show orbits ({{this.preReactOrbits.length}}) decomposed by stabilizers
-        <span v-if="actionOfGroup"> ({{actionOfGroup.orbitsSortedByStabilizers.length}}) for {{actionOfGroup.cardinalOfOrbitStabilized()}} fixed sets</span>
+        <span v-if="actionOfGroup">
+          ({{actionOfGroup.orbitsSortedByStabilizers.length}}) for {{actionOfGroup.cardinalOfOrbitStabilized()}} fixed sets
+        </span>
+      </button>
+      <button type="button" class="btn btn-primary m-1" @click="showOrbits('Cardinal')">
+        Show orbits ({{this.preReactOrbits.length}}) by cardinal
       </button>
     </div>
 
@@ -187,7 +195,7 @@
         });
         //
       },
-      showOrbits(byWhatStabilizer = "MotifStabilizer") {
+      showOrbits(byWhatCritere = "MotifStabilizer") {
         if (! this.actionOfGroup) {
           this.buildAllOperationsOfGroup()
         } else {
@@ -196,12 +204,15 @@
           this.doubleRaf(() => {
             //this.stabilizers = this.actionOfGroup.stabilizers
             //this.fixedPcsInPrimeForms = this.actionOfGroup.stabilizers.fixedPcsInPrimeForm()
-            if (byWhatStabilizer === "MotifStabilizer") {
+            if (byWhatCritere === "MotifStabilizer") {
               this.orbitsPartitions = this.actionOfGroup.orbitsSortedByMotifStabilizers
               this.showOrbitBy = "by motif stabilizer"
-            } else { //if (byWhichStabilizer === "Stabilizer")
+            } else if (byWhatCritere === "Stabilizer") {
               this.orbitsPartitions = this.actionOfGroup.orbitsSortedByStabilizers
               this.showOrbitBy = "by stabilizer"
+            } else if (byWhatCritere === "Cardinal") {
+              this.orbitsPartitions = this.actionOfGroup.orbitsSortedByCardinal
+              this.showOrbitBy = "by cardinal"
             }
             this.$nextTick(() => this.waitingCompute = false)
           })

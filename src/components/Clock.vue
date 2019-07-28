@@ -17,6 +17,7 @@ import IPcs from "../models/IPcs";
     name: "Clock",
     clockDrawing : null,
     n: 0,
+   size : 0,
     props: {
       _ipcs: Object,
       pc_color: {
@@ -40,21 +41,23 @@ import IPcs from "../models/IPcs";
     computed: {},
     methods: {
       draw() {
-        let len = Math.min(this.ctx.canvas.clientWidth, this.ctx.canvas.clientHeight) //Math.min(this.$refs['canvas'].parentElement.parentElement.clientWidth, this.$refs['canvas'].parentElement.parentElement.clientHeight)
-        // console.log("len draw: " + len)
+        let len = this.size ? this.size : Math.min(this.ctx.canvas.clientWidth, this.ctx.canvas.clientHeight)
+        //  console.log("len draw: " + len)
      
         this.clockDrawing.width = len 
-        this.clockDrawing.height = len 
+        this.clockDrawing.height = len
+        this.$refs['canvas'].width = len
+        this.$refs['canvas'].height = len
         this.clockDrawing.draw()
       }
     },
     mounted() {
       this.ctx = this.$refs['canvas'].getContext('2d')
-      let len = Math.min(this.$refs['canvas'].clientWidth, this.$refs['canvas'].clientHeight)
-     // console.log("len : " + len)
+      // let len = Math.min(this.$refs['canvas'].clientWidth, this.$refs['canvas'].clientHeight)
+      let len = this.size ? this.size : Math.min(this.ctx.canvas.clientWidth, this.ctx.canvas.clientHeight)
+      // console.log("len : " + len)
       this.$refs['canvas'].width = len
       this.$refs['canvas'].height = len
-
       if (this._ipcs) {
         this.ipcs = new IPcs({strPcs: this._ipcs.strPcs, n: this._ipcs.n})
       } else {
@@ -65,11 +68,12 @@ import IPcs from "../models/IPcs";
         {
           ipcs: this.ipcs,
           ctx: this.ctx,
-          width: this.ctx.canvas.clientWidth,
-          height: this.ctx.canvas.clientWidth + (0), // square
+          width: len,
+          height: len + (0), // square
           pc_color : "black",
           segmentsLineDash : [ [1, 2, 2, 1], [2, 3] ] // median, inter
         })
+     // this.draw()
     },
     watch: {
       ipcs: function (val, oldVal) {

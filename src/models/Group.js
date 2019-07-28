@@ -129,4 +129,8 @@ export default class Group {
       return this._predefinedGroups
   }
 
+  isComplemented(){
+    return this.operations.some(op => op.isComplemented() )
+  }
+
 }
