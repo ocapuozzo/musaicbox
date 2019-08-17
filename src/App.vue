@@ -4,9 +4,10 @@
     <!-- Sidebar Holder -->
     <nav id="sidebar">
       <div class="sidebar-header">
-        <h3>
-          <router-link to="/">MusaicBox</router-link> <span><router-link to="/explorer-space">&nbsp;&nbsp;</router-link> </span>
+        <h3 class="text-center">
+          &nbsp;<router-link to="/">MusaicBox</router-link> <span><router-link to="/explorer-space">&nbsp;</router-link> </span>
         </h3>
+        <h5 class="text-center sub-title">a compositional toolbox</h5>
       </div>
 
       <ul class="list-unstyled components">
@@ -139,5 +140,10 @@ export default {
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.sub-title {
+  font-style: italic;
+  font-size: 0.8em
 }
 </style>

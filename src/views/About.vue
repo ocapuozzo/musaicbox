@@ -22,7 +22,7 @@
       <div class="card-body">
         <p class="card-text">Powerset himself can be partitioned by</p>
          <ul>
-           <li>Relationship on orbits (same IF-Motif)</li>
+           <li>Relationship on orbits (same IS-Motif)</li>
            <li>Relationship on fixed pcs (same stabilizers)</li>
          </ul>
       </div>
@@ -56,12 +56,43 @@
             height="421"
         >
     <div class="d-flex">
+      <p class="card-text">
+        Stabilizers may stabilizer one or many sub-orbits. Example of Stabilizers : [M1 M5-T4]
+      </p>
       <ul>
         <li><p class="card-text">Orbit of Powerset is partitioned by one or many Stabilizers</p></li>
         <li><p class="card-text">A same Stabilizer may partition sub-set of many orbits</p></li>
       </ul>
-
       </div>
+      <p class="card-text">Example to know 17 limited transposition intervallic structures :
+        <img src="analyse/TL-IS-interface.png"
+             title="operation selection"
+             alt="operation selection for LT structures "
+             class="img-fluid m-1"
+             width="634"
+             height="184"
+             style = "max-width:634px; max-height:184px"
+        >
+        <img src="analyse/button-show-limited-transposition.png"
+             title="show limited transposition structures"
+             alt="selection for LT structures "
+             class="img-fluid m-1"
+             width="498"
+             height="46"
+             style = "max-width:498px; max-height:46px"
+        >
+      </p>
+      <p class="card-text">
+        We obtain :
+        <img src="analyse/Limited-Transposition-IS.png"
+             title="limited transpositon structures"
+             alt="Limited Transposition structures "
+             class="img-fluid m-1"
+             width="543"
+             height="481"
+             style = "max-width:543px; max-height:481px"
+        >
+      </p>
     </div>
   </div>
 </template>

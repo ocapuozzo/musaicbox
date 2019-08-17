@@ -61,9 +61,9 @@ import IPcs from "../models/IPcs";
       if (this._ipcs) {
         this.ipcs = new IPcs({strPcs: this._ipcs.strPcs, n: this._ipcs.n})
       } else {
-        this.ipcs = new IPcs({strPcs: "[1, 5, 6]", n: 7})
+        this.ipcs = new IPcs({strPcs: "[0,1,2,3,4,5,6]", n: 7})
       }
-      this.n = this.ipcs.pcs.length
+      this.n = this.ipcs.n
       this.clockDrawing = new ClockDrawing(
         {
           ipcs: this.ipcs,

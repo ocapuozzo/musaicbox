@@ -66,7 +66,6 @@
               ctx.fillStyle =  "black" // this.pc_color_1;
               ctx.strokeRect(1 + j * CEL_WIDTH, 1 + i * CEL_WIDTH, CEL_WIDTH, CEL_WIDTH);
               ctx.fillRect(1 + j * CEL_WIDTH, 1 + i * CEL_WIDTH, CEL_WIDTH, CEL_WIDTH);
-
             } else {
               ctx.fillStyle = "white" // this.pc_color_0;
               ctx.strokeRect(1 + j * CEL_WIDTH, 1 + i * CEL_WIDTH, CEL_WIDTH, CEL_WIDTH);
