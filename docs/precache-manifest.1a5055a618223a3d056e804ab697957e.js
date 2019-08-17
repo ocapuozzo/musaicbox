@@ -8,12 +8,12 @@ self.__precacheManifest = [
     "url": "/musaicbox/js/about.c8c12a9a.js"
   },
   {
-    "revision": "2ab35d8ee88b0fddbc34",
-    "url": "/musaicbox/css/app.ad049695.css"
+    "revision": "c7988f9671ff29b73029",
+    "url": "/musaicbox/css/app.99303ed2.css"
   },
   {
-    "revision": "2ab35d8ee88b0fddbc34",
-    "url": "/musaicbox/js/app.39438814.js"
+    "revision": "c7988f9671ff29b73029",
+    "url": "/musaicbox/js/app.14e60945.js"
   },
   {
     "revision": "4d439b9ccb4b2bd8e220",
@@ -24,12 +24,16 @@ self.__precacheManifest = [
     "url": "/musaicbox/js/chunk-vendors.b578510e.js"
   },
   {
-    "revision": "45f91b474db0aacd1c6e2fb946571464",
+    "revision": "59bd63f9d3083c530c8f0a7a61c9a4fc",
     "url": "/musaicbox/index.html"
   },
   {
     "revision": "59eb417a302ee2c78fcd2f2af73b91cc",
     "url": "/musaicbox/analyse/analyse.puml"
+  },
+  {
+    "revision": "11730d11204bfe457fece57132cb0963",
+    "url": "/musaicbox/analyse/button-show-limited-transposition.png"
   },
   {
     "revision": "9c6061bba07bea641fcecf1cbda90d65",
@@ -84,6 +88,10 @@ self.__precacheManifest = [
     "url": "/musaicbox/robots.txt"
   },
   {
+    "revision": "dbbbd3f7301bd024399ffe0cdc12e6e8",
+    "url": "/musaicbox/analyse/TL-IS-interface.png"
+  },
+  {
     "revision": "97892d8a21837400932d4db36f03c650",
     "url": "/musaicbox/analyse/orbitsByISMotif.png"
   },
@@ -94,6 +102,10 @@ self.__precacheManifest = [
   {
     "revision": "55d47c764d2234988b50a4da84d5778d",
     "url": "/musaicbox/analyse/setAnalyse.png"
+  },
+  {
+    "revision": "8ddde5bf4a4574bb53a1d8353f8c51e4",
+    "url": "/musaicbox/analyse/Limited-Transposition-IS.png"
   },
   {
     "revision": "f15c1cf65fc85c93ca84bbaf13f2fe9b",
