@@ -126,12 +126,12 @@ export default class MusaicActionGroup {
     return this._orbitsSortedByStabilizers
   }
 
- get  orbitsSortedByCardinal() {
-   if (!this._orbitsSortedByCardinal)
-     this._orbitsSortedByCardinal = this.computeOrbitSortedByCardinal()
+  get orbitsSortedByCardinal() {
+    if (!this._orbitsSortedByCardinal)
+      this._orbitsSortedByCardinal = this.computeOrbitSortedByCardinal()
 
-   return this._orbitsSortedByCardinal
- }
+    return this._orbitsSortedByCardinal
+  }
 
   /**
    * @return {Array} of objects {stabilizerName : {String}, hashcode : {Integer}, orbits : {Array} of orbits
@@ -171,12 +171,14 @@ export default class MusaicActionGroup {
   computeOrbitSortedByMotifStabilizers() {
     let orbitsSortedByMotifStabilizer = new Map() // k=name orbit based on his stabs, v=array of orbits
     this.orbits.forEach(orbit => {
-      let kmotifstab = Array.from(orbitsSortedByMotifStabilizer.keys()).find(ms => ms.hashCode() === orbit.motifStabilizer.hashCode())
+      let kNameMotifStab = Array.from(orbitsSortedByMotifStabilizer.keys())
+           .find(ms => ms.hashCode() === orbit.motifStabilizer.hashCode())
       // orbit name based on his stabilizers and shortName
-      if (!kmotifstab)
+      if (!kNameMotifStab) {
         orbitsSortedByMotifStabilizer.set(orbit.motifStabilizer, [orbit])
-      else
-        orbitsSortedByMotifStabilizer.get(kmotifstab).push(orbit)
+      } else {
+        orbitsSortedByMotifStabilizer.get(kNameMotifStab).push(orbit)
+      }
     })
     // sort operations
     // make an "view adapter" for v-for 
@@ -211,10 +213,10 @@ export default class MusaicActionGroup {
     // make an "view adapter" for v-for
     let resultOrbitsSortedByCardinal = []
     // default, sort cast key to string...
-    Array.from(orbitsSortedByCardinal.keys()).sort((a,b)=> (Number(a)- Number(b))).forEach(card => {
+    Array.from(orbitsSortedByCardinal.keys()).sort((a, b) => (Number(a) - Number(b))).forEach(card => {
       resultOrbitsSortedByCardinal.push(
         {
-          groupingCriterion: "card : " + this.group.isComplemented() ? card + "/" + (this.n-card) : card + "",
+          groupingCriterion: "card : " + this.group.isComplemented() ? card + "/" + (this.n - card) : card + "",
           // to avoid duplicate keys in vue
           hashcode: card + Date.now(),
           orbits: orbitsSortedByCardinal.get(card).sort(Orbit.comparePcsMin)

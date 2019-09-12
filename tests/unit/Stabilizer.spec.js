@@ -211,11 +211,10 @@ test("Group Explore n=7 cyclic shortname", () => {
   group.orbits.forEach(orbit => sumPcs += orbit.ipcsset.length)
   expect(sumPcs).toEqual(group.powerset.size)
   let shortNames = []
-  group.orbitsSortedByMotifStabilizers.forEach(stab=> shortNames.push(stab.stabilizerName))
+  group.orbitsSortedByMotifStabilizers.forEach(stab => shortNames.push(stab.groupingCriterion))
   expect(shortNames).toEqual(["M1"])
   shortNames = []
-  group.orbitsSortedByStabilizers.forEach(stab=> shortNames.push(stab.stabilizerName))
+  group.orbitsSortedByStabilizers.forEach(stab => shortNames.push(stab.groupingCriterion))
   expect(shortNames).toEqual(["M1-T0", "M1-T0~1*"])
-
 })
 
