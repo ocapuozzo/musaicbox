@@ -1,13 +1,16 @@
 /*
  * Copyright (c) 2019. Olivier Capuozzo
+ *  This file is part of the musaicbox
+ *
+ *  (c) Olivier Capuozzo <olivier.capuozzo@gmail.com>
+ *
+ *  For the full copyright and license information, please view the README.md file of this project.
+ *
  */
 
 import MusaicPcsOperation from "@/models/MusaicPcsOperation";
-import IPcs from "@/models/IPcs";
-import Group from "@/models/Group";
 import Stabilizer from "../../src/models/Stabilizer";
 import MusaicActionGroup from "../../src/models/MusaicActionGroup";
-import MotifStabilizer from "../../src/models/MotifStabilizer";
 
 test("Stabilizer addOperation", () => {
   let opM5T0 = new MusaicPcsOperation(12, 5, 0, false);

@@ -1,8 +1,11 @@
-/**
- * Represent a IS-Motif invariant, without worrying about transposition Tx
- * Example : "M1, M5"
- *
+/*
  * Copyright (c) 2019. Olivier Capuozzo
+ *  This file is part of the musaicbox project
+ *
+ *  (c) Olivier Capuozzo <olivier.capuozzo@gmail.com>
+ *
+ *  For the full copyright and license information, please view the README.md file of this project.
+ *
  */
 
 import Utils from "../utils/Utils";

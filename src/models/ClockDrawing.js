@@ -1,5 +1,12 @@
 /**
  * Copyright (c) 2019. Olivier Capuozzo
+ *
+ * This file is part of the musaicbox project
+ *
+ * (c) Olivier Capuozzo <olivier.capuozzo@gmail.com>
+ *
+ * For the full copyright and license information, please view the README.md
+ * file on git server.
  */
 
 import IPcs from "./IPcs";

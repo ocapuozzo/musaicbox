@@ -1,3 +1,9 @@
+/**
+ * List of Forte Number
+ * @see https://en.wikipedia.org/wiki/List_of_pitch-class_sets
+ *
+ */
+
 var fortemap = new Map()
 
 fortemap.set("[0,1,2]", "3-1");

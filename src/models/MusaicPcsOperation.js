@@ -1,3 +1,13 @@
+/*
+ * Copyright (c) 2019. Olivier Capuozzo
+ *  This file is part of the musaicbox project
+ *
+ *  (c) Olivier Capuozzo <olivier.capuozzo@gmail.com>
+ *
+ *  For the full copyright and license information, please view the README.md file of this project.
+ *
+ */
+
 /**
  * musaic operation group : ((ax + t) modulo n) . c
  *
