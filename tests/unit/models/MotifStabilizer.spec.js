@@ -1,10 +1,16 @@
 /*
  * Copyright (c) 2019. Olivier Capuozzo
+ *  This file is part of the musaicbox project
+ *
+ *  (c) Olivier Capuozzo <olivier.capuozzo@gmail.com>
+ *
+ *  For the full copyright and license information, please view the README.md file of this project.
+ *
  */
 
 
 import Orbit from "@/models/Orbit";
-import MotifStabilizer from "../../src/models/MotifStabilizer";
+import MotifStabilizer from "../../../src/models/MotifStabilizer";
 
 test("MotifStabilizer Constructor", () => {
   let motifStab = new MotifStabilizer("M1, M5");

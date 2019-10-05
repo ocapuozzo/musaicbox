@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2019. Olivier Capuozzo
- *  This file is part of the musaicbox
+ *  This file is part of the musaicbox project
  *
  *  (c) Olivier Capuozzo <olivier.capuozzo@gmail.com>
  *
@@ -9,8 +9,8 @@
  */
 
 import MusaicPcsOperation from "@/models/MusaicPcsOperation";
-import Stabilizer from "../../src/models/Stabilizer";
-import MusaicActionGroup from "../../src/models/MusaicActionGroup";
+import Stabilizer from "../../../src/models/Stabilizer";
+import MusaicActionGroup from "../../../src/models/MusaicActionGroup";
 
 test("Stabilizer addOperation", () => {
   let opM5T0 = new MusaicPcsOperation(12, 5, 0, false);

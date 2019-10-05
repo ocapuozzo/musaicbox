@@ -7,5 +7,10 @@ module.exports = {
   parallel: undefined,
   css: {
     sourceMap: true
+  },
+  pwa : {
+    workboxOptions: {
+      exclude: []
+    }
   }
 };

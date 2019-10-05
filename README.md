@@ -1,35 +1,38 @@
 # musaicbox
 
 Application JS is a demonstration implement of [88 Musaics](88Musaics.org) concepts.
-Illustrates how geometry can highlight relationships between PCS.
+Illustrates how geometry can highlight relationships between PCS. 
 
 - Bidirectional UI interaction: in clock and matrix representations
+
+- Geometrical transformations 2D/3D of Musaic/PCS
 
 - Simple music notation representation with [https://abcjs.net/](https://abcjs.net/) 
  
 - Some PCS features of Musical Set Theory presented  
 
-- Group Theory : Group builder & Group action UI 
+- Group Theory : Group builder & Group action UI (trivial, dihedral, affine, ...) 
    
 May be use as 
 
 - Compositional tool
-- Application example of Group Theory (Zx) 
+- Application example of Group Theory (Zx Affine Group). Develop with group theory concepts and implemented by permutation operations (inside a vector).
+ 
 
 Note : produces no sound ! 
 
 
-## Application on line (~PWA)
+## Application online (~PWA)
 
-It's here (github pages) => [musaicbox on line ](https://ocapuozzo.github.io/musaicbox/)
+It's here (Github Pages served over HTTPS) => [musaicbox on line ](https://ocapuozzo.github.io/musaicbox/)
 
 
 ## Contributing
  
 1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin my-new-feature`
+2. Commit your changes
+3. Pull (merge with more recent remote project)
+4. Push your new version
 5. Submit a pull request :D 
 
 
@@ -43,7 +46,7 @@ npm install
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Compiles and make `/docs` for production
 ```
 npm run build
 ```
@@ -64,7 +67,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## History
  
-Version 0.1 (2019-09-13) - add MIT licence  
+Version 0.1.1 (2019-09-13) - add MIT licence  
  
 ## Credits
  

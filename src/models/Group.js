@@ -43,7 +43,8 @@ export default class Group {
    *
    * @param {Array} someGeneratorMusaicPcsOperation
    *           : a "sub group operations" (generators of group)
-   * @return {Array} ordered list of operations including someOperations and 0..n more generated operations by table cayley composition.
+   * @return {Array} ordered list of operations including someOperations and 0..n more generated
+   * operations by table cayley composition.
    */
   static buildOperationsGroupByCaylayTable(someGeneratorMusaicPcsOperation) {
     let allOps = [...someGeneratorMusaicPcsOperation]
@@ -57,7 +58,9 @@ export default class Group {
            let newop = allOps[i].compose(allOps[j]);
            if (!allOps.find(op => op.getHashCode() === newop.getHashCode())) {
              // ho ! add a line and column to the calay table
-             // no more restart from begin index  because symmetry (TODO is to be demonstrated)
+             // no more restart from begin index because
+             // up vector dimension add redundant by symmetry
+             // TODO  must be demonstrated... and verified by tests unit
              allOps.push(newop)
              // loop = true;
              // break forloop
