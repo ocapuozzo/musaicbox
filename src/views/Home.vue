@@ -123,7 +123,7 @@
     mounted() {
       // see manifest.json
       let q = this.$route.query.load
-      console.log(q)
+      // console.log(q)
     },
     methods : {
       cardinalOrbitOf(indexGroup, ipcs) {

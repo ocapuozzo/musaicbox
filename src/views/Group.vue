@@ -182,7 +182,7 @@
           if (this.debug) {
             let end = new Date().getTime()
             let diff = end - start;
-            console.log("duration : " + String(diff / 1000) + " secondes")
+           // console.log("duration : " + String(diff / 1000) + " secondes")
           }
           this.groupOperations = local_groupOperations;
           this.actionOfGroup = local_group
