@@ -52,16 +52,16 @@ self.__precacheManifest = [
     "url": "/musaicbox/index.html"
   },
   {
+    "revision": "11730d11204bfe457fece57132cb0963",
+    "url": "/musaicbox/analyse/button-show-limited-transposition.png"
+  },
+  {
     "revision": "59eb417a302ee2c78fcd2f2af73b91cc",
     "url": "/musaicbox/analyse/analyse.puml"
   },
   {
     "revision": "8ddde5bf4a4574bb53a1d8353f8c51e4",
     "url": "/musaicbox/analyse/Limited-Transposition-IS.png"
-  },
-  {
-    "revision": "11730d11204bfe457fece57132cb0963",
-    "url": "/musaicbox/analyse/button-show-limited-transposition.png"
   },
   {
     "revision": "97892d8a21837400932d4db36f03c650",
@@ -80,12 +80,12 @@ self.__precacheManifest = [
     "url": "/musaicbox/analyse/setAnalyse.png"
   },
   {
-    "revision": "23dcb0893907e4061ef9b9fe35f8f34a",
-    "url": "/musaicbox/analyse/setAnalysePartionned.dia"
-  },
-  {
     "revision": "f15c1cf65fc85c93ca84bbaf13f2fe9b",
     "url": "/musaicbox/analyse/setAnalysePartionned.png"
+  },
+  {
+    "revision": "23dcb0893907e4061ef9b9fe35f8f34a",
+    "url": "/musaicbox/analyse/setAnalysePartionned.dia"
   },
   {
     "revision": "dbbbd3f7301bd024399ffe0cdc12e6e8",
@@ -228,15 +228,15 @@ self.__precacheManifest = [
     "url": "/musaicbox/img/twotone-rotate_right-24px.png"
   },
   {
-    "revision": "afee14e5c9c10c200717fd22707b0db5",
-    "url": "/musaicbox/img/twotone-rotate_right-24px.svg"
-  },
-  {
     "revision": "3191c7cfa04fcdb103163073a03acf34",
     "url": "/musaicbox/manifest.json"
   },
   {
     "revision": "b6216d61c03e6ce0c9aea6ca7808f7ca",
     "url": "/musaicbox/robots.txt"
+  },
+  {
+    "revision": "afee14e5c9c10c200717fd22707b0db5",
+    "url": "/musaicbox/img/twotone-rotate_right-24px.svg"
   }
 ];
