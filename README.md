@@ -1,6 +1,6 @@
 # musaicbox
 
-Application JS is a demonstration implement of [88 Musaics](88Musaics.org) concepts.
+Application JS is a demonstration implement of [88 Musaics](https://sites.google.com/view/88musaics) concepts.
 Illustrates how geometry can highlight relationships between PCS. 
 
 - Bidirectional UI interaction: in clock and matrix representations
