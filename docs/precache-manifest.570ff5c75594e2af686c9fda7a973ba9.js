@@ -1,83 +1,87 @@
 self.__precacheManifest = [
   {
-    "revision": "1f1ecd5479aad679a1eb",
-    "url": "/musaicbox/css/about.4cf41628.css"
+    "revision": "f72c08a0b822a31d347f",
+    "url": "/musaicbox/css/about.b6672802.css"
   },
   {
-    "revision": "1f1ecd5479aad679a1eb",
-    "url": "/musaicbox/js/about.f9189d77.js"
+    "revision": "f72c08a0b822a31d347f",
+    "url": "/musaicbox/js/about.7a67ddc0.js"
   },
   {
-    "revision": "1f1ecd5479aad679a1eb",
-    "url": "/musaicbox/css/about.4cf41628.css.map"
+    "revision": "f72c08a0b822a31d347f",
+    "url": "/musaicbox/css/about.b6672802.css.map"
   },
   {
-    "revision": "1f1ecd5479aad679a1eb",
-    "url": "/musaicbox/js/about.f9189d77.js.map"
+    "revision": "f72c08a0b822a31d347f",
+    "url": "/musaicbox/js/about.7a67ddc0.js.map"
   },
   {
-    "revision": "ffc0e573cca68cd6e7c4",
-    "url": "/musaicbox/css/app.7cf96ace.css"
+    "revision": "35a3e186bf860e2b4ccc",
+    "url": "/musaicbox/css/app.5af66609.css"
   },
   {
-    "revision": "ffc0e573cca68cd6e7c4",
-    "url": "/musaicbox/js/app.aaa0c813.js"
+    "revision": "35a3e186bf860e2b4ccc",
+    "url": "/musaicbox/js/app.ac55ea71.js"
   },
   {
-    "revision": "ffc0e573cca68cd6e7c4",
-    "url": "/musaicbox/css/app.7cf96ace.css.map"
+    "revision": "35a3e186bf860e2b4ccc",
+    "url": "/musaicbox/css/app.5af66609.css.map"
   },
   {
-    "revision": "ffc0e573cca68cd6e7c4",
-    "url": "/musaicbox/js/app.aaa0c813.js.map"
+    "revision": "35a3e186bf860e2b4ccc",
+    "url": "/musaicbox/js/app.ac55ea71.js.map"
   },
   {
-    "revision": "75729ff6dbe78ec0ac76",
-    "url": "/musaicbox/css/chunk-vendors.7a2e0c51.css"
+    "revision": "1a41a5d95eb291f3f20c",
+    "url": "/musaicbox/css/chunk-vendors.ad42e07b.css"
   },
   {
-    "revision": "75729ff6dbe78ec0ac76",
-    "url": "/musaicbox/js/chunk-vendors.6cb6f438.js"
+    "revision": "1a41a5d95eb291f3f20c",
+    "url": "/musaicbox/js/chunk-vendors.b2b11615.js"
   },
   {
-    "revision": "75729ff6dbe78ec0ac76",
-    "url": "/musaicbox/css/chunk-vendors.7a2e0c51.css.map"
+    "revision": "1a41a5d95eb291f3f20c",
+    "url": "/musaicbox/css/chunk-vendors.ad42e07b.css.map"
   },
   {
-    "revision": "75729ff6dbe78ec0ac76",
-    "url": "/musaicbox/js/chunk-vendors.6cb6f438.js.map"
+    "revision": "1a41a5d95eb291f3f20c",
+    "url": "/musaicbox/js/chunk-vendors.b2b11615.js.map"
   },
   {
-    "revision": "2d675b2296b6c5eef71587aff068da4f",
+    "revision": "7121d01bf7fe03093ac7b13daa3b4e75",
     "url": "/musaicbox/index.html"
-  },
-  {
-    "revision": "59eb417a302ee2c78fcd2f2af73b91cc",
-    "url": "/musaicbox/analyse/analyse.puml"
   },
   {
     "revision": "11730d11204bfe457fece57132cb0963",
     "url": "/musaicbox/analyse/button-show-limited-transposition.png"
   },
   {
-    "revision": "aaa7d33e373cf312915b86321de6d817",
-    "url": "/musaicbox/analyse/orbitsByStabilizers.png"
-  },
-  {
-    "revision": "c55435e3ea424d3b574908ec8a35ba14",
-    "url": "/musaicbox/analyse/orbitsByISMotif.png"
-  },
-  {
-    "revision": "6ec4b82c05f2b91e3fad9afa98664eed",
-    "url": "/musaicbox/analyse/setAnalyse.dia"
+    "revision": "59eb417a302ee2c78fcd2f2af73b91cc",
+    "url": "/musaicbox/analyse/analyse.puml"
   },
   {
     "revision": "8ddde5bf4a4574bb53a1d8353f8c51e4",
     "url": "/musaicbox/analyse/Limited-Transposition-IS.png"
   },
   {
+    "revision": "c55435e3ea424d3b574908ec8a35ba14",
+    "url": "/musaicbox/analyse/orbitsByISMotif.png"
+  },
+  {
     "revision": "e81bce7f5ee6795eb51c36603c6f20ad",
     "url": "/musaicbox/analyse/setAnalyse.png"
+  },
+  {
+    "revision": "6ec4b82c05f2b91e3fad9afa98664eed",
+    "url": "/musaicbox/analyse/setAnalyse.dia"
+  },
+  {
+    "revision": "aaa7d33e373cf312915b86321de6d817",
+    "url": "/musaicbox/analyse/orbitsByStabilizers.png"
+  },
+  {
+    "revision": "dbbbd3f7301bd024399ffe0cdc12e6e8",
+    "url": "/musaicbox/analyse/TL-IS-interface.png"
   },
   {
     "revision": "a1032db78bac85c817c42ca9a282bdaf",
@@ -86,10 +90,6 @@ self.__precacheManifest = [
   {
     "revision": "4a714a978de7f9474531386cfb993ee1",
     "url": "/musaicbox/analyse/setAnalysePartionned.png"
-  },
-  {
-    "revision": "dbbbd3f7301bd024399ffe0cdc12e6e8",
-    "url": "/musaicbox/analyse/TL-IS-interface.png"
   },
   {
     "revision": "1ba2ae710d927f13d483fd5d1e548c9b",
@@ -104,20 +104,20 @@ self.__precacheManifest = [
     "url": "/musaicbox/images/icons/favicon-16x16.png"
   },
   {
-    "revision": "dd125a7ed8a053b409cf8a49c414d59e",
-    "url": "/musaicbox/images/icons/icon-128x128.png"
-  },
-  {
     "revision": "313a111abb52a672b5af4059d9875080",
     "url": "/musaicbox/images/icons/favicon-32x32.png"
   },
   {
-    "revision": "24efd85d023ecf3af566ba880ed8fc0b",
-    "url": "/musaicbox/images/icons/icon-152x152.png"
+    "revision": "dd125a7ed8a053b409cf8a49c414d59e",
+    "url": "/musaicbox/images/icons/icon-128x128.png"
   },
   {
     "revision": "2d100bc5f6372171fc680736ed541432",
     "url": "/musaicbox/images/icons/icon-144x144.png"
+  },
+  {
+    "revision": "24efd85d023ecf3af566ba880ed8fc0b",
+    "url": "/musaicbox/images/icons/icon-152x152.png"
   },
   {
     "revision": "dbe09f93f0ba4caf67dcde3d565c3e1a",
@@ -128,20 +128,20 @@ self.__precacheManifest = [
     "url": "/musaicbox/images/icons/icon-384x384.png"
   },
   {
-    "revision": "8a72827bbb83702c4de79f3c90f24ed8",
-    "url": "/musaicbox/images/icons/icon-512x512.png"
-  },
-  {
     "revision": "dcee68e2eb197cbcd3427439bc287c72",
     "url": "/musaicbox/images/icons/icon-72x72.png"
   },
   {
-    "revision": "1a41247d6e5af46568a3391a5108b178",
-    "url": "/musaicbox/images/icons/icon-96x96.png"
+    "revision": "8a72827bbb83702c4de79f3c90f24ed8",
+    "url": "/musaicbox/images/icons/icon-512x512.png"
   },
   {
     "revision": "7e826a81c500d1c8114838168d080de5",
     "url": "/musaicbox/img/cplt.png"
+  },
+  {
+    "revision": "1a41247d6e5af46568a3391a5108b178",
+    "url": "/musaicbox/images/icons/icon-96x96.png"
   },
   {
     "revision": "f130a0b70e386170cf6f011c0ca8c4f4",
@@ -172,16 +172,16 @@ self.__precacheManifest = [
     "url": "/musaicbox/img/icons/apple-touch-icon-76x76.png"
   },
   {
+    "revision": "98b614336d9a12cb3f7bedb001da6fca",
+    "url": "/musaicbox/img/icons/favicon-32x32.png"
+  },
+  {
     "revision": "66830ea6be8e7e94fb55df9f7b778f2e",
     "url": "/musaicbox/img/icons/apple-touch-icon.png"
   },
   {
     "revision": "4bb1a55479d61843b89a2fdafa7849b3",
     "url": "/musaicbox/img/icons/favicon-16x16.png"
-  },
-  {
-    "revision": "98b614336d9a12cb3f7bedb001da6fca",
-    "url": "/musaicbox/img/icons/favicon-32x32.png"
   },
   {
     "revision": "b89032a4a5a1879f30ba05a13947f26f",
@@ -208,12 +208,12 @@ self.__precacheManifest = [
     "url": "/musaicbox/img/m7.png"
   },
   {
-    "revision": "da64f03504b1e2d3e108e62a7e9f7794",
-    "url": "/musaicbox/img/t+.png"
-  },
-  {
     "revision": "4d9b812677c7120f635b89a88f158e4e",
     "url": "/musaicbox/img/t-.png"
+  },
+  {
+    "revision": "da64f03504b1e2d3e108e62a7e9f7794",
+    "url": "/musaicbox/img/t+.png"
   },
   {
     "revision": "d40a1aac7d940696332fbfe242951c63",
