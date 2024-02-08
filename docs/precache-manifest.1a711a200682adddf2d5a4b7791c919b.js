@@ -60,12 +60,12 @@ self.__precacheManifest = [
     "url": "/musaicbox/analyse/button-show-limited-transposition.png"
   },
   {
-    "revision": "c55435e3ea424d3b574908ec8a35ba14",
-    "url": "/musaicbox/analyse/orbitsByISMotif.png"
-  },
-  {
     "revision": "aaa7d33e373cf312915b86321de6d817",
     "url": "/musaicbox/analyse/orbitsByStabilizers.png"
+  },
+  {
+    "revision": "c55435e3ea424d3b574908ec8a35ba14",
+    "url": "/musaicbox/analyse/orbitsByISMotif.png"
   },
   {
     "revision": "6ec4b82c05f2b91e3fad9afa98664eed",
@@ -100,10 +100,6 @@ self.__precacheManifest = [
     "url": "/musaicbox/favicon.png"
   },
   {
-    "revision": "313a111abb52a672b5af4059d9875080",
-    "url": "/musaicbox/images/icons/favicon-32x32.png"
-  },
-  {
     "revision": "38d1f3451c1fd0c56e3613ff88efb58d",
     "url": "/musaicbox/images/icons/favicon-16x16.png"
   },
@@ -112,12 +108,16 @@ self.__precacheManifest = [
     "url": "/musaicbox/images/icons/icon-128x128.png"
   },
   {
-    "revision": "2d100bc5f6372171fc680736ed541432",
-    "url": "/musaicbox/images/icons/icon-144x144.png"
+    "revision": "313a111abb52a672b5af4059d9875080",
+    "url": "/musaicbox/images/icons/favicon-32x32.png"
   },
   {
     "revision": "24efd85d023ecf3af566ba880ed8fc0b",
     "url": "/musaicbox/images/icons/icon-152x152.png"
+  },
+  {
+    "revision": "2d100bc5f6372171fc680736ed541432",
+    "url": "/musaicbox/images/icons/icon-144x144.png"
   },
   {
     "revision": "dbe09f93f0ba4caf67dcde3d565c3e1a",
@@ -148,12 +148,12 @@ self.__precacheManifest = [
     "url": "/musaicbox/img/icons/android-chrome-192x192.png"
   },
   {
-    "revision": "936d6e411cabd71f0e627011c3f18fe2",
-    "url": "/musaicbox/img/icons/apple-touch-icon-120x120.png"
-  },
-  {
     "revision": "0ff1bc4d14e5c9abcacba7c600d97814",
     "url": "/musaicbox/img/icons/android-chrome-512x512.png"
+  },
+  {
+    "revision": "936d6e411cabd71f0e627011c3f18fe2",
+    "url": "/musaicbox/img/icons/apple-touch-icon-120x120.png"
   },
   {
     "revision": "1a034e64d80905128113e5272a5ab95e",
@@ -208,12 +208,12 @@ self.__precacheManifest = [
     "url": "/musaicbox/img/m7.png"
   },
   {
-    "revision": "4d9b812677c7120f635b89a88f158e4e",
-    "url": "/musaicbox/img/t-.png"
-  },
-  {
     "revision": "da64f03504b1e2d3e108e62a7e9f7794",
     "url": "/musaicbox/img/t+.png"
+  },
+  {
+    "revision": "4d9b812677c7120f635b89a88f158e4e",
+    "url": "/musaicbox/img/t-.png"
   },
   {
     "revision": "d40a1aac7d940696332fbfe242951c63",
