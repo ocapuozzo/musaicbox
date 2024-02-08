@@ -144,15 +144,15 @@ export default class MusaicActionGroup {
   computeOrbitSortedByStabilizers() {
     let orbitsSortedByStabilizers = new Map() // k=name orbit based on his stabs, v=array of orbits
     this.orbits.forEach(orbit => {
-      orbit.stabilizers.forEach(stab => {
-        let nameStab = stab.getShortName()
-        if (!orbitsSortedByStabilizers.has(nameStab))
-          orbitsSortedByStabilizers.set(nameStab, [])
-        // make an subOrbit based on stabilizer : subOrbits partitioning orbit
-        let subOrbit = new Orbit({stabs: [stab], ipcsSet: stab.fixedPcs})
-        orbitsSortedByStabilizers.get(nameStab).push(subOrbit)
-      })
-    })
+      const orbitName = orbit.name  // stabilizer based
+
+      if (!orbitsSortedByStabilizers.has(orbitName)) {
+        orbitsSortedByStabilizers.set(orbitName, [orbit])
+      } else {
+        // @ts-ignore undefined get element
+        orbitsSortedByStabilizers.get(orbitName).push(orbit)
+      }
+    }) // end loop orbits
 
     // sort map on keys (lexical order)
     // make an "view adapter" for v-for

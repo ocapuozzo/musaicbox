@@ -22,12 +22,12 @@
       <div class="card-body">
         <p class="card-text">Powerset himself can be partitioned by</p>
          <ul>
-           <li>Relationship on orbits (same IS-Motif)</li>
-           <li>Relationship on fixed pcs (same stabilizers)</li>
+           <li>Relationship on orbits (same set of IS-Motif stabilizers - without T)</li>
+           <li>Relationship on orbits (same set of stabilizers)</li>
          </ul>
       </div>
     </div>
-    <h3>Two cases : IS-Motif and Stabilizers classifiers</h3>
+    <h3>Two cases : IS-Motif Stabilizers and Stabilizers classifiers</h3>
 
     <div class="card" style="width: 100%">
     <img
@@ -57,11 +57,11 @@
         >
     <div class="d-flex">
       <p class="card-text">
-        Stabilizers may stabilizer one or many sub-orbits. Example of Stabilizers : [M1 M5-T4]
+        Stabilizers may stabilizer one or many orbits. Example of Stabilizers : [M1 M5-T4]
       </p>
       <ul>
         <li><p class="card-text">Orbit of Powerset is partitioned by one or many Stabilizers</p></li>
-        <li><p class="card-text">A same Stabilizer may partition sub-set of many orbits</p></li>
+        <li><p class="card-text">Some orbits can share same set of stabilizers</p></li>
       </ul>
       </div>
       <p class="card-text">Example to know 17 limited transposition intervallic structures :
